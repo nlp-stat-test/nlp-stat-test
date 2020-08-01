@@ -1,4 +1,5 @@
 
+
 """
 This is a script for pre-testing exploratory data analysis. Main functionality inclues:
 1. read the score file (assumes a file with two columns of numbers, each row separated by whitespace)
@@ -185,4 +186,3 @@ def recommend_test(test_param,is_norm):
 				('wilcoxon','The Wilcoxon signed-rank test is appropriate for comparing medians.'),
 				('permutation_med','The sign test calibrated by permutation based on median difference is appropriate for testing for median.'),
 				('sign','The sign test is appropriate for testing for median, but it has relatively low statistical power due to loss of information.')])
-
