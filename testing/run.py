@@ -663,22 +663,32 @@ def power(debug=True):
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
-def download_file():
+def download_file(markdown_only=False):
+    '''
+
+    @param markdown_only: Set this to true to debug the case in which you don't want
+    the whole zip file (like if zip isn't working)
+    @return:
+    '''
     options = {}
     options["filename"] = request.cookies.get('fileName')
     options["normality_message"] = request.cookies.get('is_normal')
-    options["skewness_message"] = "3"
-    options["test_statistic_message"] = "3"
-    options["significance_tests_table"] = "3"
-    options["significance_alpha"] = "3"
-    options["bootstrap iterations"] = "3"
-    options["expected_mean_diff"] = "3"
-    options["chosen_sig_test"] = "3"
-    options["should_reject?"] = "3"
-    options["statistic/CI"] = "3"
+    options["skewness_message"] = request.cookies.get('skewness_gamma')
+    options["test_statistic_message"] = \
+        request.cookies.get('mean_or_median') # or is this 'summary_stats_dict'
+    options["significance_tests_table"] = request.cookies.get('recommended_test_reasons')
+    options["significance_alpha"] = request.cookies.get('sig_test_alpha')
+    options["bootstrap iterations"] = "200"
+    # This was mu, which we're not letting the user define: options["expected_mean_diff"] = "0"
+    options["chosen_sig_test"] = request.cookies.get('sig_test_name')
+    options["should_reject?"] = request.cookies.get('rejectH0')
+    options["statistic/CI"] = request.cookies.get('sig_test_stat_val')  #
     rand = np.random.randint(10000)
     gen_report(options, str(rand))
-    return send_file("user/report.zip", as_attachment=True)
+    if markdown_only:
+        return send_file("user/report.md", as_attachment=True)
+    else:
+        return send_file("user/report.zip", as_attachment=True)
 
 
 @app.route('/download2')
