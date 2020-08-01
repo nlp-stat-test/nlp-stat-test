@@ -305,7 +305,15 @@ margin: 0 auto;>
 
                 {% for key, value in recommended_tests_reasons.items() %}
                 <tr>
-                    <td> {{ key }} </td>
+                    <td>
+                        {% if key=='t' %}Student t test
+                        {% elif key=='bootstrap' %}Bootstrap
+                            {% elif key=='permutation' %}Permutation
+                            {% elif key=='wilcoxon' %}Wilcoxson signed rank test
+                            {% elif key=='sign' %}Sign test
+                            {% elif key=='bootstrap_med' %}Bootstrap (median)
+                            {% elif key=='permutation_med' %}Permutation (median)
+                    {% endif %} </td>
                     <td>{{ value }}</td>
                 </tr>
                 {% endfor %}
