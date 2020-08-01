@@ -1,5 +1,13 @@
 import os
 
+def truefalseToYesNo(true_or_false):
+  if true_or_false == 'true' or true_or_false == 'True':
+    return 'Yes'
+  elif true_or_false == 'false' or true_or_false == 'False':
+    return 'No'
+  else:
+    return 'Unknown'
+
 def gen_report(options: dict, string: str):
   report_string = """
 # System Performance Report
@@ -7,9 +15,9 @@ def gen_report(options: dict, string: str):
 ## Data Analysis
 
 Tests indicate the following about the data in the file `""" + options["filename"] + """`:
-  * """ + options["normality_message"] + """
-  * """ + options["skewness_message"] + """
-  * """ + options["test_statistic_message"] + """
+  * Is the data distribution normal? """ + truefalseToYesNo(options["normality_message"])  + """
+  * The skewness measurement is: """ + options["skewness_message"] + """
+  * Based on skewness and normality, the recommended statistic to use for each evaluation unit is: """ + options["test_statistic_message"] + """
 
 
 Based on this information, the following significance tests are appropriate for your data:
@@ -18,7 +26,7 @@ Based on this information, the following significance tests are appropriate for 
 
 ## Significance testing
 
-Requiring a significance level $\\alpha = """ + options["significance_alpha"] + """$, """ + options["bootstrap iterations"] + """ iterations for bootstraping tests, and an expected mean difference for null hypothesis mean of """ +  """ and using the """ + options["chosen_sig_test"] + """ significance test, we can conclude that you """ + options["should_reject?"] + """ the null hypothesis. The test statistic and confidence interval are """ + options["statistic/CI"] + """ respectively.
+Requiring a significance level $\\alpha = """ + options["significance_alpha"] + """$, """ + options["bootstrap iterations"] + """ iterations for bootstraping tests""" +  """ and using the """ + options["chosen_sig_test"] + """ significance test, can you reject the null hypothesis? """ + truefalseToYesNo(options["should_reject?"]) + """ The test statistic or confidence interval = """ + options["statistic/CI"] + """ for the significance test you selected.
 
 ## Effect Size
 
