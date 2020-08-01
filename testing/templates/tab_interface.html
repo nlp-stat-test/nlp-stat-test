@@ -803,10 +803,31 @@ margin: 0 auto;>
         window.addEventListener('load', function () {
             {% if last_tab_name_clicked %}
                 console.log('In load event listener: {{ last_tab_name_clicked }}.')
+
                 // sig_test_name radio button
                 var sig_test_button_id = "target_sig_test-{{ sig_test_name }}"
                 document.getElementById(sig_test_button_id).clicked = "clicked"
+
+                // hide green divs that aren't the current or previous divs
                 hideGreenDivs('{{ last_tab_name_clicked }}')
+
+                // power test, normal case, don't hide the parameters
+                var lastTab= '{{ last_tab_name_clicked }}'
+                if (lastTab) { //(lastTab === 'Post-test Power Analysis' || lastTab === 'Effect Size')
+                    {% if is_normal %}
+                        // TODO: preserve last clicked
+                        {% if power_test == 'montecarlo' %}
+                            show_montecarlo_div()
+                         {% elif power_test == 'bootstrap' %}
+                            show_bootstrap_div()
+                         {% else %}
+                            // default to montecarlo if not defined
+                            show_montecarlo_div()
+                          {% endif %}
+                    {% else %}  // not normal case
+                            show_bootstrap_div()
+                    {% endif %}
+                }
             {% endif %}
 
         }, false);
