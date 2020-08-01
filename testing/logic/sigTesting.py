@@ -16,27 +16,27 @@ def run_sig_test(recommended_test, score, alpha, B, mu):
 	pval = 0
 
 	# already implemented sig tests
-	if recommended_test == 't':
+	if recommended_test == 'Student t test':
 		test_stats_value, pval = stats.ttest_1samp(x,mu)
 		rejection = pval<alpha
-	if recommended_test == 'wilcoxon':
+	if recommended_test == 'Wilcoxon signed rank test':
 		test_stats_value, pval = stats.wilcoxon(x)
 		rejection = pval<alpha
-	if recommended_test == 'sign':
+	if recommended_test == 'Sign test':
 		test_stats_value, pval = sign_test(x)
 		rejection = pval<alpha
 
 	# self implemented sig tests
-	if recommended_test == 'bootstrap':
+	if recommended_test == 'Bootstrap':
 		test_stats_value, pval, rejection= bootstrap_test(x,alpha,mu,B)
 
-	if recommended_test == 'bootstrap_med':
+	if recommended_test == 'Bootstrap (median)':
 		test_stats_value, pval, rejection = bootstrap_test(x,alpha,mu,B,method='median')
 
-	if recommended_test == 'permutation':
+	if recommended_test == 'Permutation':
 		test_stats_value, pval, rejection = permutation_test(x,alpha,B)
 
-	if recommended_test == 'permutation_med':
+	if recommended_test == 'Permutation (median)':
 		test_stats_value, pval, rejection = permutation_test(x,alpha,B,method='median')
 		rejection = pval<alpha
 
