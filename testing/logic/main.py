@@ -99,7 +99,7 @@ if __name__ == '__main__':
 	testCase_new.get_summary_stats()
 
 	# skewness test
-	testCase_new.eda.testParam = dataAnalysis.skew_test(testCase_new.score_diff_par)
+	testCase_new.eda.testParam = dataAnalysis.skew_test(testCase_new.score_diff_par)[1] # test statistic
 
 
 	# normality test
