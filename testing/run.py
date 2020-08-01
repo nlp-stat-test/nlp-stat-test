@@ -496,8 +496,8 @@ def power(debug=True):
         power_iterations = int(request.form.get('power_iterations'))
 
 
-        sig_test_name = request.cookies.get('sig_test_name')
-        #sig_test_name = request.form.get('sig_test_name')
+        old_sig_test_name = request.cookies.get('sig_test_name')
+        sig_test_name = request.form.get('power_boot_sig_test')
         if request.cookies.get('sig_test_alpha'):
             # actually, sigtest should be populating PA form alpha in template.
             # can do that instead of cookie.
@@ -537,6 +537,7 @@ def power(debug=True):
         rendered = render_template(template_filename,
                                    skewness_gamma = skewness_gamma,
                                    # power
+                                   #old_sig_test_name=old_sig_test_name,
                                    power_file=power_file,
                                    power_test=power_test,
                                    power_num_intervals=power_num_intervals,
