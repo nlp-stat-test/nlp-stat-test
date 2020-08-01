@@ -184,7 +184,8 @@ def homepage(debug=False):
             summary_stats_dict = create_summary_stats_dict(tc)
 
             # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
-            mean_or_median = skew_test(score_diff_par[2])
+            mean_or_median = skew_test(score_diff_par[2])[1]
+            skewness_estimate = skew_test(score_diff_par[2])[0]
             # ---------------normality test
             # todo: add alpha parameter
             is_normal = normality_test(score_diff_par[2], alpha=0.05)
