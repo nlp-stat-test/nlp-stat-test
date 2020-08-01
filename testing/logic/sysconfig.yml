@@ -1,0 +1,30 @@
+# system config file for sig testing proc
+# users SHOULD NOT change any values in this file
+
+## EDA
+MIN_eval_unit_size: 1 # minimum number of EU = 1
+#MAX_eval_unit_size: #this should be equal to original sample size
+MIN_normal_test_alpha: 0 # ranges of alpha [0,1], but we limit it under 0.5
+MAX_normal_test_alpha: 0.5 
+
+
+## testing
+MIN_sig_test_alpha: 0 # ranges of alpha [0,1], but we limit it under 0.5
+MAX_sig_test_alpha: 0.5
+MAX_sig_boot_perm_B: 2000 # iteration time for bootstrap/permutation tests
+MIN_sig_boot_perm_B: 100 # minimum number
+mu: 0 # null hypothesis
+
+
+## effect size
+
+
+## power analysis
+MIN_power_alpha: 0 # ranges of alpha [0,1], but we limit it under 0.5
+MAX_power_alpha: 0.5 
+MIN_power_samplesize: 15 # the first subsample size should be bigger than this
+#MAX_power_samplesize:  # this should be the number of eval units 
+MIN_power_num_of_subsample: 5 # minimum number of subsampling for power analysis, i.e. points on x-axis
+MAX_power_num_of_subsample: 100 # this should be the number of eval units, we limit this to be 100
+MAX_power_B: 500
+MIN_power_B: 50
