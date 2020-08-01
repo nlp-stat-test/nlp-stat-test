@@ -57,7 +57,24 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 				if rejection:
 					count+=1
 			power_sampsizes[i] = float(count)/B
-
+	
+	
+	# test name to display
+	test_name_to_display = ''
+	if sig_test_name == "t":
+		test_name_to_display = 'Student t test'
+	if sig_test_name == 'wilcoxon':
+		test_name_to_display = "Wilcoxon signed rank test"
+	if sig_test_name == "bootstrap":
+		test_name_to_display = "Bootstrap test (mean)"
+	if sig_test_name == "permutation":
+		test_name_to_display = "Permutation test (mean)"
+	if sig_test_name == "sign":
+		test_name_to_display = "Sign test"
+	if sig_test_name == "bootstrap_med":
+		test_name_to_display = "Bootstrap test (median)"
+	if sig_test_name == "permutation_med":
+		test_name_to_display = "Permutation test (median)"
 
 	x = list(power_sampsizes.keys())
 	y = list(power_sampsizes.values())
@@ -66,7 +83,7 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 	plt.plot(x,y)
 	plt.xlabel("Sample Size")
 	plt.ylabel("Power")
-	plt.title("Power Against Different Sample Sizes for '" + str(sig_test_name) + "'")
+	plt.title("Power Against Different Sample Sizes for '" + test_name_to_display + "'")
 
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
