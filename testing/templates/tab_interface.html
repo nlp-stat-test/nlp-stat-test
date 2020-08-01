@@ -186,7 +186,7 @@ margin: 0 auto;>
 
                 <br><br>
 
-                Significance &alpha; (for calculating normality):
+                Significance level &alpha; (for calculating normality):
                 <div class="tooltip">?
                     <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.5.</span>
                 </div>
@@ -641,18 +641,38 @@ margin: 0 auto;>
                         value="bootstrap">
                         
                         <hr>
-                        
+                        <!--
+                                            <td>
+                        {% if key=='t' %}Student t test
+                        {% elif key=='bootstrap' %}Bootstrap
+                            {% elif key=='permutation' %}Permutation
+                            {% elif key=='wilcoxon' %}Wilcoxson signed rank test
+                            {% elif key=='sign' %}Sign test
+                            {% elif key=='bootstrap_med' %}Bootstrap (median)
+                            {% elif key=='permutation_med' %}Permutation (median)
+                    {% endif %} </td>
+                        -->
                 <div class="hiddendiv" id="power_boot_fields"
                      {% if is_normal %}style="display:none"{% else %}style="display:block"{% endif %} >
 
                         <b>Bootstrap Parameters</b><br><br>
-                        significance test:
+                        Significance test:<br>
                         {% for sigtest in recommended_tests %}
                         <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}"
-                            {% if sigtest[0] == sig_test_name %}checked="checked"{% endif %}>{{ sigtest[0] }}
+                            {% if sigtest[0] == sig_test_name %}checked="checked"{% endif %}>
+                            {% if sigtest[0] == 't' %}Student t-test<br>
+                            {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br>
+                            {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br>
+                            {% elif sigtest[0]=='sign' %}Sign test<br>
+                            {% elif sigtest[0]=='permutation' %}Permutation<br>
+                            {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br>
+                            {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br>
+                                {% else %}{{ sigtest[0] }}
+                            {% endif %}
+
                         {% endfor %}
                         <br><br>
-                        significance &alpha;: <input type="number" name="power_alpha"
+                        Significance level &alpha;: <input type="number" name="power_alpha"
                              {% if sig_test_alpha %}
                                               value="{{ sig_test_alpha }}"
                              {% else %}
