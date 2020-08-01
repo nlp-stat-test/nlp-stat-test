@@ -168,21 +168,21 @@ def recommend_test(test_param,is_norm):
 	@return: a list of recommended test
 	"""
 	if is_norm==True:
-		return([('Student t test','The student t test is most appropriate for normal sample and has the highest statistical power.'), 
-			('Bootstrap','The bootstrap test based on t ratios can be applied to normal sample.'),
-			('Permutation','The sign test calibrated by permutation based on mean difference is also appropriate for normal sample, but its statistical power is relatively low due to loss of information.'),
-			('Wilcoxon signed rank test','The Wilcoxon signed-rank test can be used for normal sample, but since it is a nonparametric test, it has relatively low statistical power. Also the null hypothesis is that the the pairwise difference has location 0.'),
-			('Sign test','The (exact) sign test can be used for normal sample, but it has relatively low statistical power due to loss of information.')])
+		return([('t','The student t test is most appropriate for normal sample and has the highest statistical power.'), 
+			('bootstrap','The bootstrap test based on t ratios can be applied to normal sample.'),
+			('permutation','The sign test calibrated by permutation based on mean difference is also appropriate for normal sample, but its statistical power is relatively low due to loss of information.'),
+			('wilcoxon','The Wilcoxon signed-rank test can be used for normal sample, but since it is a nonparametric test, it has relatively low statistical power. Also the null hypothesis is that the the pairwise difference has location 0.'),
+			('sign','The (exact) sign test can be used for normal sample, but it has relatively low statistical power due to loss of information.')])
 	else:
 		if test_param=="mean":
-			return([('Bootstrap','The bootstrap test based on t ratios does not assume normality, and thus is appropriate for testing for mean difference.'),
-				('Permutation','The sign test calibrated by permutation based on mean difference is nonparametric and does not assume normality.'),
-				('Wilcoxon signed rank test','The Wilcoxon signed-rank test can be used for this case, but since it is a nonparametric test, it has relatively low statistical power. Also the null hypothesis is that the the pairwise difference has location 0.'),
-				('Sign test','The (exact) sign test can be used for this case, but it has relatively low statistical power due to loss of information. Also, the null hypothesis is that the median is 0.'),
-				('student t test','The student t test may be appropriate for non-normal data if the sample size is large enough, but the iid assumption must hold.')])
+			return([('bootstrap','The bootstrap test based on t ratios does not assume normality, and thus is appropriate for testing for mean difference.'),
+				('permutation','The sign test calibrated by permutation based on mean difference is nonparametric and does not assume normality.'),
+				('wilcoxon','The Wilcoxon signed-rank test can be used for this case, but since it is a nonparametric test, it has relatively low statistical power. Also the null hypothesis is that the the pairwise difference has location 0.'),
+				('sign','The (exact) sign test can be used for this case, but it has relatively low statistical power due to loss of information. Also, the null hypothesis is that the median is 0.'),
+				('t','The student t test may be appropriate for non-normal data if the sample size is large enough, but the iid assumption must hold.')])
 		else:
-			return([('Bootstrap (median)','The bootstrap test based on median is appropriate for testing for median.'),
-				('Wilcoxon signed rank test','The Wilcoxon signed-rank test is appropriate for comparing medians.'),
-				('Permutation (median)','The sign test calibrated by permutation based on median difference is appropriate for testing for median.'),
-				('Sign test','The sign test is appropriate for testing for median, but it has relatively low statistical power due to loss of information.')])
+			return([('bootstrap_med','The bootstrap test based on median is appropriate for testing for median.'),
+				('wilcoxon','The Wilcoxon signed-rank test is appropriate for comparing medians.'),
+				('permutation_med','The sign test calibrated by permutation based on median difference is appropriate for testing for median.'),
+				('sign','The sign test is appropriate for testing for median, but it has relatively low statistical power due to loss of information.')])
 
