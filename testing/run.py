@@ -185,7 +185,7 @@ def homepage(debug=False):
 
             # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
             mean_or_median = skew_test(score_diff_par[2])[1]
-            skewness_estimate = skew_test(score_diff_par[2])[0]
+            skewness_gamma = skew_test(score_diff_par[2])[0]
             # ---------------normality test
             # todo: add alpha parameter
             is_normal = normality_test(score_diff_par[2], alpha=0.05)
@@ -209,6 +209,7 @@ def homepage(debug=False):
 
                 rendered = render_template(template_filename,
                                            normality_alpha=normality_alpha,
+                                           skewness_gamma=skewness_gamma,
                                            hist_score1_file='hist_score1_partitioned.svg',
                                            hist_score2_file='hist_score2_partitioned.svg',
                                            hist_diff_file='hist_score_diff.svg',
@@ -241,7 +242,7 @@ def homepage(debug=False):
                 # -------------- Set all cookies -------------
                 if f.filename:
                     resp.set_cookie('fileName', f.filename)
-
+                resp.set_cookie('skewness_gamma', json.dumps(skewness_gamma))
                 resp.set_cookie('eval_unit_size', eval_unit_size)
                 resp.set_cookie('eval_unit_stat', eval_unit_stat)
                 resp.set_cookie('num_eval_units', str(num_eval_units))
@@ -337,7 +338,9 @@ def sigtest(debug=True):
 
         # TODO: Don't need this anymore
         sig_test_sign_permutation=request.cookies.get('sig_test_sign_permutation')
+        skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
+                                   skewness_gamma = skewness_gamma,
                                    # specific to effect size test
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
@@ -421,7 +424,9 @@ def effectsize():
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
         print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
+        skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
+                                   skewness_gamma = skewness_gamma,
                                    # specific to effect size test
                                    effect_size_estimators=estimators,
                                    eff_estimator=cur_selected_est,
@@ -528,7 +533,9 @@ def power(debug=True):
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
+        skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
+                                   skewness_gamma = skewness_gamma,
                                    # power
                                    power_file=power_file,
                                    power_test=power_test,

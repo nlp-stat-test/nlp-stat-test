@@ -186,9 +186,9 @@ margin: 0 auto;>
 
                 <br><br>
 
-                &alpha; (for calculating normality):
+                Significance &alpha; (for calculating normality):
                 <div class="tooltip">?
-                    <span class="tooltiptext">A threshold value for the normality test. Default value is 0.5.</span>
+                    <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.5.</span>
                 </div>
 
                 <input id="normality_alpha" name="normality_alpha" type="number" value="0.05" step="0.001"
@@ -279,7 +279,12 @@ margin: 0 auto;>
                 
             <tr>
             <td>Skewness</td>
-            <td>The data distribution {% if mean_or_median == 'median' %} exceeds {% else %} does not exceed {% endif %} the skew threshold.</td>
+            <td>The skewness measure &gamma; is {{ skewness_gamma }}. <!-- {% if mean_or_median == 'median' %} {% endif %} -->
+                This means the data distribution is
+                {% if skewness_gamma > 1 %} highly skewed
+                {% elif skewness_gamma > 0.5 %} moderately skewed
+                {% else %} roughly symmetric{% endif %}.
+            </td>
             </tr>
                 
             <tr>
