@@ -18,12 +18,15 @@ def run_sig_test(recommended_test, score, alpha, B, mu):
 	# already implemented sig tests
 	if recommended_test == 'Student t test':
 		test_stats_value, pval = stats.ttest_1samp(x,mu)
+		test_states_value = round(test_states_value,4)
 		rejection = pval<alpha
 	if recommended_test == 'Wilcoxon signed rank test':
 		test_stats_value, pval = stats.wilcoxon(x)
+		test_states_value = round(test_states_value,4)
 		rejection = pval<alpha
 	if recommended_test == 'Sign test':
 		test_stats_value, pval = sign_test(x)
+		test_states_value = round(test_states_value,4)
 		rejection = pval<alpha
 
 	# self implemented sig tests
@@ -41,7 +44,7 @@ def run_sig_test(recommended_test, score, alpha, B, mu):
 		rejection = pval<alpha
 
 
-	return((test_stats_value, pval, rejection))
+	return((test_stats_value, round(pval,4), rejection))
 
 def bootstrap_test(x, alpha, mu, B, method='mean'):
 	if method == 'mean':
