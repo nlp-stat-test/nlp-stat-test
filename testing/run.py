@@ -22,6 +22,7 @@ from logic.report import gen_report
 FOLDER = os.path.join('user')
 from logic.powerAnalysis import post_power_analysis
 import logic.powerAnalysis
+
 app = Flask(__name__)
 app.config['FOLDER'] = FOLDER
 
@@ -56,6 +57,45 @@ def calc_score_diff(score1, score2):
     return (score_diff)
 
 
+def partition_score_no_hist(score1, score2, score_diff, eval_unit_size, shuffled,
+                            randomSeed, method):
+    """
+	This function partitions the score difference with respect to the given
+	evaluation unit size. Also, the user can choose to shuffle the score difference
+	before partitioning.
+
+	@param score1, score2: original scores
+	@param score_diff: score difference, a dictionary
+	@param eval_unit_size: evaluation unit size
+	@param shuffled: a boolean value indicating whether reshuffling is done
+	@param method: how to calculate score in an evaluation unit (mean or median)
+	@return: score1_new, score2_new, score_diff_new, the partitioned scores, dictionary
+	"""
+    ind = list(score_diff.keys())  # the keys should be the same for three scores
+
+    if shuffled:
+        ind_shuffled = np.random.Random(randomSeed).shuffle(ind)
+    print(eval_unit_size)
+    ind_shuffled = np.array_split(ind, np.floor(len(ind) / eval_unit_size))
+    ind_new = 0
+
+    score1_new = {}
+    score2_new = {}
+    score_diff_new = {}
+    for i in ind_shuffled:
+        if method == "mean":
+            score1_new[ind_new] = np.array([score1[x] for x in i]).mean()
+            score2_new[ind_new] = np.array([score2[x] for x in i]).mean()
+            score_diff_new[ind_new] = np.array([score_diff[x] for x in i]).mean()
+        if method == "median":
+            score1_new[ind_new] = np.median(np.array([score1[x] for x in i]))
+            score2_new[ind_new] = np.median(np.array([score2[x] for x in i]))
+            score_diff_new[ind_new] = np.median(np.array([score_diff[x] for x in i]))
+        ind_new += 1
+
+    return ([score1_new, score2_new, score_diff_new, ind_shuffled])
+
+
 def create_test_reasons(recommended_tests):
     '''
     This function creates a dictionary of test names with reasons, given the list of test names.
@@ -75,10 +115,10 @@ def format_digits(num, sig_digits=5):
 
 def create_summary_stats_dict(tc, debug=False):
     if debug: print('Score 1: mean={}, med={}, sd={}, min={}, max={}'.format(tc.eda.summaryStat_score1.mu,
-                                                                   tc.eda.summaryStat_score1.med,
-                                                                   tc.eda.summaryStat_score1.sd,
-                                                                   tc.eda.summaryStat_score1.min_val,
-                                                                   tc.eda.summaryStat_score1.max_val))
+                                                                             tc.eda.summaryStat_score1.med,
+                                                                             tc.eda.summaryStat_score1.sd,
+                                                                             tc.eda.summaryStat_score1.min_val,
+                                                                             tc.eda.summaryStat_score1.max_val))
     summary_dict = {}
     summary_dict['score1'] = {'mean': format_digits(tc.eda.summaryStat_score1.mu),
                               'median': format_digits(tc.eda.summaryStat_score1.med),
@@ -98,10 +138,10 @@ def create_summary_stats_dict(tc, debug=False):
                                   'max': format_digits(tc.eda.summaryStat_score_diff.max_val)}
                                   '''
     summary_dict['difference'] = {'mean': format_digits(tc.eda.summaryStat_score_diff_par.mu),
-                                                'median': format_digits(tc.eda.summaryStat_score_diff_par.med),
-                                                'std.dev.': format_digits(tc.eda.summaryStat_score_diff_par.sd),
-                                                'min': format_digits(tc.eda.summaryStat_score_diff_par.min_val),
-                                                'max': format_digits(tc.eda.summaryStat_score_diff_par.max_val)}
+                                  'median': format_digits(tc.eda.summaryStat_score_diff_par.med),
+                                  'std.dev.': format_digits(tc.eda.summaryStat_score_diff_par.sd),
+                                  'min': format_digits(tc.eda.summaryStat_score_diff_par.min_val),
+                                  'max': format_digits(tc.eda.summaryStat_score_diff_par.max_val)}
     return summary_dict
 
 
@@ -324,8 +364,17 @@ def sigtest(debug=True):
         print("***** LAST TAB (from POST): {}".format(last_tab_name_clicked))
 
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        # get old dif
         score_dif = calc_score_diff(scores1, scores2)
-        if debug: print("THE SCORE_DIF:{}".format(score_dif))
+        if debug: print("THE original SCORE_DIF:{}".format(score_dif))
+        # use Partition Score to get new dif
+        partitions = partition_score_no_hist(scores1, scores2, score_dif,
+                                json.loads(request.cookies.get('eval_unit_size')),
+                                shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
+        score_dif = partitions[2]
+        if debug:
+            print("THE SCORE_DIF:{}".format(score_dif))
+            # print("Partitions:{}".format(partitions))
         test_stat_val, pval, rejection = run_sig_test(sig_test_name,  # 't'
                                                       score_dif,
                                                       float(sig_alpha),  # 0.05,
@@ -337,10 +386,10 @@ def sigtest(debug=True):
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
         # TODO: Don't need this anymore
-        sig_test_sign_permutation=request.cookies.get('sig_test_sign_permutation')
+        sig_test_sign_permutation = request.cookies.get('sig_test_sign_permutation')
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
-                                   skewness_gamma = skewness_gamma,
+                                   skewness_gamma=skewness_gamma,
                                    # specific to effect size test
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
@@ -395,10 +444,13 @@ def effectsize(debug=True):
         last_tab_name_clicked = 'Effect Size'
         fileName = request.cookies.get('fileName')
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
-        # get dif
+        # get old dif
         score_dif = calc_score_diff(scores1, scores2)
-        # todo: use Partition Score
-
+        # use Partition Score to get new dif
+        partitions = partition_score_no_hist(scores1, scores2, score_dif,
+                                json.loads(request.cookies.get('eval_unit_size')),
+                                shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
+        score_dif = partitions[2]
         previous_selected_est = request.cookies.get('eff_estimator')
 
         # todo: """                                        {% if key=='hl' %}Hodges-Lehmann Estimator
@@ -431,7 +483,6 @@ def effectsize(debug=True):
             val = calc_eff_size(est, score_dif)
             estimator_value_list.append((est, val))
 
-
         # For completing previous tabs: target_stat is 'mean' or 'median'
         previous_selected_test = request.cookies.get('sig_test_name')
         recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
@@ -440,11 +491,11 @@ def effectsize(debug=True):
         print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
-                                   skewness_gamma = skewness_gamma,
+                                   skewness_gamma=skewness_gamma,
                                    # specific to effect size test
-                                   effect_size_estimators=estimators, # just names
+                                   effect_size_estimators=estimators,  # just names
                                    eff_estimator=cur_selected_est,
-                                   estimator_value_list=estimator_value_list, # name, value pairs
+                                   estimator_value_list=estimator_value_list,  # name, value pairs
                                    eff_size_val=eff_size_val,
                                    # effect_size_estimates = estimates,
                                    # effect_estimator_dict = est_dict,
@@ -499,7 +550,13 @@ def power(debug=True):
         last_tab_name_clicked = 'Post-test Power Analysis'
         fileName = request.cookies.get('fileName')
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        # get old dif
         score_dif = calc_score_diff(scores1, scores2)
+        # use Partition Score to get new dif
+        partitions = partition_score_no_hist(scores1, scores2, score_dif,
+                                json.loads(request.cookies.get('eval_unit_size')),
+                                shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
+        score_dif = partitions[2]
         is_normal = json.loads(request.cookies.get('is_normal'))
         print("POWER: (from cookie): is_normal={}".format(is_normal))
 
@@ -511,7 +568,6 @@ def power(debug=True):
         power_num_intervals = int(request.form.get('num_intervals'))  # todo: get from form
         # if request.cookies.get('power_iterations'):
         power_iterations = int(request.form.get('power_iterations'))
-
 
         old_sig_test_name = request.cookies.get('sig_test_name')
         sig_test_name = request.form.get('power_boot_sig_test')
@@ -533,6 +589,7 @@ def power(debug=True):
             boot_B = 500
         print('In PowerAnalysis: sig_test_name={} alpha={} mu={} bootB={} pow_iter={}'.format(
             sig_test_name, alpha, mu, boot_B, power_iterations))
+        print("score dif: {}".format(score_dif))
         pow_sampsizes = post_power_analysis(sig_test_name, power_test, score_dif, power_num_intervals,
                                             dist_name='normal',  # todo: handle not normal
                                             B=power_iterations,
@@ -544,7 +601,7 @@ def power(debug=True):
 
         power_file = 'power_samplesizes.svg'
         rand = np.random.randint(10000)
-        #power_path = os.path.join(app.config['FOLDER'], power_file)
+        # power_path = os.path.join(app.config['FOLDER'], power_file)
 
         recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
@@ -552,9 +609,9 @@ def power(debug=True):
 
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
-                                   skewness_gamma = skewness_gamma,
+                                   skewness_gamma=skewness_gamma,
                                    # power
-                                   #old_sig_test_name=old_sig_test_name,
+                                   # old_sig_test_name=old_sig_test_name,
                                    power_file=power_file,
                                    power_test=power_test,
                                    power_num_intervals=power_num_intervals,
@@ -591,7 +648,7 @@ def power(debug=True):
                                    pval=request.cookies.get('pval'),
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
-                                   sig_test_name=sig_test_name #request.cookies.get('sig_test_name')
+                                   sig_test_name=sig_test_name  # request.cookies.get('sig_test_name')
                                    )
 
         resp = make_response(rendered)
@@ -607,22 +664,23 @@ def power(debug=True):
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
 def download_file():
-        options = {}
-        options["filename"] = request.cookies.get('fileName')
-        options["normality_message"] = request.cookies.get('is_normal')
-        options["skewness_message"] = "3"
-        options["test_statistic_message"] = "3"
-        options["significance_tests_table"] = "3"
-        options["significance_alpha"] = "3"
-        options["bootstrap iterations"] = "3"
-        options["expected_mean_diff"] = "3"
-        options["chosen_sig_test"] = "3"
-        options["should_reject?"] = "3"
-        options["statistic/CI"] = "3"
-        rand = np.random.randint(10000)
-        gen_report(options, str(rand))
-        return send_file("user/report.zip", as_attachment=True)
-        
+    options = {}
+    options["filename"] = request.cookies.get('fileName')
+    options["normality_message"] = request.cookies.get('is_normal')
+    options["skewness_message"] = "3"
+    options["test_statistic_message"] = "3"
+    options["significance_tests_table"] = "3"
+    options["significance_alpha"] = "3"
+    options["bootstrap iterations"] = "3"
+    options["expected_mean_diff"] = "3"
+    options["chosen_sig_test"] = "3"
+    options["should_reject?"] = "3"
+    options["statistic/CI"] = "3"
+    rand = np.random.randint(10000)
+    gen_report(options, str(rand))
+    return send_file("user/report.zip", as_attachment=True)
+
+
 @app.route('/download2')
 def download_config():
     return send_file("user/config.yml", as_attachment=True)
