@@ -360,7 +360,16 @@ margin: 0 auto;>
                                        id="target_sig_test-{{ sig_test_name }}" required
                                        onclick="show_sig_boot_div('{{ tuple[0] }}')"
                                     {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
-                                    {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}t-test{% else %}{{ tuple[0] }}{% endif %}
+                                    {% endif %} value="{{ tuple[0] }}">
+                            {% if tuple[0]=='t' %}Student t test
+                            {% elif tuple[0]=='bootstrap' %}Bootstrap
+                            {% elif tuple[0]=='permutation' %}Permutation
+                            {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                            {% elif tuple[0]=='sign' %}Sign test
+                            {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                            {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                            {% else %}{{ tuple[0] }}
+                            {% endif %}
                         </td>
                         <td>{{ tuple[1] }}</td>
                     </tr>
@@ -479,8 +488,8 @@ margin: 0 auto;>
                                     {% else %}
                                     {% endif %}
                                     {% endif %} value={{ key }}>
-                                        {% if key=='hl' %}Hodges-Lehmann
-                                            {% elif key=='wilcoxonr' %}Wilcoxon's r
+                                        {% if key=='hl' %}Hodges-Lehmann Estimator
+                                            {% elif key=='wilcoxonr' %}Wilcoxon r
                                             {% elif key=='hedgesg' %}Hedges' g
                                             {% elif key=='cohend' %}Cohen's d
                                         {% else %}{{ key }}{% endif %}
