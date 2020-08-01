@@ -390,33 +390,47 @@ def sigtest(debug=True):
 
 
 @app.route('/effectsize', methods=["GET", "POST"])
-def effectsize():
+def effectsize(debug=True):
     if request.method == 'POST':
         last_tab_name_clicked = 'Effect Size'
         fileName = request.cookies.get('fileName')
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
         # get dif
         score_dif = calc_score_diff(scores1, scores2)
+        # todo: use Partition Score
 
         previous_selected_est = request.cookies.get('eff_estimator')
 
-        # todo: check if different from previous
-        cur_selected_est = request.form.get('target_eff_test')
-
-        print('previous estimator={}, current estimator={}'.format(
-            previous_selected_est, cur_selected_est))
+        # todo: """                                        {% if key=='hl' %}Hodges-Lehmann Estimator
+        #                                             {% elif key=='wilcoxonr' %}Wilcoxon r
+        #                                             {% elif key=='hedgesg' %}Hedges' g
+        #                                             {% elif key=='cohend' %}Cohen's d"""
+        cur_selected_ests = []
+        cur_selected_est_hl = request.form.get('target_eff_test_hl')
+        if cur_selected_est_hl: cur_selected_ests.append(cur_selected_est_hl)
+        cur_selected_est_wilcoxonr = request.form.get('target_eff_test_wilcoxonr')
+        if cur_selected_est_wilcoxonr: cur_selected_ests.append(cur_selected_est_wilcoxonr)
+        cur_selected_est_hedgesg = request.form.get('target_eff_test_hedgesg')
+        if cur_selected_est_hedgesg: cur_selected_ests.append(cur_selected_est_hedgesg)
+        cur_selected_est_cohend = request.form.get('target_eff_test_cohend')
+        if cur_selected_est_cohend: cur_selected_ests.append(cur_selected_est_cohend)
+        print('currentEstimators={}:'.format(cur_selected_ests))
 
         # old:
         # (estimates, estimators) = calc_eff_size(cur_selected_test,
         #                                         effect_size_target_stat,
         #                                         score_dif)
-        # print('Estimates: {}\nEstimators: {}'.format(estimates, estimators))
-        # if len(estimators) != len(estimates):
-        #     print("Warning (effect size): {} estimators but {} estimates".format(
-        #         len(estimators), len(estimates)
-        #     ))
 
+        # Hack, todo: fix
+        cur_selected_est = cur_selected_est_cohend
         eff_size_val = calc_eff_size(cur_selected_est, score_dif)
+
+        # Build list of tuples for (estimator, value) pairs
+        estimator_value_list = []
+        for est in cur_selected_ests:
+            val = calc_eff_size(est, score_dif)
+            estimator_value_list.append((est, val))
+
 
         # For completing previous tabs: target_stat is 'mean' or 'median'
         previous_selected_test = request.cookies.get('sig_test_name')
@@ -428,8 +442,9 @@ def effectsize():
         rendered = render_template(template_filename,
                                    skewness_gamma = skewness_gamma,
                                    # specific to effect size test
-                                   effect_size_estimators=estimators,
+                                   effect_size_estimators=estimators, # just names
                                    eff_estimator=cur_selected_est,
+                                   estimator_value_list=estimator_value_list, # name, value pairs
                                    eff_size_val=eff_size_val,
                                    # effect_size_estimates = estimates,
                                    # effect_estimator_dict = est_dict,
@@ -463,6 +478,8 @@ def effectsize():
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('effect_estimator_dict', json.dumps(estimators))
+
+        resp.set_cookie('estimator_value_list', json.dumps(estimator_value_list))
         if cur_selected_est:
             resp.set_cookie('eff_estimator', cur_selected_est)
         if eff_size_val:

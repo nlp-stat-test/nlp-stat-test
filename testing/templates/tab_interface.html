@@ -50,9 +50,11 @@ function greyOut(itemName) {
 }
 </script>
 
-<script>
+
+<script> //UPLOAD BUTTON CLICK HANDLER
     // change file upload message when upload button is clicked
     window.pressed = function(){
+        console.log('UPLOAD BUTTON click handler')
     var a = document.getElementById('system_file');
     if(a.value == "")
     {
@@ -473,12 +475,15 @@ margin: 0 auto;>
     <div id='Effect Size' class="tabcontent" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative; top: -18px;">
-            <form action="/effectsize" class="form-horizontal" enctype="multipart/form-data" method="post">
+            <form   id="frmEffectSize"
+                    action="/effectsize" class="form-horizontal"
+                  onsubmit="SubmitHandler('frmEffectSize')"
+                  enctype="multipart/form-data" method="post">
                 <b>Effect Size Estimator Options</b><br><br>
                 <!-- Effect Size list of tests -->
                 {% if effect_size_estimators|length %}
 
-                <table border=1>
+                <table border=1 id="tblEffectEstimator">
 
                     <tr>
                         <th>Effect Size Estimator</th>
@@ -488,7 +493,7 @@ margin: 0 auto;>
                     {% for key, value in effect_size_estimators.items() %}
                     <tr>
                         <td>
-                            <input type="checkbox" name="target_eff_test" id="target_eff_test-{{ key }}"
+                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}"
                                     {% if eff_estimator %} {% if key==eff_estimator %} checked="checked"
                                     {% else %}
                                     {% endif %}
@@ -526,17 +531,17 @@ margin: 0 auto;>
 
                 {% endfor %} --> {% endif %}
 
+              <br><br>
 
-              <br>    <br>
               <!-- effect size Submit Button -->
-        
-                    <input type="hidden" id="da_hidden" value="hidden101">
+                    <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                     <!-- Is type=submit implied by class="btn btn-success" -->
                   <button id="ef_submit"
                           name="ef_submit"
                           type=submit
                           class="button1"
-                          onsubmit="ef_submit_func()">Run</button>
+                          onclick="GetSelectedCheckboxes('tblEffectEstimator')"
+                          >Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
         
@@ -546,21 +551,30 @@ margin: 0 auto;>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
             <p></p>
-                {% if eff_size_val %}
-                    <b>Results</b><br><br>
-                <table border="1">
-                 <tr><th>Estimator</th><th>Effect Size</th></tr>
-                        <tr><td>
-                                        {% if eff_estimator=='hl' %}Hodges-Lehmann
-                                            {% elif eff_estimator=='wilcoxonr' %}Wilcoxon's r
-                                            {% elif eff_estimator=='hedgesg' %}Hedges' g
-                                            {% elif eff_estimator=='cohend' %}Cohen's d
-                                        {% else %}{{ eff_estimator }}{% endif %}
-                        </td><td>{{ eff_size_val }}</td></tr>
+            <!-- New table to make into estimator, value instead of est, desc: -->
+                {% if estimator_value_list|length %}
+
+                <table border=1 id="tblEffectEstimator">
+
+                    <tr>
+                        <th>Effect Size Estimator</th>
+                        <th>Value</th>
+                    </tr>
+
+                    {% for key_value_tuple in estimator_value_list %}
+                    <tr>
+                        <td>
+                                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann Estimator
+                                            {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon r
+                                            {% elif key_value_tuple[0]=='hedgesg' %}Hedges' g
+                                            {% elif key_value_tuple[0]=='cohend' %}Cohen's d
+                                        {% else %}{{ key_value_tuple[0] }}{% endif %}
+                        </td>
+                        <td>{{ key_value_tuple[1] }}</td>
+                    </tr>
+                    {% endfor %}
                 </table>
                 {% endif %}
-
-
         </div>
     </div>
 
@@ -769,9 +783,56 @@ margin: 0 auto;>
             modals.forEach(make_modal);
     </script>
 
+<!-- Checkboxes (effect sizes) click handler -->
+    <script type="text/javascript">
+    // get the checkbox values from effect Sizes into an array
+    // "tblEffectEstimator" is the effect size table ID
+    function GetSelectedCheckboxes(tableName) {
+            console.log("*** IN: GetSelectedCheckbox()");
+        //Create an Array.
+        var selected = new Array();
 
+        //Reference the Table.
+        var tblCheckboxes = document.getElementById(tableName);
 
+        //Reference all the CheckBoxes in Table.
+        var chks = tblCheckboxes.getElementsByTagName("INPUT");
+
+        // Loop and push the checked CheckBox value in Array.
+        for (var i = 0; i < chks.length; i++) {
+            if (chks[i].checked) {
+                selected.push(chks[i].value);
+            }
+        }
+        // "hiddenEffectEstimators" update INPUT value
+        var hiddenInputCheckArrayID = "hiddenEffectEstimators"
+        var hiddenInputCheckArray = document.getElementById(hiddenInputCheckArrayID)
+        hiddenInputCheckArray.value = selected
+        //Display the selected CheckBox values.
+        if (selected.length > 0) {
+            console.log("Checkbox selected values: " + selected.join(","));
+            //alert("Selected values: " + selected.join(",") + " HIDDEN INPUT VALUE=" + hiddenInputCheckArray.value);
+        }
+
+        return selected
+        // what can we do with selected? we need to get it into POST on submit of the form,
+        // Can we set a hidden input value in an onSubmit handler and get that inside the python?
+        // if not, then we need to get the checkbox elements one by one.
+    };
+</script>
+
+    <!-- hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
     <script>
+        // debugging a forms submit event
+        function SubmitHandler(genericMessage) {
+            formID = "frmEffectSize"
+            var form = document.getElementById(formID);
+            var hiddenArray = form.getElementById('hiddenCheckboxArray')
+            var hiddenValue = form.getElementById('hiddenEffectsEstimators').value
+            var msg = "****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue
+            console.log(msg);
+            //alert("****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue);
+        }
         function showLastTab(tabToShow) {
           // document.getElementById("hidden").style.display="block"
           var i, tabcontent, tablinks;
@@ -833,6 +894,7 @@ margin: 0 auto;>
 
     </script>
 
+    <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
     <script>
         {% if last_tab_name_clicked %}
               window.onload = showLastTab('{{ last_tab_name_clicked }}')
