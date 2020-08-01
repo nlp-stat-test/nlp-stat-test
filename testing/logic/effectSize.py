@@ -23,17 +23,17 @@ def calc_eff_size(eff_size_ind, score):
 	@param: score, the input score difference, dictionary
 
 	"""
-	if eff_size_ind == "Cohen d":
+	if eff_size_ind == "cohend":
 		return(round(cohend(score),4))
 
-	if eff_size_ind == "Hedges d":
+	if eff_size_ind == "hedgesg":
 		d = cohend(score)
 		return(round(hedgesg(d,score),4))
 
-	if eff_size_ind == "Wilcoxon r":
+	if eff_size_ind == "wilcoxonr":
 		return(round(wilcoxon_r(score),4))
 
-	if eff_size_ind == "Hodges-Lehmann":
+	if eff_size_ind == "hl":
 		return(round(hodgeslehmann(score),4))
 
 
