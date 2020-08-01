@@ -663,7 +663,7 @@ def power(debug=True):
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
-def download_file(markdown_only=False):
+def download_file(markdown_only=True):
     '''
 
     @param markdown_only: Set this to true to debug the case in which you don't want
