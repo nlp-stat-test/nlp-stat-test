@@ -2,7 +2,7 @@
 
 Hi there 👋
 
-Welcome to the NLPStatTest project. You can view a short demo of this system at https://vimeo.com/443074846
+Welcome to the NLPStatTest project. You can view a short demo (4 minutes) of this system at https://vimeo.com/443074846
 
 ## How to run NLPStatTest locally using the web UI
 1. Clone or download this repository.
