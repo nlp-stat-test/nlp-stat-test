@@ -37,6 +37,3 @@
     - the null hypothesis
 
 
-
-
-
