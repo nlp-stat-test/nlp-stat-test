@@ -141,11 +141,11 @@ def skew_test(score):
 	skewness = stats.skew(x)
 
 	if abs(skewness)>1:
-		return("median")
+		return([round(skewness,4),"median"])
 	elif abs(skewness)<1 and abs(skewness)>0.5:
-		return("median")
+		return([round(skewness,4),"median"])
 	elif abs(skewness)<0.5:
-		return("mean")
+		return([round(skewness,4),"mean"])
 
 
 def recommend_test(test_param,is_norm):
