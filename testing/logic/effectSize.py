@@ -89,15 +89,13 @@ def wilcoxon_r(score):
     return(abs(z_score/np.sqrt(len(z))))
 
 
-
 def hodgeslehmann(score):
-	z = np.array(list(score.values()))
-	z_pair = list(itertools.combinations(z, 2))
-
-	z_pair_average = []
-	for i in z_pair:
-		z_pair_average.append(np.mean(i))
-
-	return(np.median(z_pair_average))
+    score_temp = score.copy()
+    score_pair_avg = []
+    for i in score.keys():
+        for j in range(i,len(score_temp.keys())):
+            score_pair_avg.append(np.mean([score[i],score_temp[j]]))
+    
+    return(round(np.median(score_pair_avg),4))
 
 
