@@ -2,12 +2,13 @@
 
 Hi there 👋
 
-Welcome to the NLPStatTest project. You can view a short demo of this system at https://vimeo.com/443074846
+Welcome to the NLPStatTest project. You can view a short demo (4 minutes) of this system at https://vimeo.com/443074846
 
 ## How to run NLPStatTest locally using the web UI
 1. Clone or download this repository.
-2. The web server components are built using Python 3 including Flask. Install the Python requirements listed in requirements.txt
-3. run the following command to start the web server:
+2. The web server components require Python 3 including Flask. Install the Python requirements listed in requirements.txt:
+> pip install -r requirements.txt
+3. Run `run.py` to start the web server:
 > python run.py
 
 You'll see output like the following:
