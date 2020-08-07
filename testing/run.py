@@ -676,7 +676,7 @@ def download_file(markdown_only=True):
     options["skewness_message"] = request.cookies.get('skewness_gamma')
     options["test_statistic_message"] = \
         request.cookies.get('mean_or_median') # or is this 'summary_stats_dict'
-    options["significance_tests_table"] = request.cookies.get('recommended_test_reasons')
+    options["significance_tests_table"] = json.loads(request.cookies.get('recommended_test_reasons'))
     options["significance_alpha"] = request.cookies.get('sig_test_alpha')
     options["bootstrap iterations"] = "200"
     # This was mu, which we're not letting the user define: options["expected_mean_diff"] = "0"
