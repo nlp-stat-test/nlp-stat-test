@@ -89,13 +89,29 @@ def wilcoxon_r(score):
     return(abs(z_score/np.sqrt(len(z))))
 
 
-def hodgeslehmann(score):
+def hodgeslehmann(score, conf_int = False, conf_lev = 0.05):
     score_temp = score.copy()
     score_pair_avg = []
     for i in score.keys():
-        for j in range(i,len(score_temp.keys())):
+        for j in range(i,len(score_temp.keys())): #i<=j
             score_pair_avg.append(np.mean([score[i],score_temp[j]]))
-    
-    return(round(np.median(score_pair_avg),4))
+            
+    if conf_int:
+        N = len(score.values())
+        M = N*(N+1)/2
+        score_pair_avg_sorted = sorted(score_pair_avg)
+        t_low = np.floor(stats.norm.ppf(conf_lev/2)*np.sqrt(M*(N+2)/12)\
+                         +(M/2))
+        gamma_low = score_pair_avg_sorted[int(t_low+1)]
+        
+        t_upp = np.ceil(stats.norm.ppf(1-conf_lev/2)*np.sqrt(M*(N+2)/12)\
+                        +(M/2))
+        gamma_up = score_pair_avg_sorted[int(t_upp)]
+        return((round(np.median(score_pair_avg),4),\
+                (round(gamma_low,4),round(gamma_up,4))))
+        
+        
+    #return((round(np.median(score_pair_avg),4),None))
+    return(round(np.median(score_pair_avg),4)) # TO-FIX
 
 
