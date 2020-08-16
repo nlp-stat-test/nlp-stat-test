@@ -58,8 +58,9 @@ def run_sig_test(recommended_test, score, alpha, B, mu, alternative, conf_int=Fa
 			CI = CI_median(x, alpha, alternative)
 
 
-
-	return((test_stats_value, pval, CI, rejection))
+	
+	#return((test_stats_value, pval, CI, rejection)) # to fix
+	return((test_stats_value, pval, rejection))
 
 
 
