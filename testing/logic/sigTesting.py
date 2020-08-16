@@ -7,7 +7,7 @@ import effectSize
 
 
 
-def run_sig_test(recommended_test, score, alpha, B, mu, alternative, conf_int=False):
+def run_sig_test(recommended_test, score, alpha, B, mu, alternative="two-sided", conf_int=False):
 
 	if isinstance(score, dict): # check if score is a dict
 		x = np.array(list(score.values()))
