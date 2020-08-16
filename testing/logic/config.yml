@@ -1,0 +1,31 @@
+# user's config file for testing proc
+
+## data analysis:
+eval_unit_size: 1
+eval_unit_met: mean
+shuffled: False
+random_seed: 13
+normal_test_alpha: 0.05
+
+
+## sig testing
+sig_test_alpha: 0.05
+sig_boot_perm_B: 500
+mu: 3 # null hypothesis
+h1: less # alternative hypothesis
+
+## effect size
+eff_size_ind: cohend
+
+## power analysis
+power_alpha: 0.05
+power_method: montecarlo
+power_dist_name: normal
+power_num_of_subsample: 10 # number of simulations 
+power_B: 50
+
+
+
+## output
+fig_output_dir: figures
+#report_output_dir: report
