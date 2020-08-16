@@ -49,18 +49,18 @@ def hedgesg(d,score):
 	return(d*J)
 
 
+def handling_ties(z,z_rank):
+    D = defaultdict(list)
+    for i,item in enumerate(z_rank):
+        D[item].append(i)
+    D = {k:v for k,v in D.items() if len(v)>1}
+    tie_list = list(D.values())
+    ties_ind = [item for sublist in tie_list for item in sublist]
+    ties = [z[i] for i in ties_ind]
+    return(ties)
 
 def wilcoxon_r(score):
-    
-    def handling_ties(z_rank):
-        D = defaultdict(list)
-        for i,item in enumerate(z_rank):
-            D[item].append(i)
-        D = {k:v for k,v in D.items() if len(v)>1}
-        tie_list = list(D.values())
-        ties_ind = [item for sublist in tie_list for item in sublist]
-        ties = [z[i] for i in ties_ind]
-        return(ties)
+
     
     if isinstance(score,dict):
         z = list(score.values())
@@ -71,7 +71,7 @@ def wilcoxon_r(score):
     
     z_rank = stats.rankdata(abs(z),method='average')
 
-    ties = handling_ties(z_rank)
+    ties = handling_ties(z,z_rank)
 
     w_p = 0
     w_m = 0
@@ -83,8 +83,8 @@ def wilcoxon_r(score):
             w_m+=z_rank[i]
     
     mu_w = len(z)*(len(z)+1)/4
-    sigma_w = np.sqrt(len(z)*(len(z)+1)*(2*len(z)+1)/24-sum((np.array(ties)**3-np.array(ties))/48))
-    z_score = (np.min([w_p,w_m])-mu_w)/sigma_w
+    sigma_w = np.sqrt((len(z)*(len(z)+1)*(2*len(z)+1)-0.5*sum((np.array(ties)*(np.array(ties)+1)*(np.array(ties)-1)**3-np.array(ties))))/24)
+    z_score = (w_p-mu_w)/sigma_w
 
     return(abs(z_score/np.sqrt(len(z))))
 

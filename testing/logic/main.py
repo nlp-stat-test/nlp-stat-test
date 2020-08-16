@@ -54,7 +54,10 @@ if __name__ == '__main__':
 	#report_output_dir = str(config['report_output_dir'])
 
 	# null hypothesis
-	mu = float(sysconfig['mu'])
+	mu = float(config['mu'])
+
+	# h1
+	h1 = str(config['h1'])
 
 
 	### read score file
@@ -130,12 +133,14 @@ if __name__ == '__main__':
 
 	# run sig test
 	print("------ Testing ------")
-	test_stat, pval, rejection = sigTesting.run_sig_test(\
+	test_stat, pval, CI, rejection = sigTesting.run_sig_test(\
 		recommended_test = testCase_new.sigTest.testName, 
 		score = testCase_new.score_diff_par, 
 		alpha = testCase_new.sigTest.alpha, 
 		B = testCase_new.sigTest.B, 
-		mu=mu)
+		mu=mu,
+		alternative = h1,
+		conf_int = True)
 
 	testCase_new.sigTest.test_stat = test_stat
 	testCase_new.sigTest.pval = pval
@@ -164,6 +169,7 @@ if __name__ == '__main__':
 		alpha = testCase_new.power.alpha,
 		mu = mu,
 		output_dir = fig_output_dir,
+		alternative = h1,
 		boot_B = testCase_new.sigTest.B)
 
 	sys.stderr.write("Finished power analysis. Runtime: --- %s seconds ---" % (time.time() - start_time) + '\n')
@@ -177,6 +183,7 @@ if __name__ == '__main__':
 	print('test statistic/CI: '+str(testCase_new.sigTest.test_stat))
 	print('p-value: '+str(testCase_new.sigTest.pval))
 	print('rejection of H0: '+str(testCase_new.sigTest.rejection))
+	print('CI: '+str(CI))
 
 
 	print('-----------')
