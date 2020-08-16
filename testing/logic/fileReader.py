@@ -17,11 +17,12 @@ def read_score_file(score_file):
 	ind = 0
 	for i in score_lines:
 		line_tokens = i.split()
-		if len(line_tokens) != 2:
-			sys.stderr.write("Input file not in the correct format (separated by a whitespace)!")
-			return
-
-		score1[ind] = float(line_tokens[0])
-		score2[ind] = float(line_tokens[1])
-		ind += 1
+		if len(line_tokens) > 0:
+			if len(line_tokens) != 2:
+				sys.stderr.write("Input file not in the correct format (separated by a whitespace)!")
+				return
+			else:
+				score1[ind] = float(line_tokens[0])
+				score2[ind] = float(line_tokens[1])
+				ind += 1
 	return([score1,score2])
