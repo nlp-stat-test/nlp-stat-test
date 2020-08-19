@@ -3,8 +3,6 @@
 import numpy as np
 import random
 from scipy import stats
-import itertools
-from collections import defaultdict
 
 
 """
@@ -50,8 +48,10 @@ def hedgesg(d,score):
 
 
 def handling_ties(z,z_rank):
-    D = defaultdict(list)
+    D = {}
     for i,item in enumerate(z_rank):
+        if item not in D:
+            D[item] = []
         D[item].append(i)
     D = {k:v for k,v in D.items() if len(v)>1}
     tie_list = list(D.values())
@@ -60,8 +60,6 @@ def handling_ties(z,z_rank):
     return(ties)
 
 def wilcoxon_r(score):
-
-    
     if isinstance(score,dict):
         z = list(score.values())
     else:

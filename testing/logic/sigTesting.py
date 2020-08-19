@@ -1,7 +1,8 @@
 # imports
 import numpy as np
 from scipy import stats
-import logic.effectSize
+import effectSize
+#import logic.effectSize
 #from statsmodels.stats.descriptivestats import sign_test
 
 
@@ -27,13 +28,14 @@ def run_sig_test(recommended_test, score, alpha, B, mu, alternative="two-sided",
 		rejection = pval<alpha
 
 	if recommended_test == 'wilcoxon':
-		x = x - mu
+		#x = x - mu
 		test_stats_value, pval = wilcoxon_test(x, alpha, mu, alternative)
 		if conf_int:
 			CI = CI_wilcoxon(score, alpha, alternative)  #adjust for mu?
 		rejection = pval<alpha
 
 	if recommended_test == 'sign':
+
 		test_stats_value, pval = sign_test(x, alpha, mu, alternative)
 		if conf_int:
 			CI = CI_median(x, alpha, alternative)
@@ -59,8 +61,8 @@ def run_sig_test(recommended_test, score, alpha, B, mu, alternative="two-sided",
 
 
 	
-	#return((test_stats_value, pval, CI, rejection)) # to fix
-	return((test_stats_value, pval, rejection))
+	return((test_stats_value, pval, CI, rejection)) # to fix
+	#return((test_stats_value, pval, rejection))
 
 
 
@@ -109,7 +111,8 @@ def CI_median(x, alpha, alternative):
 		CI = (x_sorted[int(round(n/2-stats.norm.ppf(1-alpha)*np.sqrt(n)/2))],float('inf'))
 
 	if alternative == "two-sided":
-		CI = (x_sorted[int(round(n/2-stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))],x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))])
+		CI = (x_sorted[int(round(n/2-stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))],\
+			x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))])
 
 	return(CI)
 
@@ -243,7 +246,7 @@ def wilcoxon_test(x, alpha, delta, alternative):
 
 	x_rank = stats.rankdata(abs(x),method='average')
 
-	ties = logic.effectSize.handling_ties(x, x_rank)
+	ties = effectSize.handling_ties(x, x_rank) #logic.
 
 	w_p = 0
 	w_m = 0

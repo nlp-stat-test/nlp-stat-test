@@ -112,7 +112,12 @@ if __name__ == '__main__':
 
 
 	# recommend tests
-	recommended_tests = dataAnalysis.recommend_test(testCase_new.eda.testParam,testCase_new.eda.normal)
+	list_of_tests = dataAnalysis.recommend_test(testCase_new.eda.testParam,testCase_new.eda.normal)
+
+	recommended_test_list = []
+	for i,j in list_of_tests.items():
+		if j>0:
+			recommended_test_list.append(i)
 
 
 	print('Sample size after partitioning is: '+str(testCase_new.sample_size))
@@ -121,9 +126,8 @@ if __name__ == '__main__':
 	print('testing parameter: '+testCase_new.eda.testParam)
 
 	print('Recommended tests are:')
-	for i in recommended_tests:
-		print("test name: "+str(i[0]))
-		print("----- reason: "+str(i[1]))
+	for i in recommended_test_list:
+		print("test name: "+str(i))
 		print("=============")
 
 	testCase_new.sigTest.testName= input("Please choose a test:\n")
