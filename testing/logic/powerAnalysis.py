@@ -8,8 +8,8 @@ from scipy import stats
 from statsmodels.stats.descriptivestats import sign_test
 import matplotlib
 
-import sigTesting
-#import logic.sigTesting
+#import sigTesting
+import logic.sigTesting
 
 
 matplotlib.use('Svg')
@@ -46,7 +46,7 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 					for j in range(0,len(z_b)):
 						z_b_dict[j] = z_b[j]
 
-					(test_stats, pval, CI, rejection) = sigTesting.run_sig_test("t", z_b_dict, alpha, boot_B, mu, alternative) # TO-FIX add CI
+					(test_stats, pval, CI, rejection) = logic.sigTesting.run_sig_test("t", z_b_dict, alpha, boot_B, mu, alternative) # TO-FIX add CI
 					if rejection:
 						count+=1
 				power_sampsizes[i] = float(count)/B
@@ -62,7 +62,7 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 				z_b_dict = {}
 				for j in range(0,len(z_b)):
 					z_b_dict[j] = z_b[j]
-				(test_stats, pval, CI, rejection) = sigTesting.run_sig_test(sig_test_name, z_b_dict, alpha, boot_B, mu, alternative) # TO-FIX add CI
+				(test_stats, pval, CI, rejection) = logic.sigTesting.run_sig_test(sig_test_name, z_b_dict, alpha, boot_B, mu, alternative) # TO-FIX add CI
 				if rejection:
 					count+=1
 			power_sampsizes[i] = float(count)/B
