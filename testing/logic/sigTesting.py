@@ -1,8 +1,8 @@
 # imports
 import numpy as np
 from scipy import stats
-import effectSize
-#import logic.effectSize
+#import effectSize
+import logic.effectSize
 #from statsmodels.stats.descriptivestats import sign_test
 
 
@@ -246,7 +246,7 @@ def wilcoxon_test(x, alpha, delta, alternative):
 
 	x_rank = stats.rankdata(abs(x),method='average')
 
-	ties = effectSize.handling_ties(x, x_rank) #logic.
+	ties = logic.effectSize.handling_ties(x, x_rank) #logic.
 
 	w_p = 0
 	w_m = 0
