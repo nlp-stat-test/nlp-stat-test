@@ -121,7 +121,6 @@ def create_test_reasons(recommended_tests, test_statistic='mean'):
                     'and does not assume normality.'.format(test_statistic)
                 recommended_list.append((k, recommended_tests[k]))
             else:
-                # TODO: mean as reason
                 recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
                 not_recommended_list.append((k, recommended_tests[k]))
         elif k=='bootstrap':
@@ -130,18 +129,18 @@ def create_test_reasons(recommended_tests, test_statistic='mean'):
                     'The bootstrap test based on t ratios does not assume normality, and thus is appropriate for testing for mean difference.'
                     recommended_list.append((k, recommended_tests[k]))
             else:
-                # TODO: mean as reason
                 recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
                 not_recommended_list.append((k, recommended_tests[k]))
         elif k=='sign':
             if v > 0:
-                if test_statistic == 'mean':
+                if test_statistic == 'mean':  
+			# allowed but not preferred
                     recommended_tests[k] = \
                     'The (exact) sign test can be used for this case, but it has relatively low statistical power due \
                     to loss of information. Also, the null hypothesis is that the median is 0.'
-                else:
+                else: # 'median'
                     recommended_tests[k] = \
-                    'The The sign test is appropriate for testing for median, ' \
+                    'The sign test is appropriate for testing for median, ' \
                     'but it has relatively low statistical power due to loss of information.'
                 recommended_list.append((k, recommended_tests[k]))
             else:
@@ -150,7 +149,7 @@ def create_test_reasons(recommended_tests, test_statistic='mean'):
         elif k=='wilcoxon':
             if v > 0:
                 recommended_tests[k] = \
-                'The Wilcoxon signed-rank test is appropriate for comparing medians.'
+                'The Wilcoxon signed-rank test is appropriate for comparing means or comparing medians.'
                 recommended_list.append((k, recommended_tests[k]))
             else:
                 recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
