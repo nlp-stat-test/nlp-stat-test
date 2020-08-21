@@ -112,76 +112,16 @@ def create_test_reasons(recommended_tests, test_statistic='mean'):
                                                  reverse=True,
                                                  key=lambda item: item[1])}
     recommended_list = []
+    not_preferred_list = []
     not_recommended_list = []
     for k, v in recommended_tests.items():
-        if k=='permutation':
-            if v > 0:
-                recommended_tests[k] = \
-                    'The sign test calibrated by permutation based on {} is nonparametric ' \
-                    'and does not assume normality.'.format(test_statistic)
-                recommended_list.append((k, recommended_tests[k]))
+            if v[0] > 0:
+                recommended_list.append((k, v[1]))
+            elif v[0] == 0:
+                not_preferred_list.append((k, v[1]))
             else:
-                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
-                not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='bootstrap':
-            if v > 0:
-                    recommended_tests[k] = \
-                    'The bootstrap test based on t ratios does not assume normality, and thus is appropriate for testing for mean difference.'
-                    recommended_list.append((k, recommended_tests[k]))
-            else:
-                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
-                not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='sign':
-            if v > 0:
-                if test_statistic == 'mean':  
-			# allowed but not preferred
-                    recommended_tests[k] = \
-                    'The (exact) sign test can be used for this case, but it has relatively low statistical power due \
-                    to loss of information. Also, the null hypothesis is that the median is 0.'
-                else: # 'median'
-                    recommended_tests[k] = \
-                    'The sign test is appropriate for testing for median, ' \
-                    'but it has relatively low statistical power due to loss of information.'
-                recommended_list.append((k, recommended_tests[k]))
-            else:
-                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
-                not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='wilcoxon':
-            if v > 0:
-                recommended_tests[k] = \
-                'The Wilcoxon signed-rank test is appropriate for comparing means or comparing medians.'
-                recommended_list.append((k, recommended_tests[k]))
-            else:
-                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
-                not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='t':
-            if v > 0:
-                    recommended_tests[k] = \
-                    'The student t test is most appropriate for a normal sample and has the highest statistical power.'
-                    recommended_list.append((k, recommended_tests[k]))
-            else:
-                    recommended_tests[k] = 'Not recommended. The student t test requires a normal distribution'
-                    not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='bootstrap_med':
-            if v > 0:
-                recommended_tests[k] =\
-                'The bootstrap test based on median is appropriate for testing for median.'
-                recommended_list.append((k, recommended_tests[k]))
-            else:
-                recommended_tests[k] =\
-                'Not recommended. If the distribution is normal, use the t-test. Otherwise, the bootstrap test based on t ratios should be applied if testing for mean difference.'
-                not_recommended_list.append((k, recommended_tests[k]))
-        elif k=='permutation_med':
-            if v > 0:
-                recommended_tests[k] =\
-                'The sign test calibrated by permutation based on median difference is appropriate for testing for median.'
-                recommended_list.append((k, recommended_tests[k]))
-            else:
-
-                recommended_tests[k] =\
-                'Not recommended. If the distribution is normal, user the t-test. Otherwise, the use sign test calibrated by permutation based on mean difference.'
-                not_recommended_list.append((k, recommended_tests[k]))
-    return recommended_tests, recommended_list, not_recommended_list
+                not_recommended_list.append((k, v[1]))
+    return recommended_list, not_preferred_list, not_recommended_list
 
 
 def format_digits(num, sig_digits=5):
@@ -242,7 +182,8 @@ def homepage(debug=True):
         print('eval_unit_stat={}'.format(eval_unit_stat))
 
         # normality
-        normality_alpha = request.form.get('normality_alpha')
+        normality_alpha = float(request.form.get('normality_alpha'))
+        print('NORMALITY_ALPHA (from form)={}'.format(normality_alpha))
         seed = request.form.get('seed')
         if not seed:
             shuffle = False
@@ -305,19 +246,18 @@ def homepage(debug=True):
 
             # ---------------normality test
             # todo: add alpha parameter
-            is_normal = normality_test(score_diff_par[2], alpha=0.05)
-            print('DA: is_normal={}'.format(is_normal))
+            is_normal = normality_test(score_diff_par[2], alpha=normality_alpha)
             # --------------Recommended Significance Tests -------------------------
             recommended_tests = recommend_test(mean_or_median, is_normal)
 
             # create_test_reasons returns a list of 3
-            (recommended_tests_reasons, recommended_tests, not_recommended_tests) = \
+            ( recommended_tests, not_preferred_tests, not_recommended_tests) = \
                 create_test_reasons(recommended_tests)
 
             if debug:
-                print("Reasons Dict: {}".format(recommended_tests_reasons))
-                print("Recommended List: {}".format(recommended_tests))
-                print("Not Recommended List: {}".format(not_recommended_tests))
+                print("Recommended: {}".format(recommended_tests))
+                print("Appropriate (not preferred): {}".format(not_preferred_tests))
+                print("Inappropriate: {}".format(not_recommended_tests))
 
             USE_JSON = False
             if USE_JSON:
@@ -350,7 +290,7 @@ def homepage(debug=True):
                                            is_normal=is_normal,  # True if normal, False if not.
                                            recommended_tests=recommended_tests,  # list of tuples
                                            not_recommended_tests=not_recommended_tests, # list of tuples
-                                           recommended_tests_reasons=recommended_tests_reasons,  # dict with reasons
+                                           not_preferred_tests=not_preferred_tests,  # list of tuples
                                            rand=rand,  # rand is for image URL to force reload (avoid caching)
                                            # specific to effect size test
                                            effect_size_estimators=estimators,
@@ -382,7 +322,7 @@ def homepage(debug=True):
                 resp.set_cookie('sig_test_heading', sig_test_heading)
                 resp.set_cookie('recommended_tests', json.dumps(recommended_tests))
                 resp.set_cookie('not_recommended_tests', json.dumps(not_recommended_tests))
-                resp.set_cookie('recommended_test_reasons', json.dumps(recommended_tests_reasons))
+                resp.set_cookie('not_preferred_tests', json.dumps(not_preferred_tests))
 
                 resp.set_cookie('hist_score1_file', 'hist_score1_partitioned.svg')
                 resp.set_cookie('hist_score2_file', 'hist_score2_partitioned.svg')
