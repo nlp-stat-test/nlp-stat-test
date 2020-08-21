@@ -417,7 +417,7 @@ def permutation_test(x, alpha, delta, B, alternative, method='mean'):
 				if mu_b > mu_ob:
 					count+=1
 			if alternative == "two-sided":
-				if abs(mu_b)>abs(mu):
+				if abs(mu_b)>abs(mu_ob):
 					count+=1
 
 	pval = float(count+1)/(B+1)

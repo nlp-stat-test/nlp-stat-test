@@ -96,16 +96,93 @@ def partition_score_no_hist(score1, score2, score_diff, eval_unit_size, shuffled
     return ([score1_new, score2_new, score_diff_new, ind_shuffled])
 
 
-def create_test_reasons(recommended_tests):
+def create_test_reasons(recommended_tests, test_statistic='mean'):
     '''
     This function creates a dictionary of test names with reasons, given the list of test names.
     @param recommended_tests: List of tuples [('t', "t because..."), ('bootstrap', 'bootstrap because...')]
     @return: Dictionary of test names with reasons as the values
     '''
-    test_reasons = {}
-    for test in recommended_tests:  # test is a tuple (name, reason)
-        test_reasons[test[0]] = test[1]
-    return test_reasons
+    #test_reasons = {}
+    #for test in recommended_tests:  # test is a tuple (name, reason)
+    #    test_reasons[test[0]] = test[1]
+    #return test_reasons
+
+    # sort based on reverse order
+    recommended_tests = {k: v for k, v in sorted(recommended_tests.items(),
+                                                 reverse=True,
+                                                 key=lambda item: item[1])}
+    recommended_list = []
+    not_recommended_list = []
+    for k, v in recommended_tests.items():
+        if k=='permutation':
+            if v > 0:
+                recommended_tests[k] = \
+                    'The sign test calibrated by permutation based on {} is nonparametric ' \
+                    'and does not assume normality.'.format(test_statistic)
+                recommended_list.append((k, recommended_tests[k]))
+            else:
+                # TODO: mean as reason
+                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
+                not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='bootstrap':
+            if v > 0:
+                    recommended_tests[k] = \
+                    'The bootstrap test based on t ratios does not assume normality, and thus is appropriate for testing for mean difference.'
+                    recommended_list.append((k, recommended_tests[k]))
+            else:
+                # TODO: mean as reason
+                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
+                not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='sign':
+            if v > 0:
+                if test_statistic == 'mean':
+                    recommended_tests[k] = \
+                    'The (exact) sign test can be used for this case, but it has relatively low statistical power due \
+                    to loss of information. Also, the null hypothesis is that the median is 0.'
+                else:
+                    recommended_tests[k] = \
+                    'The The sign test is appropriate for testing for median, ' \
+                    'but it has relatively low statistical power due to loss of information.'
+                recommended_list.append((k, recommended_tests[k]))
+            else:
+                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
+                not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='wilcoxon':
+            if v > 0:
+                recommended_tests[k] = \
+                'The Wilcoxon signed-rank test is appropriate for comparing medians.'
+                recommended_list.append((k, recommended_tests[k]))
+            else:
+                recommended_tests[k] = 'Not recommended. If the distribution is normal, use the t-test.'
+                not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='t':
+            if v > 0:
+                    recommended_tests[k] = \
+                    'The student t test is most appropriate for a normal sample and has the highest statistical power.'
+                    recommended_list.append((k, recommended_tests[k]))
+            else:
+                    recommended_tests[k] = 'Not recommended. The student t test requires a normal distribution'
+                    not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='bootstrap_med':
+            if v > 0:
+                recommended_tests[k] =\
+                'The bootstrap test based on median is appropriate for testing for median.'
+                recommended_list.append((k, recommended_tests[k]))
+            else:
+                recommended_tests[k] =\
+                'Not recommended. If the distribution is normal, use the t-test. Otherwise, the bootstrap test based on t ratios should be applied if testing for mean difference.'
+                not_recommended_list.append((k, recommended_tests[k]))
+        elif k=='permutation_med':
+            if v > 0:
+                recommended_tests[k] =\
+                'The sign test calibrated by permutation based on median difference is appropriate for testing for median.'
+                recommended_list.append((k, recommended_tests[k]))
+            else:
+
+                recommended_tests[k] =\
+                'Not recommended. If the distribution is normal, user the t-test. Otherwise, the use sign test calibrated by permutation based on mean difference.'
+                not_recommended_list.append((k, recommended_tests[k]))
+    return recommended_tests, recommended_list, not_recommended_list
 
 
 def format_digits(num, sig_digits=5):
@@ -146,7 +223,7 @@ def create_summary_stats_dict(tc, debug=False):
 
 
 @app.route('/', methods=["GET", "POST"])
-def homepage(debug=False):
+def homepage(debug=True):
     if request.method == 'POST':
         # ------- Test if 'last_tab' was sent
         last_tab_clicked = request.form.get('last_tab')
@@ -226,17 +303,22 @@ def homepage(debug=False):
             # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
             mean_or_median = skew_test(score_diff_par[2])[1]
             skewness_gamma = skew_test(score_diff_par[2])[0]
+
             # ---------------normality test
             # todo: add alpha parameter
             is_normal = normality_test(score_diff_par[2], alpha=0.05)
             print('DA: is_normal={}'.format(is_normal))
             # --------------Recommended Significance Tests -------------------------
             recommended_tests = recommend_test(mean_or_median, is_normal)
-            print(recommended_tests)
-            # recommended tests reasons (temp function)
-            recommended_tests_reasons = create_test_reasons(recommended_tests)
 
-            if debug: print(recommended_tests_reasons)
+            # create_test_reasons returns a list of 3
+            (recommended_tests_reasons, recommended_tests, not_recommended_tests) = \
+                create_test_reasons(recommended_tests)
+
+            if debug:
+                print("Reasons Dict: {}".format(recommended_tests_reasons))
+                print("Recommended List: {}".format(recommended_tests))
+                print("Not Recommended List: {}".format(not_recommended_tests))
 
             USE_JSON = False
             if USE_JSON:
@@ -267,7 +349,8 @@ def homepage(debug=False):
                                            sigtest_heading=sig_test_heading,
                                            mean_or_median=mean_or_median,  # 'mean' if not skewed, 'median' if skewed.
                                            is_normal=is_normal,  # True if normal, False if not.
-                                           recommended_tests=recommended_tests,  # this is a list.
+                                           recommended_tests=recommended_tests,  # list of tuples
+                                           not_recommended_tests=not_recommended_tests, # list of tuples
                                            recommended_tests_reasons=recommended_tests_reasons,  # dict with reasons
                                            rand=rand,  # rand is for image URL to force reload (avoid caching)
                                            # specific to effect size test
@@ -298,10 +381,9 @@ def homepage(debug=False):
                 resp.set_cookie('is_normal', json.dumps(is_normal))
 
                 resp.set_cookie('sig_test_heading', sig_test_heading)
-                serialized_recommended_tests = json.dumps(recommended_tests)
-                serialized_recommended_tests_reasons = json.dumps(recommended_tests_reasons)
-                resp.set_cookie('recommended_tests', serialized_recommended_tests)
-                resp.set_cookie('recommended_test_reasons', serialized_recommended_tests_reasons)
+                resp.set_cookie('recommended_tests', json.dumps(recommended_tests))
+                resp.set_cookie('not_recommended_tests', json.dumps(not_recommended_tests))
+                resp.set_cookie('recommended_test_reasons', json.dumps(recommended_tests_reasons))
 
                 resp.set_cookie('hist_score1_file', 'hist_score1_partitioned.svg')
                 resp.set_cookie('hist_score2_file', 'hist_score2_partitioned.svg')
@@ -349,6 +431,7 @@ def sigtest(debug=True):
         recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
         fileName = request.cookies.get('fileName')
         # ------- Get form data
+        show_non_recommended = request.form.get('checkbox_show_non_recommended')
         sig_test_name = request.form.get('target_sig_test')
         sig_alpha = request.form.get('significance_level')
         mu = 0  # float(request.form.get('mu'))
@@ -375,18 +458,17 @@ def sigtest(debug=True):
         if debug:
             print("THE SCORE_DIF:{}".format(score_dif))
             # print("Partitions:{}".format(partitions))
-        test_stat_val, pval, rejection = run_sig_test(sig_test_name,  # 't'
+        test_stat_val, pval, CI, rejection = run_sig_test(sig_test_name,  # 't'
                                                       score_dif,
                                                       float(sig_alpha),  # 0.05,
-                                                      B=sig_boot_iterations,  # todo: B_boot default 2000
-                                                      mu=mu)  # todo: mu default 0
-        if debug: print("test_stat_val={}, pval={}, rejection={}".format(test_stat_val, pval, rejection))
+                                                      B=sig_boot_iterations,
+                                                      conf_int=True,
+                                                      mu=mu)
+        if debug: print("test_stat_val={}, pval={}, CI={}, rejection={}".format(test_stat_val, pval, CI, rejection))
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
-        # TODO: Don't need this anymore
-        sig_test_sign_permutation = request.cookies.get('sig_test_sign_permutation')
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
                                    skewness_gamma=skewness_gamma,
@@ -407,7 +489,9 @@ def sigtest(debug=True):
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    recommended_tests=recommended_tests,
+                                   not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    recommended_tests_reasons=recommended_test_reasons,
+                                   show_non_recommended=show_non_recommended,
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
@@ -417,18 +501,25 @@ def sigtest(debug=True):
                                    mu=mu,
                                    sig_boot_iterations=sig_boot_iterations,
                                    sig_test_stat_val=test_stat_val,
+                                   CI=CI,
                                    pval=pval,
                                    rejectH0=rejection,
                                    sig_alpha=sig_alpha,
-                                   sig_test_name=sig_test_name,
-                                   sig_test_sign_permutation=sig_test_sign_permutation,
+                                   sig_test_name=sig_test_name
                                    )
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('sig_test_name', sig_test_name)
         resp.set_cookie('sig_test_alpha', sig_alpha)
-        resp.set_cookie('sig_test_stat_val', json.dumps(test_stat_val))
-        print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(test_stat_val)))
+        if test_stat_val:
+            resp.set_cookie('sig_test_stat_val', json.dumps(float(test_stat_val)))
+            print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(float(test_stat_val))))
+        if CI:
+            resp.set_cookie('CI', json.dumps(CI))
+        if show_non_recommended:
+            resp.set_cookie('show_non_recommended', show_non_recommended)
+        else:
+            resp.set_cookie('show_non_recommended', '')
         resp.set_cookie('sig_boot_iterations', str(sig_boot_iterations))
         resp.set_cookie('mu', str(mu))
         resp.set_cookie('pval', str(pval))
@@ -512,6 +603,8 @@ def effectsize(debug=True):
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    recommended_tests=recommended_tests,
+                                   not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
+                                   show_non_recommended=request.cookies.get('show_non_recommended'),
                                    recommended_tests_reasons=recommended_test_reasons,
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
@@ -519,7 +612,8 @@ def effectsize(debug=True):
                                    hist_diff_file=request.cookies.get('hist_diff_file'),
                                    hist_diff_par_file=request.cookies.get('hist_diff_par_file'),
                                    # specific to sig_test
-                                   sig_test_stat_val=request.cookies.get('sig_test_stat_val'),  # json.loads?
+                                   sig_test_stat_val=request.cookies.get('sig_test_stat_val'),
+                                   CI=request.cookies.get('CI'),
                                    pval=request.cookies.get('pval'),
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
@@ -636,8 +730,10 @@ def power(debug=True):
                                    summary_str=request.cookies.get('summary_str'),
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
+                                   not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    recommended_tests=recommended_tests,
                                    recommended_tests_reasons=recommended_test_reasons,
+                                   show_non_recommended=request.cookies.get('show_non_recommended'),
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
@@ -646,6 +742,7 @@ def power(debug=True):
                                    # specific to sig_test
                                    sig_test_stat_val=request.cookies.get('sig_test_stat_val'),  # json.loads?
                                    pval=request.cookies.get('pval'),
+                                   CI=request.cookies.get('CI'),
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
                                    sig_test_name=sig_test_name  # request.cookies.get('sig_test_name')
