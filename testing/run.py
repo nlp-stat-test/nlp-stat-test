@@ -623,7 +623,6 @@ def effectsize(debug=True):
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('effect_estimator_dict', json.dumps(estimators))
-
         resp.set_cookie('estimator_value_list', json.dumps(estimator_value_list))
         if cur_selected_est:
             resp.set_cookie('eff_estimator', cur_selected_est)
@@ -715,9 +714,10 @@ def power(debug=True):
                                    # specific to effect size test
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
+                                   estimator_value_list=json.loads(request.cookies.get('estimator_value_list')),
                                    eff_size_val=request.cookies.get('eff_size_val'),
                                    # effect_size_estimates = estimates,
-                                   # effect_estimator_dict = est_dict,
+                                   effect_estimator_dict = json.loads(request.cookies.get('effect_estimator_dict')),
                                    # file_uploaded = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies

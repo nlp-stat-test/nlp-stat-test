@@ -534,10 +534,10 @@ margin: 0 auto;>
                     <tr>
                         <td>
                             <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}"
-                                    {% if eff_estimator %} {% if key==eff_estimator %} checked="checked"
-                                    {% else %}
-                                    {% endif %}
-                                    {% endif %} value={{ key }}>
+                                   {% for est in estimator_value_list %}
+                                        {% if est[0]==key%} checked="checked" {% endif %}
+                                    {% endfor %}
+                                   value={{ key }}>
                                         {% if key=='hl' %}Hodges-Lehmann Estimator
                                             {% elif key=='wilcoxonr' %}Wilcoxon r
                                             {% elif key=='hedgesg' %}Hedges' g
@@ -548,28 +548,8 @@ margin: 0 auto;>
                     </tr>
                     {% endfor %}
                 </table>
-                <!--<ul>
-                                 {% for key, value in effect_size_estimators.items() %}
-                            <li>{{ key }}
-                                <div class="tooltip">?
-                                    <span class="tooltiptext">{{ value }}</span>
-                                </div>
-                            </li>
-                                 {% endfor %}
 
-                        </ul> -->
-                <!-- <b>Choose the significance test to run</b> -->
-                <!-- radio button to choose test
-                <br> {% for key, value in effect_size_estimators.items() %}
-
-                <input type="radio" name="target_eff_test" id="target_eff_test-1"
-                        {% if eff_estimator %} {% if key==eff_estimator %} checked="checked" {% endif %}
-                        {% endif %} value={{ key }}> {{ key }}
-                <div class="tooltip">?
-                    <span class="tooltiptext">{{ value }}</span>
-                </div>
-
-                {% endfor %} --> {% endif %}
+                {% endif %}
 
               <br><br>
 
