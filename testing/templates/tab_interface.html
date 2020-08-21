@@ -408,6 +408,15 @@ margin: 0 auto;>
         <div class="roundpurplebottom" style="position:relative; top: -18px;">
 
             <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <!-- 3 alternatives, less, greater, two sided -->
+            <b>Choose the hypothesis type</b><br><br>
+                <input type="radio" name="alternative" id="alternative_less" value="less" required
+                        {% if alternative=='less' %}checked{% endif %}> u2-u1 > delta <br>
+                <input type="radio" name="alternative" id="alternative_greater" value="greater"
+                {% if alternative=='greater' %}checked {% endif %}> u1-u2 > delta <br>
+                <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided"
+                       {% if alternative=='two-sided' %}checked{% endif %}> u1-u2 != delta <br><br>
+
                 <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
                 <b>Recommended Tests</b><br><br>
                 {% if recommended_tests|length %}
