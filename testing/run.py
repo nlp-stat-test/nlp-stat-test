@@ -434,7 +434,9 @@ def sigtest(debug=True):
         show_non_recommended = request.form.get('checkbox_show_non_recommended')
         sig_test_name = request.form.get('target_sig_test')
         sig_alpha = request.form.get('significance_level')
-        mu = 0  # float(request.form.get('mu'))
+        mu = float(request.form.get('mu'))
+        if not mu:
+            mu = 0.0
         alternative = request.form.get('alternative')
         sig_boot_iterations = int(request.form.get('sig_boot_iterations'))
 
@@ -466,8 +468,8 @@ def sigtest(debug=True):
                                                       conf_int=True,
                                                       mu=mu)
         if debug: print("test_stat_val={}, pval={},"
-                        "alternative={}, CI={}, rejection={}".format(
-            test_stat_val, pval, alternative, CI, rejection))
+                        "alternative={}, mu={}, CI={}, rejection={}".format(
+            test_stat_val, pval, alternative, mu, CI, rejection))
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
@@ -616,7 +618,8 @@ def effectsize(debug=True):
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
                                    sig_test_name=request.cookies.get('sig_test_name'),
-                                   alternative=request.cookies.get('alternative')
+                                   alternative=request.cookies.get('alternative'),
+                                   mu=request.cookies.get('mu')
                                    )
 
         resp = make_response(rendered)
