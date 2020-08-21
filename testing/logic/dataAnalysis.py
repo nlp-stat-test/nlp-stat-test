@@ -148,31 +148,65 @@ def skew_test(score):
 		return([round(skewness,4),"mean"])
 
 
-def recommend_test(test_param,is_norm):
+def recommend_test(test_param, is_norm):
 
 	list_of_tests =\
 	{ 
-		't' : -1,
-		'wilcoxon': -1,
-		'sign' : -1,
-		'bootstrap' : -1,
-		'permutation' : -1,
-		'bootstrap_med' : -1,
-		'permutation_med' : -1
+		't' : (-1,''),
+		'wilcoxon': (-1,''),
+		'sign' : (-1,''),
+		'bootstrap' : (-1,''),
+		'permutation' : (-1,''),
+		'bootstrap_med' : (-1,''),
+		'permutation_med' : (-1,'')
 
 	}
 
 	if test_param == 'median':
-		list_of_tests['sign'] = 1
-		list_of_tests['bootstrap_med'] = 2
-		list_of_tests['permutation_med'] = 3
+		# appropriate and preferred
+		list_of_tests['sign'] = (1, 'The data distribution is skewed,\
+		 so median is a better measure for central tendency. Sign test is appropriate for testing for median.')
+		
+		# not preferred
+		list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case where the distribution is skewed.')
+		list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case where the distribution is skewed.')
+
+		# not appropriate
+		list_of_tests['t'][1] = 'The student t test is not appropriate for this case since the data distribution is skewed and thus not normal.'
+		list_of_tests['wilcoxon'][1] = 'The Wilcoxon signed rank test is not appropriate for this case since it assumes symmetric distribution around the median.'
+		list_of_tests['bootstrap'][1] = 'The bootstrap test based on mean is not appropriate for skewed distribution.'
+		list_of_tests['permutation'][1] = 'The permutation test based on mean is not appropriate for skewed distribution.'
+
 	else:
 		if is_norm:
-			list_of_tests['t'] = 1
+			# appropriate and preferred
+			list_of_tests['t'] = (1, 'The student t test is most appropriate for normally distributed data.')
+
+			# not preferred
+			list_of_tests['wilcoxon'] = (0, 'The Wilcoxon signed rank test is appropriate for conitnuous symmetric distributions, but t test is more powerful.')
+			list_of_tests['sign'] = (0, 'The sign test is appropriate for this case, but it tests for median equality and has low statistical power.')
+			list_of_tests['bootstrap'] = (0, 'The bootstrap test based on mean is appropriate for normal distribution, but it is computationally expensive and t test has higher statistical power.')
+			list_of_tests['permutation'] = (0, 'The permutation test based on mean is appropriate for normal distribution, but it is computationally expensive and t test has higher statistical power.')
+			list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case, but it is computationally expensive and t test has higher statistical power.')
+			list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case, but it is computationally expensive and t test has higher statistical power.')
+
+			# not appropriate
+			# None
+
 		else:
-			list_of_tests['wilcoxon'] = 1
-			list_of_tests['sign'] = 2
-			list_of_tests['bootstrap'] = 3
-			list_of_tests['permutation'] = 4
+			# appropriate and preferred
+			list_of_tests['wilcoxon'] = (1,'The Wilcoxon signed rank test is appropriate since it does not assume any specific distribution but only requires symmetry.')
+			
+			# not preferred
+			list_of_tests['sign'] = (0, 'The sign test is appropriate for non-normal data but it has lower statistical power due to loss of information.')
+			list_of_tests['bootstrap'] = (0, 'The bootstrap test based on mean is appropriate for non-normal data, but it is computationally expensive.')
+			list_of_tests['permutation'] = (0, 'The permutation test based on mean is appropriate for non-normal data, but it is computationally expensive.')
+			list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case, but it is computationally expensive and Wilcoxon test has higher statistical power.')
+			list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case, but it is computationally expensive and Wilcoxon test has higher statistical power.')
+
+
+			# not appropriate
+			list_of_tests['t'][1] = 'The student t test is not appropriate for this case since the data distribution is not normal.'
+
 			
 	return(list_of_tests)
