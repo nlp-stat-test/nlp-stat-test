@@ -203,11 +203,13 @@ margin: 0 auto;>
 
                 Significance level &alpha; (for calculating normality):
                 <div class="tooltip">?
-                    <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.5.</span>
+                    <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.05.</span>
                 </div>
 
-                <input id="normality_alpha" name="normality_alpha" type="number" value="0.05" step="0.001"
-                        {% if normality_alpha %} value="{{ normality_alpha }}" {% endif %}  class="form-control input-md">
+                <input id="normality_alpha" name="normality_alpha" type="number"
+                        step="0.001"
+                        {% if normality_alpha %} value="{{ normality_alpha }}"
+                        {% else %}value="0.05"{% endif %}  class="form-control input-md">
 
                 <br><br>
                 <!-- Data Analysis Submit Button -->
@@ -344,6 +346,42 @@ margin: 0 auto;>
                 </table> <!-- End Recommended Tests Table -->
                 {% endif %}
 
+                <div id="non_preferred_div_da"
+                     {% if show_non_preferred %} style="display: block;"
+                        {% else %} style="display: none"
+                     {% endif %}  >
+                <br>
+
+                <b>Non-Preferred Tests</b><br><br>
+                    {% if not_preferred_tests|length %}
+
+                    <table border=1>
+                          <col style="width:140px">
+
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
+
+                        {% for tuple in not_preferred_tests %}
+                        <tr>
+                            <td>
+                                {% if tuple[0]=='t' %}Student t test
+                                {% elif tuple[0]=='bootstrap' %}Bootstrap
+                                {% elif tuple[0]=='permutation' %}Permutation
+                                {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                                {% elif tuple[0]=='sign' %}Sign test
+                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                                {% else %}{{ tuple[0] }}
+                                {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>  <!-- End Non-Preferred Tests Table -->
+                    {% endif %}
+                </div>
                 <div id="non_recommended_div_da"
                      {% if show_non_recommended %} style="display: block;"
                         {% else %} style="display: none"
@@ -380,13 +418,18 @@ margin: 0 auto;>
                     </table>  <!-- End Non-Recommended Tests Table -->
                     {% endif %}
                 </div>
-
+                <input type="checkbox" name="checkbox_show_non_preferred"
+                       {% if show_non_preferred %} checked {% endif %}
+                       id="checkbox_show_non_preferred_da"
+                       onclick="toggle_non_recommended('non_preferred_div_da',
+                           'checkbox_show_non_preferred_da')">
+                       List less-preferred significance tests.
                 <input type="checkbox" name="checkbox_show_non_recommended"
                        {% if show_non_recommended %} checked {% endif %}
                        id="checkbox_show_non_recommended_da"
                        onclick="toggle_non_recommended('non_recommended_div_da',
                            'checkbox_show_non_recommended_da')">
-                       Check here to show non-recommended significance tests.
+                       List inappropriate significance tests.
             <!-- (Bulleted list example) -->
             <!--
                        The following tests are recommended:
@@ -409,7 +452,7 @@ margin: 0 auto;>
 
             <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- 3 alternatives, less, greater, two sided -->
-            <b>Choose the hypothesis type</b><br><br>
+            <b>Choose the alternative hypothesis</b><br><br>
                 <input type="radio" name="alternative" id="alternative_less" value="less" required
                         {% if alternative=='less' %}checked{% endif %}> &mu;2-&mu;1 > &mu; <br>
                 <input type="radio" name="alternative" id="alternative_greater" value="greater"

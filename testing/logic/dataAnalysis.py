@@ -206,7 +206,7 @@ def recommend_test(test_param, is_norm):
 
 
 			# not appropriate
-			list_of_tests['t'][1] = 'The student t test is not appropriate for this case since the data distribution is not normal.'
+			list_of_tests['t']= (-1, 'The student t test is not appropriate for this case since the data distribution is not normal.')
 
 			
 	return(list_of_tests)
