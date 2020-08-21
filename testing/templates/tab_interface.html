@@ -79,6 +79,13 @@ function showdiv() {
         hist_button.innerHTML = "Hide Histograms"
     }
 }
+function toggle_non_recommended() {
+    if (document.getElementById("checkbox_show_non_recommended").checked == true) {
+        document.getElementById("non_recommended_div").style.display = "block"
+    } else {
+        document.getElementById("non_recommended_div").style.display = "none"
+    }
+}
 
 function show_sig_boot_div(test_name){
     if (test_name && test_name.includes('boot') || test_name.startsWith('permutation')) {
@@ -349,8 +356,7 @@ margin: 0 auto;>
             <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
                 <b>Recommended Tests</b><br><br>
-                {% if recommended_tests_reasons|length %}
-
+                {% if recommended_tests|length %}
                 <table border=1>
                       <col style="width:140px">
                           
@@ -366,7 +372,8 @@ margin: 0 auto;>
                                    name="target_sig_test"
                                        id="target_sig_test-{{ sig_test_name }}" required
                                        onclick="show_sig_boot_div('{{ tuple[0] }}')"
-                                    {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
+                                    {% if sig_test_name %}
+                                        {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
                                     {% endif %} value="{{ tuple[0] }}">
                             {% if tuple[0]=='t' %}Student t test
                             {% elif tuple[0]=='bootstrap' %}Bootstrap
@@ -381,30 +388,55 @@ margin: 0 auto;>
                         <td>{{ tuple[1] }}</td>
                     </tr>
                     {% endfor %}
-                </table>
+                </table>  <!-- End Recommended Tests Table -->
+                {% endif %}
 
-<!--
-                                 {% for key, value in recommended_tests_reasons.items() %}
-                            <li>{{ key }}
-                                <div class="tooltip">?
-                                    <span class="tooltiptext">{{ value }}</span>
-                                </div>
-                            </li>
-                                 {% endfor %}
--->
+                <div id="non_recommended_div"
+                     {% if show_non_recommended %} style="display: block;"
+                        {% else %} style="display: none"
+                     {% endif %}>
+                <br>
+                <b>Non-Recommended Tests</b><br><br>
+                    {% if not_recommended_tests|length %}
+                    <table border=1>
+                          <col style="width:140px">
 
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
 
-                <!-- <b>Choose the significance test to run</b> -->
-                <!-- radio button to choose test -->
-                    <!--
-                <br> {% for key, value in recommended_tests_reasons.items() %}
-
-                <input type="radio" name="target_sig_test" id="target_sig_test-1" {% if sig_test_name %} {% if key==sig_test_name %} checked="checked" {% endif %} {% endif %} value={{ key }}> {{ key }}
-                <div class="tooltip">?
-                    <span class="tooltiptext">{{ value }}</span>
+                        {% for tuple in not_recommended_tests %}
+                        <tr>
+                            <td>
+                                <input type="radio"
+                                       name="target_sig_test"
+                                           id="target_sig_test-{{ sig_test_name }}" required
+                                           onclick="show_sig_boot_div('{{ tuple[0] }}')"
+                                        {% if sig_test_name %}
+                                            {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
+                                        {% endif %} value="{{ tuple[0] }}">
+                                {% if tuple[0]=='t' %}Student t test
+                                {% elif tuple[0]=='bootstrap' %}Bootstrap
+                                {% elif tuple[0]=='permutation' %}Permutation
+                                {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                                {% elif tuple[0]=='sign' %}Sign test
+                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                                {% else %}{{ tuple[0] }}
+                                {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>  <!-- End Non-Recommended Tests Table -->
+                    {% endif %}
                 </div>
 
-                {% endfor %} --> {% endif %}
+                <input type="checkbox" name="checkbox_show_non_recommended"
+                       {% if show_non_recommended %} checked {% endif %}
+                       id="checkbox_show_non_recommended" onclick="toggle_non_recommended()">
+                       Check here to show non-recommended significance tests.
       <br>
 
                 <!-- SIGNIFICANCE alpha -->
@@ -447,14 +479,22 @@ margin: 0 auto;>
         </div>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenSignificanceTest">
-            {% if sig_test_stat_val %}
+            {% if sig_test_stat_val or CI%}
             <b>Results</b><br><br>
 
             <table border="1">
-                <tr><!-- todo: permutation result? -->
-                    <th> {% if sig_test_name == 'bootstrap' %}confidence interval{% else %}test statistic{% endif %}
+
+                {% if sig_test_name != 'bootstrap' %}
+                 <tr>
+                    <th>
+                    test statistic
                     </th>
                     <td>{{ sig_test_stat_val }}</td>
+                </tr>{% endif %}
+                <tr>
+                    <th> confidence interval
+                    </th>
+                    <td>{{ CI }}</td>
                 </tr>
                 <tr>
                     <th>p-value</th>
@@ -673,7 +713,7 @@ margin: 0 auto;>
                         Significance test:<br>
                         {% for sigtest in recommended_tests %}
                         <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}"
-                            {% if sigtest[0] == sig_test_name %}checked="checked"{% endif %}>
+                            {% if sigtest[0] == sig_test_name %}checked="checked"{% endif %} required>
                             {% if sigtest[0] == 't' %}Student t-test<br>
                             {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br>
                             {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br>
