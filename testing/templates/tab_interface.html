@@ -79,11 +79,17 @@ function showdiv() {
         hist_button.innerHTML = "Hide Histograms"
     }
 }
-function toggle_non_recommended() {
-    if (document.getElementById("checkbox_show_non_recommended").checked == true) {
-        document.getElementById("non_recommended_div").style.display = "block"
+function toggle_non_recommended(div_id, checkbox_id) {
+    if (!div_id) {
+        div_id = "non_recommended_div"
+    }
+    if (!checkbox_id) {
+        checkbox_id = "checkbox_show_non_recommended"
+    }
+    if (document.getElementById(checkbox_id).checked == true) {
+        document.getElementById(div_id).style.display = "block"
     } else {
-        document.getElementById("non_recommended_div").style.display = "none"
+        document.getElementById(div_id).style.display = "none"
     }
 }
 
@@ -309,30 +315,78 @@ margin: 0 auto;>
             <b id=sigtest_heading align='left'>
                 {{ sigtest_heading }}</b><br><br>
 
-            {% if recommended_tests_reasons|length %}
-            <table border=1>
+                The folllowing tests are recommended:<br><br>
+                {% if recommended_tests|length %}
+                <table border=1>
+                      <col style="width:140px">
 
-                <tr>
-                    <th>Test</th>
-                    <th>Reason</th>
-                </tr>
+                    <tr>
+                        <th>Test</th>
+                        <th>Reason</th>
+                    </tr>
 
-                {% for key, value in recommended_tests_reasons.items() %}
-                <tr>
-                    <td>
-                        {% if key=='t' %}Student t test
-                        {% elif key=='bootstrap' %}Bootstrap
-                            {% elif key=='permutation' %}Permutation
-                            {% elif key=='wilcoxon' %}Wilcoxson signed rank test
-                            {% elif key=='sign' %}Sign test
-                            {% elif key=='bootstrap_med' %}Bootstrap (median)
-                            {% elif key=='permutation_med' %}Permutation (median)
-                    {% endif %} </td>
-                    <td>{{ value }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            {% endif %}
+                    {% for tuple in recommended_tests %}
+                    <tr>
+                        <td>
+                            {% if tuple[0]=='t' %}Student t test
+                            {% elif tuple[0]=='bootstrap' %}Bootstrap
+                            {% elif tuple[0]=='permutation' %}Permutation
+                            {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                            {% elif tuple[0]=='sign' %}Sign test
+                            {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                            {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                            {% else %}{{ tuple[0] }}
+                            {% endif %}
+                        </td>
+                        <td>{{ tuple[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table> <!-- End Recommended Tests Table -->
+                {% endif %}
+
+                <div id="non_recommended_div_da"
+                     {% if show_non_recommended %} style="display: block;"
+                        {% else %} style="display: none"
+                     {% endif %}>
+                <br>
+
+                <b>Non-Recommended Tests</b><br><br>
+                    {% if not_recommended_tests|length %}
+
+                    <table border=1>
+                          <col style="width:140px">
+
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
+
+                        {% for tuple in not_recommended_tests %}
+                        <tr>
+                            <td>
+                                {% if tuple[0]=='t' %}Student t test
+                                {% elif tuple[0]=='bootstrap' %}Bootstrap
+                                {% elif tuple[0]=='permutation' %}Permutation
+                                {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                                {% elif tuple[0]=='sign' %}Sign test
+                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                                {% else %}{{ tuple[0] }}
+                                {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>  <!-- End Non-Recommended Tests Table -->
+                    {% endif %}
+                </div>
+
+                <input type="checkbox" name="checkbox_show_non_recommended"
+                       {% if show_non_recommended %} checked {% endif %}
+                       id="checkbox_show_non_recommended_da"
+                       onclick="toggle_non_recommended('non_recommended_div_da',
+                           'checkbox_show_non_recommended_da')">
+                       Check here to show non-recommended significance tests.
             <!-- (Bulleted list example) -->
             <!--
                        The following tests are recommended:
