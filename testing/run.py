@@ -435,6 +435,7 @@ def sigtest(debug=True):
         sig_test_name = request.form.get('target_sig_test')
         sig_alpha = request.form.get('significance_level')
         mu = 0  # float(request.form.get('mu'))
+        alternative = request.form.get('alternative')
         sig_boot_iterations = int(request.form.get('sig_boot_iterations'))
 
         if debug:
@@ -449,22 +450,24 @@ def sigtest(debug=True):
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
         # get old dif
         score_dif = calc_score_diff(scores1, scores2)
-        if debug: print("THE original SCORE_DIF:{}".format(score_dif))
+
         # use Partition Score to get new dif
         partitions = partition_score_no_hist(scores1, scores2, score_dif,
                                 json.loads(request.cookies.get('eval_unit_size')),
                                 shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
         score_dif = partitions[2]
-        if debug:
-            print("THE SCORE_DIF:{}".format(score_dif))
-            # print("Partitions:{}".format(partitions))
+
+
         test_stat_val, pval, CI, rejection = run_sig_test(sig_test_name,  # 't'
                                                       score_dif,
                                                       float(sig_alpha),  # 0.05,
                                                       B=sig_boot_iterations,
+                                                      alternative=alternative,
                                                       conf_int=True,
                                                       mu=mu)
-        if debug: print("test_stat_val={}, pval={}, CI={}, rejection={}".format(test_stat_val, pval, CI, rejection))
+        if debug: print("test_stat_val={}, pval={},"
+                        "alternative={}, CI={}, rejection={}".format(
+            test_stat_val, pval, alternative, CI, rejection))
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
@@ -500,6 +503,7 @@ def sigtest(debug=True):
                                    # specific to sig_test
                                    mu=mu,
                                    sig_boot_iterations=sig_boot_iterations,
+                                   alternative=alternative,
                                    sig_test_stat_val=test_stat_val,
                                    CI=CI,
                                    pval=pval,
@@ -511,6 +515,7 @@ def sigtest(debug=True):
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('sig_test_name', sig_test_name)
         resp.set_cookie('sig_test_alpha', sig_alpha)
+        resp.set_cookie('alternative', alternative)
         if test_stat_val:
             resp.set_cookie('sig_test_stat_val', json.dumps(float(test_stat_val)))
             print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(float(test_stat_val))))
@@ -564,9 +569,6 @@ def effectsize(debug=True):
         #                                         effect_size_target_stat,
         #                                         score_dif)
 
-        # Hack, todo: fix
-        cur_selected_est = cur_selected_est_cohend
-        eff_size_val = calc_eff_size(cur_selected_est, score_dif)
 
         # Build list of tuples for (estimator, value) pairs
         estimator_value_list = []
@@ -585,11 +587,7 @@ def effectsize(debug=True):
                                    skewness_gamma=skewness_gamma,
                                    # specific to effect size test
                                    effect_size_estimators=estimators,  # just names
-                                   eff_estimator=cur_selected_est,
                                    estimator_value_list=estimator_value_list,  # name, value pairs
-                                   eff_size_val=eff_size_val,
-                                   # effect_size_estimates = estimates,
-                                   # effect_estimator_dict = est_dict,
                                    # file_uploaded = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies
@@ -617,17 +615,14 @@ def effectsize(debug=True):
                                    pval=request.cookies.get('pval'),
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
-                                   sig_test_name=request.cookies.get('sig_test_name')
+                                   sig_test_name=request.cookies.get('sig_test_name'),
+                                   alternative=request.cookies.get('alternative')
                                    )
 
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('effect_estimator_dict', json.dumps(estimators))
         resp.set_cookie('estimator_value_list', json.dumps(estimator_value_list))
-        if cur_selected_est:
-            resp.set_cookie('eff_estimator', cur_selected_est)
-        if eff_size_val:
-            resp.set_cookie('eff_size_val', str(eff_size_val))
         return resp
 
     elif request.method == 'GET':
