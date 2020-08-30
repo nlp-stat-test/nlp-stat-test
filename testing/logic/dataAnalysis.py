@@ -168,14 +168,14 @@ def recommend_test(test_param, is_norm):
 		 so median is a better measure for central tendency. Sign test is appropriate for testing for median.')
 		
 		# not preferred
-		list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case where the distribution is skewed.')
-		list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case where the distribution is skewed.')
+		list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case where the distribution is skewed, but it is computationally expensive if the sample size is large.')
+		list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case where the distribution is skewed, but it is computationally expensive if the sample size is large.')
 
 		# not appropriate
 		list_of_tests['t'][1] = 'The student t test is not appropriate for this case since the data distribution is skewed and thus not normal.'
 		list_of_tests['wilcoxon'][1] = 'The Wilcoxon signed rank test is not appropriate for this case since it assumes symmetric distribution around the median.'
-		list_of_tests['bootstrap'][1] = 'The bootstrap test based on mean is not appropriate for skewed distribution.'
-		list_of_tests['permutation'][1] = 'The permutation test based on mean is not appropriate for skewed distribution.'
+		list_of_tests['bootstrap'][1] = 'The bootstrap test based on mean is not appropriate for skewed distribution because the distribution is skewed.'
+		list_of_tests['permutation'][1] = 'The permutation test based on mean is not appropriate for skewed distribution because the distribution is skewed.'
 
 	else:
 		if is_norm:
