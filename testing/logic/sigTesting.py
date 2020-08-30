@@ -1,9 +1,7 @@
 # imports
 import numpy as np
 from scipy import stats
-#import effectSize
 import logic.effectSize
-#from statsmodels.stats.descriptivestats import sign_test
 
 
 
@@ -31,7 +29,7 @@ def run_sig_test(recommended_test, score, alpha, B, mu, alternative="two-sided",
 		#x = x - mu
 		test_stats_value, pval = wilcoxon_test(x, alpha, mu, alternative)
 		if conf_int:
-			CI = CI_wilcoxon(score, alpha, alternative)  #adjust for mu?
+			CI = logic.effectSize.CI_wilcoxon(score, alpha, alternative)  #adjust for mu?
 		rejection = pval<alpha
 
 	if recommended_test == 'sign':
@@ -78,13 +76,17 @@ def CI_mean(x, alpha, alternative):
 	t = x_bar/(np.sqrt(var_x)/np.sqrt(n))
 
 	if alternative == "less":
-		CI = (-float('inf'),x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(1-alpha,n-1))
+		upp_bound = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(1-alpha,n-1)
+		CI = (-float('inf'),round(upp_bound,5))
 
 	if alternative == "greater":
-		CI = (x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha,n-1),float('inf'))
+		low_bound_temp = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha,n-1)
+		CI = (round(low_bound,5),float('inf'))
 
 	if alternative == "two-sided":
-		CI = (x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha/2,n-1),x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(1-alpha/2,n-1))
+		low_bound = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha/2,n-1)
+		upp_bound = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(1-alpha/2,n-1)
+		CI = (round(low_bound,5),round(upp_bound,5))
 
 	return(CI)
 
@@ -105,49 +107,22 @@ def CI_median(x, alpha, alternative):
 	CI = None
 
 	if alternative == "less":
-		CI = (-float('inf'),x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha)*np.sqrt(n)/2))])
+		upp_bound = x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha)*np.sqrt(n)/2))]
+		CI = (-float('inf'),round(upp_bound,5))
 
 	if alternative == "greater":
-		CI = (x_sorted[int(round(n/2-stats.norm.ppf(1-alpha)*np.sqrt(n)/2))],float('inf'))
+		low_bound = x_sorted[int(round(n/2-stats.norm.ppf(1-alpha)*np.sqrt(n)/2))]
+		CI = (round(low_bound,5),float('inf'))
 
 	if alternative == "two-sided":
-		CI = (x_sorted[int(round(n/2-stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))],\
-			x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))])
+		low_bound = x_sorted[int(round(n/2-stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))]
+		upp_bound = x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))]
+		CI = (round(low_bound,5),round(upp_bound,5))
 
 	return(CI)
 
 
 
-def CI_wilcoxon(score, alpha, alternative):
-	n  = len(score.values())
-	M = n*(n+1)/2
-
-	score_temp = score.copy()
-	score_pair_avg = []
-
-	for i in score.keys():
-		for j in range(i,len(score_temp.keys())): #i<=j
-			score_pair_avg.append(np.mean([score[i],score_temp[j]]))
-
-	W = sorted(score_pair_avg)
-
-	if alternative == "less":
-		C_a_one = np.floor(n*(n+1)/4-stats.norm.ppf(1-alpha)*np.sqrt(n*(n+1)*(2*n+1)/24))
-		upp_bound = W[int(M+1-C_a_one)]
-		CI = (-float('inf'),upp_bound)
-
-	if alternative == "greater":
-		C_a_one = np.floor(n*(n+1)/4-stats.norm.ppf(1-alpha)*np.sqrt(n*(n+1)*(2*n+1)/24))
-		low_bound = W[int(C_a_one)]
-		CI = (low_bound, float('inf'))
-
-	if alternative == "two-sided":
-		C_a_two = np.floor(n*(n+1)/4-stats.norm.ppf(1-alpha/2)*np.sqrt(n*(n+1)*(2*n+1)/24))
-		low_bound = W[int(C_a_two)]
-		upp_bound = W[int(M+1-C_a_two)]
-		CI = (low_bound,upp_bound)
-
-	return(CI)
 
 
 ### sig test methods ###
@@ -183,7 +158,7 @@ def t_test(x, alpha, delta, alternative):
 		if t>0:
 			pval = 2*(1-stats.t.cdf(t,df=n-1))
 
-	return((t, pval))
+	return((round(t,5), round(pval,5)))
 
 
 def sign_test(x, alpha, delta, alternative):
@@ -236,7 +211,7 @@ def sign_test(x, alpha, delta, alternative):
 			if B==n/2:
 				pval = 1.0
 
-	return((B,pval))
+	return((round(B,5),round(pval,5)))
 
 
 def wilcoxon_test(x, alpha, delta, alternative):
@@ -276,7 +251,7 @@ def wilcoxon_test(x, alpha, delta, alternative):
 	if alternative == "two-sided":
 		pval = 2*(1-stats.norm.cdf(T))
 
-	return((T,pval))
+	return((round(T,5),round(pval,5)))
 
 
 def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
@@ -304,7 +279,7 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				pval = pval - increment
 				upp_bound_temp = mu_ob-np.quantile(t_ratios,pval)*se_ob
 
-			CI = (-float('inf'),upp_bound)
+			CI = (-float('inf'),round(upp_bound,5))
 
 
 		if alternative == "greater":
@@ -316,7 +291,7 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				pval = pval - increment
 				low_bound_temp = mu_ob-np.quantile(t_ratios,pval)*se_ob
 
-			CI = (low_bound,float('inf'))
+			CI = (round(low_bound,5),float('inf'))
 
 		if alternative == "two-sided":
 			low_bound = mu_ob-np.quantile(t_ratios,1-alpha/2)*se_ob
@@ -330,7 +305,7 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				low_bound_temp = mu_ob-np.quantile(t_ratios,1-pval/2)*se_ob
 				upp_bound_temp = mu_ob-np.quantile(t_ratios,pval/2)*se_ob
 
-			CI = (low_bound,upp_bound)
+			CI = (round(low_bound,5),round(upp_bound,5))
 
 	elif method == 'median':
 		mu_ob = np.median(x)
@@ -353,7 +328,7 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				pval = pval - increment
 				upp_bound_temp = 2*mu_ob-np.quantile(t_ratios,alpha)
 
-			CI = (-float('inf'),upp_bound)
+			CI = (-float('inf'),round(upp_bound,5))
 
 
 		if alternative == "greater":
@@ -365,7 +340,7 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				pval = pval - increment
 				low_bound_temp = 2*mu_ob-np.quantile(t_ratios,1-pval)
 
-			CI = (low_bound,float('inf'))
+			CI = (round(low_bound,5),float('inf'))
 
 		if alternative == "two-sided":
 			low_bound = 2*mu_ob-np.quantile(t_ratios,1-alpha/2)
@@ -379,10 +354,10 @@ def bootstrap_test(x, alpha, delta, B, alternative, method='mean'):
 				low_bound_temp = 2*mu_ob-np.quantile(t_ratios,1-pval/2)
 				upp_bound_temp = 2*mu_ob-np.quantile(t_ratios,pval/2)
 
-			CI = (low_bound,upp_bound)
+			CI = (round(low_bound,5),round(upp_bound,5))
 
 
-	return((None, pval, CI))
+	return((round(mu_ob,5), round(pval,5), CI))
 
 
 def permutation_test(x, alpha, delta, B, alternative, method='mean'):
@@ -421,5 +396,5 @@ def permutation_test(x, alpha, delta, B, alternative, method='mean'):
 					count+=1
 
 	pval = float(count+1)/(B+1)
-	return((mu_ob,round(pval,4),pval<alpha))
+	return((round(mu_ob,5),round(pval,5),pval<alpha))
 
