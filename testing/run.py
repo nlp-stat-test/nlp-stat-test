@@ -356,7 +356,7 @@ def homepage(debug=True):
 
                                file_uploaded="Upload a file.",
                                recommended_tests=[],
-                               recommended_tests_reasons={},
+                               #recommended_tests_reasons={},
                                summary_stats_dict={})
 
 
@@ -367,7 +367,6 @@ def homepage(debug=True):
 def sigtest(debug=True):
     if request.method == "POST":
         # ------- Get cookies
-        recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
         fileName = request.cookies.get('fileName')
         # ------- Get form data
         show_non_recommended = request.form.get('checkbox_show_non_recommended')
@@ -381,7 +380,6 @@ def sigtest(debug=True):
 
         if debug:
             print(' ********* Running /sig_test')
-            print('Recommended tests reasons={}'.format(recommended_test_reasons))
             print('Sig_test_name={}, sig_alpha={}'.format(sig_test_name, sig_alpha))
 
         # ------- Test if 'last_tab' was sent
@@ -434,7 +432,6 @@ def sigtest(debug=True):
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    recommended_tests=recommended_tests,
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
-                                   recommended_tests_reasons=recommended_test_reasons,
                                    show_non_recommended=show_non_recommended,
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
@@ -481,6 +478,9 @@ def effectsize(debug=True):
         last_tab_name_clicked = 'Effect Size'
         fileName = request.cookies.get('fileName')
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        # alpha for significance, boostrap iterations
+        sig_test_alpha = json.loads(request.cookies.get('sig_test_alpha'))
+        sig_boot_iterations = json.loads(request.cookies.get('sig_boot_iterations'))
         # get old dif
         score_dif = calc_score_diff(scores1, scores2)
         # use Partition Score to get new dif
@@ -514,12 +514,14 @@ def effectsize(debug=True):
         # Build list of tuples for (estimator, value) pairs
         estimator_value_list = []
         for est in cur_selected_ests:
-            val = calc_eff_size(est, score_dif)
+            val = calc_eff_size(est,
+                                score_dif,
+                                sig_test_alpha,
+                                sig_boot_iterations) # sig_test_alpha, sig_boot_iterations
             estimator_value_list.append((est, val))
 
         # For completing previous tabs: target_stat is 'mean' or 'median'
         previous_selected_test = request.cookies.get('sig_test_name')
-        recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
         print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
@@ -544,7 +546,6 @@ def effectsize(debug=True):
                                    recommended_tests=recommended_tests,
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
-                                   recommended_tests_reasons=recommended_test_reasons,
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
@@ -633,7 +634,6 @@ def power(debug=True):
         rand = np.random.randint(10000)
         # power_path = os.path.join(app.config['FOLDER'], power_file)
 
-        recommended_test_reasons = json.loads(request.cookies.get('recommended_test_reasons'))
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
@@ -669,7 +669,6 @@ def power(debug=True):
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    recommended_tests=recommended_tests,
-                                   recommended_tests_reasons=recommended_test_reasons,
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
