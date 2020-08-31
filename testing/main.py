@@ -72,6 +72,11 @@ if __name__ == '__main__':
 	h1 = str(config['h1'])
 
 
+
+	with open(report_output_dir +'/report','w') as report_file:
+		report_file.write('System Comparison Report\n\n')
+
+
 	####################################################
 	####################################################
 
@@ -148,6 +153,7 @@ if __name__ == '__main__':
 	####################################
 	with open(report_output_dir +'/report','a') as report_file:
 		report_file.write('Summary statistics:\n')
+		report_file.write('   Score   Mean   Median   SD   Min   Max\n')
 		report_file.write('-- score1   '+str(testCase_new.eda.summaryStat_score1.mu)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.med)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.sd)+'   '+\
@@ -216,7 +222,7 @@ if __name__ == '__main__':
 			report_file.write('-- '+str(i[0])+'\n')
 		report_file.write('\n')
 
-		report_file.write('Recommended but not preferred tests:\n')
+		report_file.write('Appropriate but not preferred tests:\n')
 		for i in not_preferred_test_list:
 			report_file.write('-- '+str(i[0])+'\n')
 		report_file.write('\n')
