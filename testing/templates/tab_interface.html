@@ -317,7 +317,7 @@ margin: 0 auto;>
             <b id=sigtest_heading align='left'>
                 {{ sigtest_heading }}</b><br><br>
 
-                The folllowing tests are recommended:<br><br>
+                The folllowing tests are appropriate and preferred:<br><br>
                 {% if recommended_tests|length %}
                 <table border=1>
                       <col style="width:140px">
@@ -352,9 +352,9 @@ margin: 0 auto;>
                      {% endif %}  >
                 <br>
 
-                <b>Non-Preferred Tests</b><br><br>
+                <b>Appropriate but Non-Preferred Tests</b><br><br>
                     {% if not_preferred_tests|length %}
-
+    The folllowing tests are appropriate but not preferred:<br><br>
                     <table border=1>
                           <col style="width:140px">
 
@@ -380,6 +380,7 @@ margin: 0 auto;>
                         </tr>
                         {% endfor %}
                     </table>  <!-- End Non-Preferred Tests Table -->
+                        {% else %} There are no tests in this category.<br><br>
                     {% endif %}
                 </div>
                 <div id="non_recommended_div_da"
@@ -388,9 +389,9 @@ margin: 0 auto;>
                      {% endif %}>
                 <br>
 
-                <b>Non-Recommended Tests</b><br><br>
+                <b>Inappropriate Tests</b><br><br>
                     {% if not_recommended_tests|length %}
-
+            The following tests are inappropriate and not recommended:
                     <table border=1>
                           <col style="width:140px">
 
@@ -514,7 +515,7 @@ margin: 0 auto;>
                         {% else %} style="display: none"
                      {% endif %}>
                 <br>
-                <b>Non-Recommended Tests</b><br><br>
+                <b>Inappropriate Tests</b><br><br>
                     {% if not_recommended_tests|length %}
                     <table border=1>
                           <col style="width:140px">
@@ -548,6 +549,8 @@ margin: 0 auto;>
                         </tr>
                         {% endfor %}
                     </table>  <!-- End Non-Recommended Tests Table -->
+                        {% else %}
+                        No tests fall into this category.
                     {% endif %}
                 </div>
 
