@@ -970,8 +970,7 @@ margin: 0 auto;>
         function SubmitHandler(genericMessage) {
             formID = "frmEffectSize"
             var form = document.getElementById(formID);
-            var hiddenArray = form.getElementById('hiddenCheckboxArray')
-            var hiddenValue = form.getElementById('hiddenEffectsEstimators').value
+            var hiddenValue = document.getElementById('hiddenEffectEstimators').value
             var msg = "****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue
             console.log(msg);
             //alert("****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue);
