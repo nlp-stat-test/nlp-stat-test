@@ -148,18 +148,17 @@ if __name__ == '__main__':
 	####################################
 	with open(report_output_dir +'/report','a') as report_file:
 		report_file.write('Summary statistics:\n')
-		report_file.write('Score   Mean   Median   SD   Min   Max\n')
-		report_file.write('score1   '+str(testCase_new.eda.summaryStat_score1.mu)+'   '+\
+		report_file.write('-- score1   '+str(testCase_new.eda.summaryStat_score1.mu)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.med)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.sd)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.min_val)+'   '+\
 			str(testCase_new.eda.summaryStat_score1.max_val)+'   \n')
-		report_file.write('score2   '+str(testCase_new.eda.summaryStat_score2.mu)+'   '+\
+		report_file.write('-- score2   '+str(testCase_new.eda.summaryStat_score2.mu)+'   '+\
 			str(testCase_new.eda.summaryStat_score2.med)+'   '+\
 			str(testCase_new.eda.summaryStat_score2.sd)+'   '+\
 			str(testCase_new.eda.summaryStat_score2.min_val)+'   '+\
 			str(testCase_new.eda.summaryStat_score2.max_val)+'   \n')
-		report_file.write('difference   '+str(testCase_new.eda.summaryStat_score_diff_par.mu)+'   '+\
+		report_file.write('-- difference   '+str(testCase_new.eda.summaryStat_score_diff_par.mu)+'   '+\
 			str(testCase_new.eda.summaryStat_score_diff_par.med)+'   '+\
 			str(testCase_new.eda.summaryStat_score_diff_par.sd)+'   '+\
 			str(testCase_new.eda.summaryStat_score_diff_par.min_val)+'   '+\
@@ -334,7 +333,7 @@ if __name__ == '__main__':
 	####################################
 	with open(report_output_dir +'/report','a') as report_file:
 		report_file.write('Post-testing power analysis:\n')
-		report_file.write('obtained power: ' + str(list(testCase_new.power.powerCurve.values())[-1])+'\n')
+		report_file.write('-- obtained power: ' + str(list(testCase_new.power.powerCurve.values())[-1])+'\n')
 
 	####################################
 
