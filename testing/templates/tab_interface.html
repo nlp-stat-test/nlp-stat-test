@@ -530,10 +530,45 @@ margin: 0 auto;>
                         <td>{{ tuple[1] }}</td>
                     </tr>
                     {% endfor %}
-                </table>  <!-- End Recommended Tests Table -->
+                </table> <br> <!-- End Recommended Tests Table -->
                 {% endif %}
 
-                <div id="non_recommended_div"
+                <div id="non_preferred_div_st"
+                     {% if show_non_preferred %} style="display: block;"
+                        {% else %} style="display: none"
+                     {% endif %}  >
+                <b>Appropriate but Non-Preferred Tests</b><br><br>
+                    {% if not_preferred_tests|length %}
+    The folllowing tests are appropriate but not preferred:<br><br>
+                    <table border=1>
+                          <col style="width:140px">
+
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
+
+                        {% for tuple in not_preferred_tests %}
+                        <tr>
+                            <td>
+                                {% if tuple[0]=='t' %}Student t test
+                                {% elif tuple[0]=='bootstrap' %}Bootstrap
+                                {% elif tuple[0]=='permutation' %}Permutation
+                                {% elif tuple[0]=='wilcoxon' %}Wilcoxson signed rank test
+                                {% elif tuple[0]=='sign' %}Sign test
+                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
+                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
+                                {% else %}{{ tuple[0] }}
+                                {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>  <!-- End Non-Preferred Tests Table -->
+                        {% else %} There are no tests in this category.<br><br>
+                    {% endif %}
+                </div>
+                <div id="non_recommended_div_st"
                      {% if show_non_recommended %} style="display: block;"
                         {% else %} style="display: none"
                      {% endif %}>
@@ -577,10 +612,18 @@ margin: 0 auto;>
                     {% endif %}
                 </div>
 
+                <input type="checkbox" name="checkbox_show_non_preferred"
+                       {% if show_non_preferred %} checked {% endif %}
+                       id="checkbox_show_non_preferred_st"
+                       onclick="toggle_non_recommended('non_preferred_div_st',
+                           'checkbox_show_non_preferred_st')">
+                       List less-preferred significance tests.
                 <input type="checkbox" name="checkbox_show_non_recommended"
                        {% if show_non_recommended %} checked {% endif %}
-                       id="checkbox_show_non_recommended" onclick="toggle_non_recommended()">
-                       Check here to show non-recommended significance tests.
+                       id="checkbox_show_non_recommended_st" onclick="toggle_non_recommended('non_recommended_div_st',
+                           'checkbox_show_non_recommended_st')">
+                       List inappropriate significance tests.
+
       <br>
 
                 <!-- SIGNIFICANCE alpha -->
@@ -617,8 +660,7 @@ margin: 0 auto;>
                 <input type="hidden" id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
              
                 <button id="submit" name="submit" class="button1">Run</button>
-                <!-- Button for JS script-->
-                <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
+
 
             </form>
             <!-- End Significance Test form -->
