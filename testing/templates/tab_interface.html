@@ -454,19 +454,42 @@ margin: 0 auto;>
             <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- 3 alternatives, less, greater, two sided -->
             <b>Choose the alternative hypothesis</b><br><br>
+                <!-- u1 < u2 -->
                 <input type="radio" name="alternative" id="alternative_less" value="less" required
-                        {% if alternative=='less' %}checked{% endif %}> &mu;2-&mu;1 > &mu; <br>
+                        {% if alternative=='less' %}checked{% endif %}> &mu;1-&mu;2 < &mu;
+                <div class="tooltip">?
+                    <span class="tooltiptext">The alternative hypothesis is that the first system is
+                        less than the second.</span>
+                </div> <br>
+                <!-- u1 > u2 -->
                 <input type="radio" name="alternative" id="alternative_greater" value="greater"
-                {% if alternative=='greater' %}checked {% endif %}> &mu;1-&mu;2 > &mu; <br>
+                {% if alternative=='greater' %}checked {% endif %}> &mu;1-&mu;2 > &mu;
+                <div class="tooltip">?
+                    <span class="tooltiptext">The alternative hypothesis is that the first system is
+                        greater than the second.</span>
+                </div> <br>
                 <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided"
-                       {% if alternative=='two-sided' %}checked{% endif %}> &mu;1-&mu;2 != &mu; <br><br>
+                       {% if alternative=='two-sided' %}checked{% endif %}> &mu;1-&mu;2 != &mu;
+                <div class="tooltip">?
+                    <span class="tooltiptext">The alternative hypothesis is that the first system differs from the second.</span>
+                </div>
+                <br><br>
                                 <!-- Mu -->
 
                 Threshold &mu;:
                 <div class="tooltip">?
-                    <span class="tooltiptext">The difference between the systems is
+
+                    <span class="tooltiptext">
+                    The threshold for difference between the systems.
+                        <!-- {% if alternative=='two-sided' %}The absolute value of the difference between the systems is
                         less than this value in the case of the null hypothesis, and greater than this value
-                    in the case of the alternative hypothesis.</span>
+                    in the case of the alternative hypothesis.{% elif alternative=='less' %}
+                    System 1 - System 2 is less than this number for the alternative hypothesis,
+                        and greater than this number for the null hypothesis.
+                        {% elif alternative=='greater' %}
+                        System 1 - System 2 is greater than this number for the alternative hypothesis,
+                        and less than this number for the null hypothesis.
+                    {% endif %}--></span>
                 </div>
 
                 <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}"
@@ -606,14 +629,14 @@ margin: 0 auto;>
             <b>Results</b><br><br>
 
             <table border="1">
-
+                <!-- Hide test statistic
                 {% if sig_test_name != 'bootstrap' %}
                  <tr>
                     <th>
                     test statistic
                     </th>
                     <td>{{ sig_test_stat_val }}</td>
-                </tr>{% endif %}
+                </tr>{% endif %}  -->
                 <tr>
                     <th> confidence interval
                     </th>
