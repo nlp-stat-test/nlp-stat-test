@@ -17,6 +17,10 @@ mu: 0 # null hypothesis
 
 
 ## effect size
+NUM_of_iter_boot: 1000
+MIN_CI_alpha: 0
+MAX_CI_alpha: 0.5
+
 
 
 ## power analysis
