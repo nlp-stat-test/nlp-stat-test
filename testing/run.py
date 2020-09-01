@@ -46,6 +46,14 @@ estimators = {"cohend": "This function calculates the Cohen's d effect size esti
               "wilcoxonr": "This function calculates the standardized z-score (r) for the Wilcoxon signed-rank test.",
               "hl": "This function estimates the Hodges-Lehmann estimator for the input score."}
 
+def get_rand_state_str():
+    '''
+    This is a random string that's generate every time a 'submit' operation happens.
+    It's used to distinguish when the state of the app may have changed.
+    @return: A random int between 0 and 9999
+    '''
+    rand_str = str(np.random.randint(10000))
+    return rand_str
 
 def calc_score_diff(score1, score2):
     """
@@ -248,7 +256,6 @@ def homepage(debug=True):
             skewness_gamma = skew_test(score_diff_par[2])[0]
 
             # ---------------normality test
-            # todo: add alpha parameter
             is_normal = normality_test(score_diff_par[2], alpha=normality_alpha)
             # --------------Recommended Significance Tests -------------------------
             recommended_tests = recommend_test(mean_or_median, is_normal)
@@ -300,7 +307,8 @@ def homepage(debug=True):
                                            # power
                                            power_path=request.cookies.get('power_path'),
                                            power_test=request.cookies.get('power_test'),
-                                           power_num_intervals=request.cookies.get('power_num_intervals')
+                                           power_num_intervals=request.cookies.get('power_num_intervals'),
+                                           rand_str=get_rand_state_str()
                                            )
                 resp = make_response(rendered)
 
@@ -454,7 +462,8 @@ def sigtest(debug=True):
                                    pval=pval,
                                    rejectH0=rejection,
                                    sig_alpha=sig_alpha,
-                                   sig_test_name=sig_test_name
+                                   sig_test_name=sig_test_name,
+                                   rand_str=get_rand_state_str()
                                    )
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
@@ -575,7 +584,8 @@ def effectsize(debug=True):
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
                                    sig_test_name=request.cookies.get('sig_test_name'),
                                    alternative=request.cookies.get('alternative'),
-                                   mu=request.cookies.get('mu')
+                                   mu=request.cookies.get('mu'),
+                                   rand_str=get_rand_state_str()
                                    )
 
         resp = make_response(rendered)
@@ -701,7 +711,8 @@ def power(debug=True):
                                    CI=request.cookies.get('CI'),
                                    rejectH0=request.cookies.get('rejectH0'),
                                    sig_alpha=request.cookies.get('sig_test_alpha'),
-                                   sig_test_name=sig_test_name  # request.cookies.get('sig_test_name')
+                                   sig_test_name=sig_test_name,  # request.cookies.get('sig_test_name')
+                                   rand_str=get_rand_state_str()
                                    )
 
         resp = make_response(rendered)
