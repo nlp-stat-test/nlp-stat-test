@@ -120,7 +120,7 @@ margin: 0 auto;>
 
     <div class="top_bar">
         <button class="button1" id="btn_about">About</button>
-        <!--<button class="button1" id="btn_settings">Save/Restore Settings</button>-->
+        <button class="button1" id="btn_settings">Save/Restore Settings</button>
         <button class="button1" id="btn_download">Download Report</button>
     </div>
 
@@ -990,9 +990,13 @@ margin: 0 auto;>
         <div class="modal-content">
             <button class="button1" id="close_btn_settings">&#x2715;</button>
             <p>You can download the configuration, edit it, and upload a new configuration file.</p> <br>
-     <form action="{{ url_for('.download_config') }}" method="get" target="_blank">
+     <!-- see download button for example of no parameter -->
+     <form  action="{{ url_for('.download_config', config_file_name='config') }}?{{ rand }}"
+           method="get" target="_blank">
          <button class="button1" type="submit">Download Settings File</button>
      </form>
+
+
         </div>
     </div>
 

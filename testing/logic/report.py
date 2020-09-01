@@ -10,7 +10,7 @@ def truefalseToYesNo(true_or_false):
 
 def getReasonsTable(dictSignificanceReasons):
   table_string = ''
-  for test, reason in dictSignificanceReasons.items():
+  for test, reason in dictSignificanceReasons:
     table_string = table_string + '* ' +   str(test) + ": {}\n".format(reason)
   return table_string
 

@@ -1,4 +1,7 @@
 # v3
+import io
+
+import yaml
 from flask import *
 from flask import render_template
 
@@ -720,13 +723,14 @@ def download_file(markdown_only=True):
     the whole zip file (like if zip isn't working)
     @return:
     '''
+
     options = {}
     options["filename"] = request.cookies.get('fileName')
     options["normality_message"] = request.cookies.get('is_normal')
     options["skewness_message"] = request.cookies.get('skewness_gamma')
     options["test_statistic_message"] = \
         request.cookies.get('mean_or_median') # or is this 'summary_stats_dict'
-    options["significance_tests_table"] = json.loads(request.cookies.get('recommended_test_reasons'))
+    options["significance_tests_table"] = json.loads(request.cookies.get('recommended_tests'))
     options["significance_alpha"] = request.cookies.get('sig_test_alpha')
     options["bootstrap iterations"] = "200"
     # This was mu, which we're not letting the user define: options["expected_mean_diff"] = "0"
@@ -741,9 +745,25 @@ def download_file(markdown_only=True):
         return send_file("user/report.zip", as_attachment=True)
 
 
-@app.route('/download2')
-def download_config():
-    return send_file("user/config.yml", as_attachment=True)
+#@app.route('/download2')  # @app.route('/download2')
+@app.route('/download2/<config_file_name>')
+def download_config(config_file_name):   # was download_config() no param
+
+    rand_str = str(np.random.randint(10000))
+    config_file_path = 'user/'+config_file_name + rand_str + '.yml'
+    items = request.cookies.items()
+    cookie_dict = {}
+    for k,v in items:
+        #print('key={}, value={}'.format(k,v))
+        cookie_dict[k]=v
+
+    #Write YAML file
+    print('Writing to file: {}'.format(config_file_path))
+    with io.open(config_file_path, 'w', encoding='utf8') as outfile:
+        yaml.dump(cookie_dict, outfile, default_flow_style=False, allow_unicode=True)
+
+    return send_file(config_file_path, as_attachment=True)
+    #return send_file('user/config_cookies.yaml', as_attachment=True)
 
 
 @app.route('/img_url/<image_path>')
