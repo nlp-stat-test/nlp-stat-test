@@ -488,6 +488,7 @@ def effectsize(debug=True):
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
         # alpha for significance, boostrap iterations
         sig_test_alpha = json.loads(request.cookies.get('sig_test_alpha'))
+        effectsize_sig_alpha = request.form.get('effectsize_significance_level')
         sig_boot_iterations = json.loads(request.cookies.get('sig_boot_iterations'))
         # get old dif
         score_dif = calc_score_diff(scores1, scores2)
@@ -524,7 +525,8 @@ def effectsize(debug=True):
         for est in cur_selected_ests:
             val = calc_eff_size(est,
                                 score_dif,
-                                sig_test_alpha,
+                                float(effectsize_sig_alpha),
+                                #sig_test_alpha,
                                 sig_boot_iterations) # sig_test_alpha, sig_boot_iterations
             estimator_value_list.append((est, val))
 
@@ -539,6 +541,7 @@ def effectsize(debug=True):
                                    # specific to effect size test
                                    effect_size_estimators=estimators,  # just names
                                    estimator_value_list=estimator_value_list,  # name, value pairs
+                                   effectsize_sig_alpha=effectsize_sig_alpha,
                                    # file_uploaded = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies
@@ -576,6 +579,7 @@ def effectsize(debug=True):
         # -------- WRITE TO COOKIES ----------
         resp.set_cookie('effect_estimator_dict', json.dumps(estimators))
         resp.set_cookie('estimator_value_list', json.dumps(estimator_value_list))
+        resp.set_cookie('effectsize_sig_alpha', effectsize_sig_alpha)
         return resp
 
     elif request.method == 'GET':
@@ -662,6 +666,7 @@ def power(debug=True):
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
                                    estimator_value_list=json.loads(request.cookies.get('estimator_value_list')),
+                                   effectsize_sig_alpha=request.cookies.get('effectsize_sig_alpha'),
                                    eff_size_val=request.cookies.get('eff_size_val'),
                                    # effect_size_estimates = estimates,
                                    effect_estimator_dict = json.loads(request.cookies.get('effect_estimator_dict')),
