@@ -551,6 +551,13 @@ margin: 0 auto;>
                         {% for tuple in not_preferred_tests %}
                         <tr>
                             <td>
+                                <input type="radio"
+                                       name="target_sig_test"
+                                           id="target_sig_test-{{ sig_test_name }}" required
+                                           onclick="show_sig_boot_div('{{ tuple[0] }}')"
+                                        {% if sig_test_name %}
+                                            {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
+                                        {% endif %} value="{{ tuple[0] }}">
                                 {% if tuple[0]=='t' %}Student t test
                                 {% elif tuple[0]=='bootstrap' %}Bootstrap
                                 {% elif tuple[0]=='permutation' %}Permutation
@@ -586,13 +593,6 @@ margin: 0 auto;>
                         {% for tuple in not_recommended_tests %}
                         <tr>
                             <td>
-                                <input type="radio"
-                                       name="target_sig_test"
-                                           id="target_sig_test-{{ sig_test_name }}" required
-                                           onclick="show_sig_boot_div('{{ tuple[0] }}')"
-                                        {% if sig_test_name %}
-                                            {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
-                                        {% endif %} value="{{ tuple[0] }}">
                                 {% if tuple[0]=='t' %}Student t test
                                 {% elif tuple[0]=='bootstrap' %}Bootstrap
                                 {% elif tuple[0]=='permutation' %}Permutation

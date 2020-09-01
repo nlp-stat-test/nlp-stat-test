@@ -370,6 +370,7 @@ def sigtest(debug=True):
         fileName = request.cookies.get('fileName')
         # ------- Get form data
         show_non_recommended = request.form.get('checkbox_show_non_recommended')
+        show_non_preferred = request.form.get('checkbox_show_non_preferred')
         sig_test_name = request.form.get('target_sig_test')
         sig_alpha = request.form.get('significance_level')
         mu = float(request.form.get('mu'))
@@ -409,6 +410,7 @@ def sigtest(debug=True):
             test_stat_val, pval, alternative, mu, CI, rejection))
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
+        not_preferred_tests = json.loads(request.cookies.get('not_preferred_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
@@ -431,8 +433,10 @@ def sigtest(debug=True):
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    recommended_tests=recommended_tests,
+                                   not_preferred_tests=not_preferred_tests,  # list of tuples
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    show_non_recommended=show_non_recommended,
+                                   show_non_preferred=show_non_preferred,
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
