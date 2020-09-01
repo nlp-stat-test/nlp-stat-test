@@ -467,6 +467,10 @@ def sigtest(debug=True):
             resp.set_cookie('show_non_recommended', show_non_recommended)
         else:
             resp.set_cookie('show_non_recommended', '')
+        if show_non_preferred:
+            resp.set_cookie('show_non_preferred', show_non_preferred)
+        else:
+            resp.set_cookie('show_non_preferred', '')
         resp.set_cookie('sig_boot_iterations', str(sig_boot_iterations))
         resp.set_cookie('mu', str(mu))
         resp.set_cookie('pval', str(pval))
@@ -548,7 +552,9 @@ def effectsize(debug=True):
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
                                    recommended_tests=recommended_tests,
+                                   not_preferred_tests=json.loads(request.cookies.get('not_preferred_tests')),
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
+                                   show_non_preferred=request.cookies.get('show_non_preferred'),
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
@@ -671,9 +677,11 @@ def power(debug=True):
                                    summary_str=request.cookies.get('summary_str'),
                                    mean_or_median=request.cookies.get('mean_or_median'),
                                    is_normal=json.loads(request.cookies.get('is_normal')),
+                                   not_preferred_tests=json.loads(request.cookies.get('not_preferred_tests')),
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    recommended_tests=recommended_tests,
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
+                                   show_non_preferred=request.cookies.get('show_non_preferred'),
                                    summary_stats_dict=summary_stats_dict,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),

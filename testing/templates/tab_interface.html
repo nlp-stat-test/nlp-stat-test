@@ -417,6 +417,7 @@ margin: 0 auto;>
                         </tr>
                         {% endfor %}
                     </table>  <!-- End Non-Recommended Tests Table -->
+                        {% else %} There are no inappropriate tests.<br><br>
                     {% endif %}
                 </div>
                 <input type="checkbox" name="checkbox_show_non_preferred"
@@ -608,7 +609,7 @@ margin: 0 auto;>
                         {% endfor %}
                     </table>  <!-- End Non-Recommended Tests Table -->
                         {% else %}
-                        No tests fall into this category.
+                        No tests fall into this category. <br><br>
                     {% endif %}
                 </div>
 
@@ -671,7 +672,23 @@ margin: 0 auto;>
             <b>Results</b><br><br>
 
             <table border="1">
-                <!-- Hide test statistic
+
+                {% if sig_test_name %}
+                    <tr> <th>significance test</th>
+                        <td>
+                                {% if sig_test_name=='t' %}Student t test
+                                {% elif sig_test_name=='bootstrap' %}Bootstrap
+                                {% elif sig_test_name=='permutation' %}Permutation
+                                {% elif sig_test_name=='wilcoxon' %}Wilcoxson signed rank test
+                                {% elif sig_test_name=='sign' %}Sign test
+                                {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median)
+                                {% elif sig_test_name=='permutation_med' %}Permutation (median)
+                                {% else %}{{ sig_test_name}}
+                                {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                            <!-- Hide test statistic
                 {% if sig_test_name != 'bootstrap' %}
                  <tr>
                     <th>
@@ -767,6 +784,7 @@ margin: 0 auto;>
                     <tr>
                         <th>Effect Size Estimator</th>
                         <th>Value</th>
+                        <th>Confidence Interval</th>
                     </tr>
 
                     {% for key_value_tuple in estimator_value_list %}
@@ -778,7 +796,8 @@ margin: 0 auto;>
                                             {% elif key_value_tuple[0]=='cohend' %}Cohen's d
                                         {% else %}{{ key_value_tuple[0] }}{% endif %}
                         </td>
-                        <td>{{ key_value_tuple[1] }}</td>
+                        <td>{{ key_value_tuple[1][0] }}</td>
+                        <td>{{ key_value_tuple[1][1] }}</td>
                     </tr>
                     {% endfor %}
                 </table>
