@@ -364,11 +364,11 @@ def homepage(debug=True):
                                tooltip_bootstrap_test=helper("bootstrap_test"),
                                tooltip_permutation_test=helper("permutation_test"),
                                tooltip_post_power_analysis=helper("post_power_analysis"),
-
                                file_uploaded="Upload a file.",
                                recommended_tests=[],
-                               #recommended_tests_reasons={},
-                               summary_stats_dict={})
+                               summary_stats_dict={},
+                               rand_str=get_rand_state_str()
+                               )
 
 
 # ********************************************************************************************
@@ -489,7 +489,9 @@ def sigtest(debug=True):
         resp.set_cookie('rejectH0', str(rejection))
         return resp
     # GET
-    return render_template(template_filename)
+    return render_template(template_filename,
+                           rand_str=get_rand_state_str()
+                           )
 
 
 @app.route('/effectsize', methods=["GET", "POST"])
@@ -599,7 +601,9 @@ def effectsize(debug=True):
         # You got to the main page by navigating to the URL, not by clicking submit
         # full_filename1 = os.path.join(app.config['FOLDER'], 'hist_score1.svg')
         # full_filename2 = os.path.join(app.config['FOLDER'], 'hist_score2.svg')
-        return render_template('tab_interface.html')
+        return render_template('tab_interface.html',
+                               rand_str=get_rand_state_str()
+                               )
 
 
 @app.route('/power', methods=["GET", "POST"])
@@ -722,7 +726,9 @@ def power(debug=True):
         resp.set_cookie('sig_test_name', sig_test_name)
         resp.set_cookie('power_num_intervals', str(power_num_intervals))
         return resp
-    return render_template(template_filename)
+    return render_template(template_filename,
+                           rand_str=get_rand_state_str()
+                           )
 
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
