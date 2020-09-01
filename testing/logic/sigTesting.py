@@ -80,8 +80,8 @@ def CI_mean(x, alpha, alternative):
 		CI = (-float('inf'),round(upp_bound,5))
 
 	if alternative == "greater":
-		low_bound_temp = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha,n-1)
-		CI = (round(low_bound_temp,5),float('inf'))
+		low_bound = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha,n-1)
+		CI = (round(low_bound,5),float('inf'))
 
 	if alternative == "two-sided":
 		low_bound = x_bar+(np.sqrt(var_x)/np.sqrt(n))*stats.t.ppf(alpha/2,n-1)
