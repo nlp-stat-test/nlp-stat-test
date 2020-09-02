@@ -990,12 +990,21 @@ margin: 0 auto;>
         <div class="modal-content">
             <button class="button1" id="close_btn_settings">&#x2715;</button>
             <p>You can download the configuration, edit it, and upload a new configuration file.</p> <br>
-     <!-- see download button for example of no parameter -->
+     <!-- download config button -->
      <form  action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}"
            method="get" target="_blank">
          <button class="button1" type="submit">Download Settings File</button>
      </form>
+     <!-- upload config button -->
+         <form  action="{{ url_for('.upload_config')}}"
+                enctype="multipart/form-data" method="post"
+                target="_blank">
 
+                <button class="button1" type="submit">Upload Settings File</button>
+                <input type="file" id="system_file"
+                             name="system_file"
+                                        {% if error_str %}required{% endif %}/>
+         </form>
 
         </div>
     </div>
