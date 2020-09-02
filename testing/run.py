@@ -173,7 +173,7 @@ def create_summary_stats_dict(tc, debug=False):
 
 
 @app.route('/', methods=["GET", "POST"])
-def homepage(debug=True):
+def data_analysis(debug=True):
     if request.method == 'POST':
         # ------- Test if 'last_tab' was sent
         last_tab_clicked = request.form.get('last_tab')
@@ -315,6 +315,7 @@ def homepage(debug=True):
                 # -------------- Set all cookies -------------
                 if f.filename:
                     resp.set_cookie('fileName', f.filename)
+                resp.set_cookie('normality_alpha', json.dumps(normality_alpha))
                 resp.set_cookie('skewness_gamma', json.dumps(skewness_gamma))
                 resp.set_cookie('eval_unit_size', eval_unit_size)
                 resp.set_cookie('eval_unit_stat', eval_unit_stat)
@@ -424,9 +425,9 @@ def sigtest(debug=True):
         not_preferred_tests = json.loads(request.cookies.get('not_preferred_tests'))
         summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
 
-        skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
-                                   skewness_gamma=skewness_gamma,
+                                   skewness_gamma=json.loads(request.cookies.get('skewness_gamma')),
+                                   normality_alpha=json.loads(request.cookies.get('normality_alpha')),
                                    # specific to effect size test
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
@@ -730,6 +731,28 @@ def power(debug=True):
                            rand_str=get_rand_state_str()
                            )
 
+@app.route('/upload_config', methods=["POST"])
+def upload_config():
+    print('Uploading from config file.')
+    f = request.files['system_file']
+    if f.filename:
+        config_filename = f.filename
+        f.save(FOLDER + "/" + secure_filename(config_filename))
+        # Read YAML file
+        with open(FOLDER + "/" + config_filename, 'r') as stream: # read_score_file(FOLDER + "/" + data_filename)
+            data_loaded = yaml.safe_load(stream)
+            print('Data loaded from config.yml: {}'.format(data_loaded))
+            # TODO: get each field out of data_loaded to use in render_template parameters
+            resp = render_template(template_filename,
+                                   normality_alpha= data_loaded.get('normality_alpha'),
+                                   shuffle_seed= data_loaded.get('shuffle_seed'),
+                                   rand_str=get_rand_state_str()
+                                   )
+    else:
+        # todo: handle exceptions, print or indicate that no file was chosen.
+        resp = render_template(template_filename,
+                               rand_str=get_rand_state_str())
+    return resp
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
@@ -781,7 +804,6 @@ def download_config(config_file_name):   # was download_config() no param
 
     return send_file(config_file_path, as_attachment=True)
     #return send_file('user/config_cookies.yaml', as_attachment=True)
-
 
 @app.route('/img_url/<image_path>')
 def send_img_file(image_path, debug=False):
