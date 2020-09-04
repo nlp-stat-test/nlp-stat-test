@@ -10,9 +10,9 @@ import sys
 import time
 import numpy as np
 import os
-
 import yaml
-
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 if __name__ == '__main__':
 
