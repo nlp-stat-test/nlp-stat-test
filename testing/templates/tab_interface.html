@@ -480,11 +480,12 @@ margin: 0 auto;>
                 <div class="tooltip">?
                     <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
                 </div>
-
+                <div class="hide-arrows">
                 <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}"
                        value="{{ mu }}" {% else %} value=0.0 {% endif %}
-                       class="form-control input-md" step="0.0001" > <br><br> 
-
+                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;" > <br><br>
+                       <!-- class="form-control input-md" -->
+                </div>
                 <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
                 <b>Recommended Tests</b><br><br>
                 {% if recommended_tests|length %}
