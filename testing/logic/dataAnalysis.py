@@ -59,7 +59,7 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	# plot score1_new
 	x = list(score1_new.values())
 	plt.figure()
-	plt.hist(x, bins=np.linspace(-1,1, 50))
+	plt.hist(x, bins=np.linspace(np.min(x),np.max(x), 50))
 	plt.axvline(np.array(x).mean(), color='b', linestyle='--', linewidth=1, label='mean')
 	plt.axvline(np.median(np.array(x)), color='r', linestyle='-.', linewidth=1, label='median')
 	plt.legend(loc='upper right')
@@ -75,7 +75,7 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	# plot score2_new
 	y = list(score2_new.values())
 	plt.figure()
-	plt.hist(y, bins=np.linspace(-1,1, 50))
+	plt.hist(y, bins=np.linspace(np.min(y),np.max(y), 50))
 	plt.axvline(np.array(y).mean(), color='b', linestyle='--', linewidth=1, label='mean')
 	plt.axvline(np.median(np.array(y)), color='r', linestyle='-.', linewidth=1, label='median')
 	plt.legend(loc='upper right')
@@ -88,7 +88,7 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	# plot score_diff_new
 	z = list(score_diff_new.values())
 	plt.figure()
-	plt.hist(z, bins=np.linspace(-1,1, 50))
+	plt.hist(z, bins=np.linspace(np.min(z),np.max(z), 50))
 	plt.axvline(np.array(z).mean(), color='b', linestyle='--', linewidth=1, label='mean')
 	plt.axvline(np.median(np.array(z)), color='r', linestyle='-.', linewidth=1, label='median')
 	plt.legend(loc='upper right')
