@@ -1,39 +1,108 @@
+
 # user's config file for testing proc
 
-## pre-testing power analysis
+#######################################################
+#######################################################
+
+## pre-testing power analysis ##
+
+# mean difference between the two samples (or mean of one normal sample)
 pre_mu_diff: 1
+
+# sum of sd of two normal samples (or sd of one normal sample)
 pre_sd: 2
+
+# desired power level
 pre_pow_lev: 0.8
+
+# significance level alpha
 pre_alpha: 0.05
+
+# side of alternative hypothesis (less, greater, two-sided)
 pre_alternative: two-sided
 
+#######################################################
+#######################################################
+
 ## data analysis:
+
+# evaluation unit size (must be an integer from 1 to max of original sample size)
 eval_unit_size: 5
+
+# metric to calculate evaluation unit (mean, median)
 eval_unit_met: mean
+
+# a boolean indicating whether the sample should be reshuffled
 shuffled: False
+
+# random seed for reshuffling
 random_seed: 13
+
+# significance level for normality test
 normal_test_alpha: 0.05
 
+#######################################################
+#######################################################
 
 ## sig testing
+
+# significance level for the primary significance test 
 sig_test_alpha: 0.05
+
+# number of iterations for bootstrap/permutation test
 sig_boot_perm_B: 500
-mu: 0 # null hypothesis
+
+# the hypothesized value of mean difference in the null (also denoted by delta)
+mu: 0
+
+# side of the primary significance test (less, greater, two-sided)
 h1: two-sided # alternative hypothesis
 
+#######################################################
+#######################################################
+
 ## effect size
+
+# effect size index (cohend, hedgesg, wilcoxonr, hl)
 eff_size_ind: wilcoxonr
+
+# significance level for calculating confidence interval for effect size
 eff_size_alpha: 0.05
 
+
+#######################################################
+#######################################################
+
 ## power analysis
+
+# significance level for power analysis
 power_alpha: 0.05
+
+# method for power analysis (montecarlo, bootstrap)
 power_method: bootstrap
+
+# the distribution name for montecarlo simulation (currently only implemented for normal)
 power_dist_name: normal
-power_num_of_subsample: 10 # number of simulations 
+
+# number of power measurements on the x-axis
+power_num_of_subsample: 10 
+
+# number of iterations for each measurement
 power_B: 50
 
 
+#######################################################
+#######################################################
 
-## output
+## output directory
+
+# name of the output directory for figures
 fig_output_dir: figures
+
+# name of the output directory for report
 report_output_dir: report
+
+
+
+
+
