@@ -832,7 +832,46 @@ def send_img_file_dir(image_name, debug=False):
     return send_from_directory(dir_name, image_name)
 
 
-# --- End examples ----
+# --- Begin functions relating to help and manual ----
+@app.route('/<help_file_name>', methods=["GET", "POST"])
+def request_help_file(help_file_name='about.html', debug=True):
+    # todo: reuse code from help functions
+    if debug:
+        print('Optional Filename parameter to request_help_file: {}'.format(help_file_name))
+    try:
+        file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
+    except FileNotFoundError:
+        if 'manual' in help_file_name or 'help' in help_file_name:
+            file = send_file('./static/{}'.format('manual.html'))
+        elif 'about' in help_file_name:
+            file = send_file('./static/{}'.format('about.html'))
+        else:
+            # go to step 1 (todo: use previous state)
+            file = render_template(template_filename, rand_str=get_rand_state_str())
+    return file
+
+@app.route('/manual')
+def get_manual(debug=True):
+    if debug: print('getting manual')
+    try:
+        file = send_file('./static/manual.html', as_attachment=False, cache_timeout=0)
+    except FileNotFoundError:
+        file = render_template(template_filename, rand_str=get_rand_state_str())
+    return file
+
+@app.route('/help/<help_file_name>/')
+def get_help(help_file_name, debug=True):
+    if debug: print('get_help: {}'.format(help_file_name))
+    try:
+        file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
+    except:
+        if 'manual' in help_file_name:
+            file = send_file('./static/{}'.format('manual.html'))
+        elif 'about' in help_file_name:
+            file = send_file('./static/{}'.format('about.html'))
+        else:
+            file = render_template(template_filename, rand_str=get_rand_state_str())
+    return file
 
 if __name__ == "__main__":
     app.debug = True
