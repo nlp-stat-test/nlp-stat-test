@@ -26,3 +26,13 @@ def read_score_file(score_file):
 				score2[ind] = float(line_tokens[1])
 				ind += 1
 	return([score1,score2])
+
+
+def print_eu(score1, score2, score_diff, orig_ind, sample_file_dir):
+	with open(sample_file_dir+'/score','w') as f:
+		f.write('score1'+' '+'score2'+' '+'score_diff'+' '+'original_ind'+'\n')
+		for i in score1.keys():
+			f.write(str(score1[i])+' '+str(score2[i])+' '+str(score_diff[i])+' '+str(orig_ind[i])+'\n')
+
+
+
