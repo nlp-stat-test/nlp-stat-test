@@ -27,13 +27,13 @@ pre_alternative: two-sided
 ## data analysis:
 
 # evaluation unit size (must be an integer from 1 to max of original sample size)
-eval_unit_size: 5
+eval_unit_size: 10
 
 # metric to calculate evaluation unit (mean, median)
 eval_unit_met: mean
 
 # a boolean indicating whether the sample should be reshuffled
-shuffled: False
+shuffled: True
 
 # random seed for reshuffling
 random_seed: 13
@@ -101,6 +101,9 @@ fig_output_dir: figures
 
 # name of the output directory for report
 report_output_dir: report
+
+# name of the output directory for sample
+sample_output_dir: sample
 
 
 

@@ -6,8 +6,9 @@
     <link href="{{ url_for('static', filename='modal.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='breadcrumbs.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
 </head>
 
@@ -50,22 +51,22 @@ function greyOut(itemName) {
 }
 </script>
 
-
-<script> //UPLOAD BUTTON CLICK HANDLER
-    // change file upload message when upload button is clicked
-    window.pressed = function(){
-        console.log('UPLOAD BUTTON click handler')
-    var a = document.getElementById('system_file');
-    if(a.value == "")
-    {
-        fileLabel.innerHTML = "<i>Upload a file.</i>";
-    }
-    else
-    {
-        var theSplit = a.value.split('\\');
-        fileLabel.innerHTML = "<i>File selected:</i> " + theSplit[theSplit.length-1] + ".";
-    }
-};
+<script>
+    //UPLOAD BUTTON CLICK HANDLER
+        // change file upload message when upload button is clicked
+        window.pressed = function(){
+            console.log('UPLOAD BUTTON click handler')
+        var a = document.getElementById('system_file');
+        if(a.value == "")
+        {
+            fileLabel.innerHTML = "<i>Upload a file.</i>";
+        }
+        else
+        {
+            var theSplit = a.value.split('\\');
+            fileLabel.innerHTML = "<i>File selected:</i> " + theSplit[theSplit.length-1] + ".";
+        }
+    };
 </script>
 
 <script>
@@ -111,216 +112,179 @@ function show_montecarlo_div() {
     document.getElementById("power_boot_fields").style.display="none"
 }
 </script>
+
 <body>
-<div style="width: 640px;"
-margin: 0 auto;>
-    <div class="header">
-        <h1>NlpStatTest</h1>
-    </div>
+    <div margin: 100 auto;>
+        <div class="header">
+            <h1>NlpStatTest</h1>
+        </div>
 
-    <div class="top_bar">
-        <button class="button1" id="btn_about">About</button>
-        <button class="button1" id="btn_settings">Save/Restore Settings</button>
-        <button class="button1" id="btn_download">Download Report</button>
-    </div>
+        <div class="top_bar interface">
+            <button class='interface button1' id="btn_about" >About</button>
+            <button class='interface button1' id="btn_settings" >Save/Restore Settings</button>
+            <button class='interface button1' id="btn_download" >Download Report</button>
+        </div>
 
-    <div class="roundpurple">
-        <ul class="breadcrumb">
-            <li><button class="button1" id ='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis →</button></li>
-            <li><button class="button1" id ='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance → </button></li>
-            <li><button class="button1"  id ='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size →</button></li>
-            <li><button class="button1" id ='BtnTab4'onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></li>
-        </ul>
-    </div>
+        <div class='roundpurple interface'>
+            <ul class="breadcrumb">
+                <li><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis →</button></li>
+                <li><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance → </button></li>
+                <li><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size →</button></li>
+                <li><button class="button1" id='BtnTab4' onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></li>
+            </ul>
+        </div>
 
-    <div id='Data Analysis' class="tabcontent" style="display:block">
-        <!-- Data Analysis form -->
-        <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
-            <!-- Begin Data Analysis div -->
-            <div class="roundpurplebottom" style="position:relative; top: -18px;">
+        <div id='Data Analysis' class="tabcontent" style="display:block">
+            <!-- Data Analysis form -->
+            <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <!-- Begin Data Analysis div -->
+                <div class="roundpurplebottom" style="position:relative; top: -18px;">
 
-                <b>Data and Parameters</b><br><br>
-
-
-                System File:
-                    <div class="tooltip">?
+                    <b>Data and Parameters</b><br><br> System File:
+                    <div class="tooltip interface">?
                         <span class="tooltiptext">Upload a text file containing metrics comparing two systems.
                         The file should have two colummns, one for each system.</span></div>
-                <!-- Original (works):
+                    <!-- Original (works):
                 <input id="system_file" name="system_file" class="input-file" type="file" />
                 -->
-                <!-- Display name of previously uploaded file in file_uploaded -->
-                    <input type="file" id="system_file" onchange="pressed()"
-                           name="system_file" style="display:none;" {% if error_str %}required{% endif %}/>
-                            <!-- todo: make a {file_error} variable if no file found -->
-                    <a href="#" class="button1"><label for="system_file">Upload</label></a>
-                           <label id="fileLabel" >{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
-                <br><br>
+                    <!-- Display name of previously uploaded file in file_uploaded -->
+                    <input type="file" id="system_file" onchange="pressed()" name="system_file" style="display:none;" {% if error_str %}required{% endif %}/>
+                    <!-- todo: make a {file_error} variable if no file found -->
+                    <a href="#" class="button1 interface"><label for="system_file">Upload</label></a>
+                    <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                    <br><br>
 
-                <!-- Data Analysis: Evaluation Unit size-->
-                Evaluation Unit Size:
-                <div class="tooltip">?
-                    <span class="tooltiptext">This should be a whole number between one and the number of data points.</span>
-                </div>
+                    <!-- Data Analysis: Evaluation Unit size-->
+                    Evaluation Unit Size:
+                    <div class="tooltip interface">?
+                        <span class="tooltiptext">This should be a whole number between one and the number of data points.</span>
+                    </div>
 
-                <input id="eval_unit_size" name="eval_unit_size"
-                       type="number"
-                       {% if eval_unit_size %}
-                            value="{{ eval_unit_size }}"
-                       {% else %}
-                            value="1"
-                       {% endif %}
-                       class="form-control input-md" required="">
+                    <input id="eval_unit_size" name="eval_unit_size" type="number" {% if eval_unit_size %} value="{{ eval_unit_size }}" {% else %} value="1" {% endif %} class="form-control input-md" required="">
 
-                <br><br>
-                <!-- Data Analysis: Radio Buttons (mean, median)  -->
+                    <br><br>
+                    <!-- Data Analysis: Radio Buttons (mean, median)  -->
 
-                Evaluation Unit Metric:
-                <div class="tooltip">?
-                    <span class="tooltiptext"> The metric to use as the representative value for each evaluation unit.
+                    Evaluation Unit Metric:
+                    <div class="tooltip interface">?
+                        <span class="tooltiptext"> The metric to use as the representative value for each evaluation unit.
                           <!-- TODO: Use "{{help2}}" or another server side help string -->
                       </span></div>
 
-                <input type="radio" name="target_statistic" id="target_statistic-0" value="mean" checked="checked"
-                        {% if eval_unit_stat=="mean" %} checked="checked" {% else %} checked="checked"{% endif %}> Mean
+                    <input type="radio" name="target_statistic" id="target_statistic-0" value="mean" checked="checked" {% if eval_unit_stat=="mean" %} checked="checked" {% else %} checked="checked" {% endif %}> Mean
 
-                <input type="radio" name="target_statistic" id="target_statistic-1" value="median"
-                        {% if eval_unit_stat=="median" %} checked="checked" {% endif %}> Median
+                    <input type="radio" name="target_statistic" id="target_statistic-1" value="median" {% if eval_unit_stat=="median" %} checked="checked" {% endif %}> Median
 
-                <br> <br>
-                <!-- Data Analysis: seed-->
+                    <br> <br>
+                    <!-- Data Analysis: seed-->
 
-                Random Seed:
-                <div class="tooltip">?
-                    <span class="tooltiptext">If you would like to provide a (real number) seed for random shuffling, enter it here.
+                    Random Seed:
+                    <div class="tooltip interface">?
+                        <span class="tooltiptext">If you would like to provide a (real number) seed for random shuffling, enter it here.
                       Otherwise, we will not shuffle.</span>
-                </div>
+                    </div>
 
-                <input id="seed" name="seed" type="number" placeholder="don't shuffle"
-                        {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
+                    <input id="seed" name="seed" type="number" placeholder="don't shuffle" {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
 
-                <br><br>
+                    <br><br> Significance level &alpha; (for calculating normality):
+                    <div class="tooltip interface">?
+                        <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.05.</span>
+                    </div>
 
-                Significance level &alpha; (for calculating normality):
-                <div class="tooltip">?
-                    <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.05.</span>
-                </div>
+                    <input id="normality_alpha" name="normality_alpha" type="number" step="0.001" {% if normality_alpha %} value="{{ normality_alpha }}" {% else %}value="0.05" {% endif %} class="form-control input-md">
 
-                <input id="normality_alpha" name="normality_alpha" type="number"
-                        step="0.001"
-                        {% if normality_alpha %} value="{{ normality_alpha }}"
-                        {% else %}value="0.05"{% endif %}  class="form-control input-md">
+                    <br><br>
+                    <!-- Data Analysis Submit Button -->
 
-                <br><br>
-                <!-- Data Analysis Submit Button -->
-
-        
                     <input type="hidden" id="da_hidden" value="hidden101">
                     <!-- Is type=submit implied by class="btn btn-success" -->
-                    <button id="submit" name="submit" type=submit class="button1" onclick="document.getElementById('hidden').style.display = 'block'">Run</button>
+                    <button id="submit" name="submit" type=submit class="button1 interface" onclick="document.getElementById('hidden').style.display = 'block'">Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
-                
 
-            </div>
-            <!-- end purple box -->
-        </form>
-        <!-- End data analysis form -->
-        <!-- begin green results area -->
-        <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
+                </div>
+                <!-- end purple box -->
+            </form>
+            <!-- End data analysis form -->
+            <!-- begin green results area -->
+            <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
 
-            <!-- SUMMARY STATISTICS -->
-            <b>{{ summary_str }}</b><br><br>
+                <!-- SUMMARY STATISTICS -->
+                <b>{{ summary_str }}</b><br><br> {% if summary_stats_dict|length %}
+                <table>
 
-            {% if summary_stats_dict|length %}
-            <table>
+                    <tr>
+                        <th>Score</th>
+                        <th>Mean</th>
+                        <th>Median</th>
+                        <th>Standard Deviation</th>
+                        <th>Minimum</th>
+                        <th>Maximum</th>
+                    </tr>
 
-                <tr>
-                    <th>Score</th>
-                    <th>Mean</th>
-                    <th>Median</th>
-                    <th>Standard Deviation</th>
-                    <th>Minimum</th>
-                    <th>Maximum</th>
-                </tr>
+                    {% for key, value in summary_stats_dict.items() %}
 
-                {% for key, value in summary_stats_dict.items() %}
-
-                <tr>
-                    <!--
+                    <tr>
+                        <!--
                                   <td> {{ key }} </td> <td>{{ value }}</td> -->
-                    <td> {{ key }} </td>
-                    {% for k, v in value.items() %}
-                    <td>{{ v }}</td>
+                        <td> {{ key }} </td>
+                        {% for k, v in value.items() %}
+                        <td>{{ v }}</td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
-            {% endif %}
+                </table>
+                {% endif %}
 
-            <!-- HISTOGRAM Images -->
-            <br>
-            {% if hist_score1_file %}
-            <button id="hist_button" class="button1" onclick = "showdiv()">View Histograms</button>
-            {% endif %} <br><br>
-            <div class="hiddendiv" id = "hidden_graph">
+                <!-- HISTOGRAM Images -->
+                <br> {% if hist_score1_file %}
+                <button id="hist_button" class="button1 interface" onclick="showdiv()">View Histograms</button> {% endif %} <br><br>
+                <div class="hiddendiv" id="hidden_graph">
 
-            <!-- new way -->
-            {% if hist_score1_file %}
-                <img id=hist_score1_file src="{{ url_for('send_img_file_dir', image_name=hist_score1_file) }}?{{ rand }}">{% endif %}
-            {% if hist_score2_file %}
-                <img id=hist_score2_file src="../{{ url_for('send_img_file_dir', image_name=hist_score2_file) }}?{{ rand }}"> {% endif %}
-            {% if hist_diff_par_file %}
-                <img id=hist_diff_par_file src="../{{ url_for('send_img_file_dir', image_name=hist_diff_par_file) }}?{{ rand }}"> {% endif %}
+                    <!-- new way -->
+                    {% if hist_score1_file %}
+                    <img id=hist_score1_file src="{{ url_for('send_img_file_dir', image_name=hist_score1_file) }}?{{ rand }}">{% endif %} {% if hist_score2_file %}
+                    <img id=hist_score2_file src="../{{ url_for('send_img_file_dir', image_name=hist_score2_file) }}?{{ rand }}"> {% endif %} {% if hist_diff_par_file %}
+                    <img id=hist_diff_par_file src="../{{ url_for('send_img_file_dir', image_name=hist_diff_par_file) }}?{{ rand }}"> {% endif %}
 
-            </div>
+                </div>
 
+                <!-- RECOMMENDATION for test statistics -->
 
-            <!-- RECOMMENDATION for test statistics -->
-
-            <b id=teststat_heading align='left'>{{ teststat_heading }}</b><br><br>
-
-
-            {% if mean_or_median %}
-            <table border=1>
-            
-            <tr>
-            <th>Property</th>
-            <th>Conclusion</th>
-            </tr>
-            
-            <tr>
-            <td>Normality</td>
-            <td>The data distribution {% if is_normal %} passes {% else %} does not pass {% endif %} the normality test.</td>
-            </tr>
-                
-            <tr>
-            <td>Skewness</td>
-            <td>The skewness measure &gamma; is {{ skewness_gamma }}. <!-- {% if mean_or_median == 'median' %} {% endif %} -->
-                This means the data distribution is
-                {% if skewness_gamma > 1 %} highly skewed
-                {% elif skewness_gamma > 0.5 %} moderately skewed
-                {% else %} roughly symmetric{% endif %}.
-            </td>
-            </tr>
-                
-            <tr>
-            <td>Test Statistic</td>
-            <td>Based on the skewness, the recommended test statistic to use is:
-            {{ mean_or_median }}.</td>
-            </tr>
-                
-            </table>
-            {% endif %} <br>
-
-            <!-- RECOMMENDATION for significance tests with REASONS -->
-            <b id=sigtest_heading align='left'>
-                {{ sigtest_heading }}</b><br><br>
-
-                The folllowing tests are appropriate and preferred:<br><br>
-                {% if recommended_tests|length %}
+                <b id=teststat_heading align='left'>{{ teststat_heading }}</b><br><br> {% if mean_or_median %}
                 <table border=1>
-                      <col style="width:140px">
+
+                    <tr>
+                        <th>Property</th>
+                        <th>Conclusion</th>
+                    </tr>
+
+                    <tr>
+                        <td>Normality</td>
+                        <td>The data distribution {% if is_normal %} passes {% else %} does not pass {% endif %} the normality test.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Skewness</td>
+                        <td>The skewness measure &gamma; is {{ skewness_gamma }}.
+                            <!-- {% if mean_or_median == 'median' %} {% endif %} -->
+                            This means the data distribution is {% if skewness_gamma > 1 %} highly skewed {% elif skewness_gamma > 0.5 %} moderately skewed {% else %} roughly symmetric{% endif %}.
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Test Statistic</td>
+                        <td>Based on the skewness, the recommended test statistic to use is: {{ mean_or_median }}.</td>
+                    </tr>
+
+                </table>
+                {% endif %} <br>
+
+                <!-- RECOMMENDATION for significance tests with REASONS -->
+                <b id=sigtest_heading align='left'>
+                {{ sigtest_heading }}</b><br><br> The folllowing tests are appropriate and preferred:<br><br> {% if recommended_tests|length %}
+                <table border=1>
+                    <col style="width:140px">
 
                     <tr>
                         <th>Test</th>
@@ -330,33 +294,21 @@ margin: 0 auto;>
                     {% for tuple in recommended_tests %}
                     <tr>
                         <td>
-                            {% if tuple[0]=='t' %}Student t test
-                            {% elif tuple[0]=='bootstrap' %}Bootstrap
-                            {% elif tuple[0]=='permutation' %}Permutation
-                            {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                            {% elif tuple[0]=='sign' %}Sign test
-                            {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                            {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                            {% else %}{{ tuple[0] }}
-                            {% endif %}
+                            {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                         </td>
                         <td>{{ tuple[1] }}</td>
                     </tr>
                     {% endfor %}
-                </table> <!-- End Recommended Tests Table -->
+                </table>
+                <!-- End Recommended Tests Table -->
                 {% endif %}
 
-                <div id="non_preferred_div_da"
-                     {% if show_non_preferred %} style="display: block;"
-                        {% else %} style="display: none"
-                     {% endif %}  >
-                <br>
+                <div id="non_preferred_div_da" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
+                    <br>
 
-                <b>Appropriate but Non-Preferred Tests</b><br><br>
-                    {% if not_preferred_tests|length %}
-    The folllowing tests are appropriate but not preferred:<br><br>
+                    <b>Appropriate but Non-Preferred Tests</b><br><br> {% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:<br><br>
                     <table border=1>
-                          <col style="width:140px">
+                        <col style="width:140px">
 
                         <tr>
                             <th>Test</th>
@@ -366,34 +318,21 @@ margin: 0 auto;>
                         {% for tuple in not_preferred_tests %}
                         <tr>
                             <td>
-                                {% if tuple[0]=='t' %}Student t test
-                                {% elif tuple[0]=='bootstrap' %}Bootstrap
-                                {% elif tuple[0]=='permutation' %}Permutation
-                                {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                                {% elif tuple[0]=='sign' %}Sign test
-                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                                {% else %}{{ tuple[0] }}
-                                {% endif %}
+                                {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                             </td>
                             <td>{{ tuple[1] }}</td>
                         </tr>
                         {% endfor %}
-                    </table>  <!-- End Non-Preferred Tests Table -->
-                        {% else %} There are no tests in this category.<br><br>
-                    {% endif %}
+                    </table>
+                    <!-- End Non-Preferred Tests Table -->
+                    {% else %} There are no tests in this category.<br><br> {% endif %}
                 </div>
-                <div id="non_recommended_div_da"
-                     {% if show_non_recommended %} style="display: block;"
-                        {% else %} style="display: none"
-                     {% endif %}>
-                <br>
+                <div id="non_recommended_div_da" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
+                    <br>
 
-                <b>Inappropriate Tests</b><br><br>
-                    {% if not_recommended_tests|length %}
-            The following tests are inappropriate and not recommended:
+                    <b>Inappropriate Tests</b><br><br> {% if not_recommended_tests|length %} The following tests are inappropriate and not recommended:
                     <table border=1>
-                          <col style="width:140px">
+                        <col style="width:140px">
 
                         <tr>
                             <th>Test</th>
@@ -403,37 +342,23 @@ margin: 0 auto;>
                         {% for tuple in not_recommended_tests %}
                         <tr>
                             <td>
-                                {% if tuple[0]=='t' %}Student t test
-                                {% elif tuple[0]=='bootstrap' %}Bootstrap
-                                {% elif tuple[0]=='permutation' %}Permutation
-                                {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                                {% elif tuple[0]=='sign' %}Sign test
-                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                                {% else %}{{ tuple[0] }}
-                                {% endif %}
+                                {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                             </td>
                             <td>{{ tuple[1] }}</td>
                         </tr>
                         {% endfor %}
-                    </table>  <!-- End Non-Recommended Tests Table -->
-                        {% else %} There are no inappropriate tests.<br><br>
-                    {% endif %}
+                    </table>
+                    <!-- End Non-Recommended Tests Table -->
+                    {% else %} There are no inappropriate tests.<br><br> {% endif %}
                 </div>
-                <input type="checkbox" name="checkbox_show_non_preferred"
-                       {% if show_non_preferred %} checked {% endif %}
-                       id="checkbox_show_non_preferred_da"
-                       onclick="toggle_non_recommended('non_preferred_div_da',
-                           'checkbox_show_non_preferred_da')">
-                       List less-preferred significance tests.
-                <input type="checkbox" name="checkbox_show_non_recommended"
-                       {% if show_non_recommended %} checked {% endif %}
-                       id="checkbox_show_non_recommended_da"
-                       onclick="toggle_non_recommended('non_recommended_div_da',
-                           'checkbox_show_non_recommended_da')">
-                       List inappropriate significance tests.
-            <!-- (Bulleted list example) -->
-            <!--
+                <div class="interface">
+                <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_da" onclick="toggle_non_recommended('non_preferred_div_da',
+                           'checkbox_show_non_preferred_da')"> List less-preferred significance tests.
+                <input type="checkbox"  name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_da" onclick="toggle_non_recommended('non_recommended_div_da',
+                           'checkbox_show_non_recommended_da')"> List inappropriate significance tests.
+                           </div>
+                <!-- (Bulleted list example) -->
+                <!--
                        The following tests are recommended:
                        <ul>
                          {% for name in recommended_tests %}
@@ -442,215 +367,152 @@ margin: 0 auto;>
                        </ul>
                        -->
 
-
+            </div>
+            <!-- end round green (data analysis) -->
+            <h1></h1>
         </div>
-        <!-- end round green (data analysis) -->
-    </div>
-    <!-- End data analysis -->
+        <!-- End data analysis -->
 
-    <div id='Significance Test' class="tabcontent" style="display:none">
+        <div id='Significance Test' class="tabcontent" style="display:none">
 
-        <div class="roundpurplebottom" style="position:relative; top: -18px;">
+            <div class="roundpurplebottom" style="position:relative; top: -18px;">
 
-            <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
-                <!-- 3 alternatives, less, greater, two sided -->
-            <b>Choose the alternative hypothesis</b><br><br>
-                <!-- u1 < u2 -->
-                <input type="radio" name="alternative" id="alternative_less" value="less" required
-                        {% if alternative=='less' %}checked{% endif %}> &mu;1-&mu;2 < &delta;
-                <div class="tooltip">?
-                    <span class="tooltiptext">The alternative hypothesis is that the difference between systems is less than &delta;.</span>
-                </div> <br>
-                <!-- u1 > u2 -->
-                <input type="radio" name="alternative" id="alternative_greater" value="greater"
-                {% if alternative=='greater' %}checked {% endif %}> &mu;1-&mu;2 > &delta;
-                <div class="tooltip">?
-                    <span class="tooltiptext">The alternative hypothesis is that the difference between systems is greater than &delta;.</span>
-                </div> <br>
-                <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided"
-                       {% if alternative=='two-sided' %}checked{% endif %}> &mu;1-&mu;2 != &delta;
-                <div class="tooltip">?
-                    <span class="tooltiptext">The alternative hypothesis is that the difference between
+                <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    <!-- 3 alternatives, less, greater, two sided -->
+                    <b>Choose the alternative hypothesis</b><br><br>
+                    <!-- u1 < u2 -->
+                    <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> &mu;1-&mu;2
+                    < &delta; <div class="tooltip interface">?
+                        <span class="tooltiptext">The alternative hypothesis is that the difference between systems is less than &delta;.</span>
+            </div> <br>
+            <!-- u1 > u2 -->
+            <input type="radio" name="alternative" id="alternative_greater" value="greater" {% if alternative=='greater' %}checked {% endif %}> &mu;1-&mu;2 > &delta;
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is greater than &delta;.</span>
+            </div> <br>
+            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> &mu;1-&mu;2 != &delta;
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between
                         the first and second system is not equal to &delta;.</span>
-                </div>
-                <br><br>
-                                <!-- Mu -->
+            </div>
+            <br><br>
+            <!-- Mu -->
 
-                Threshold &delta;:
-                <div class="tooltip">?
-                    <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
-                </div>
-                <div class="hide-arrows">
-                <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}"
-                       value="{{ mu }}" {% else %} value=0.0 {% endif %}
-                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;" > <br><br>
-                       <!-- class="form-control input-md" -->
-                </div>
-                <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
-                <b>Recommended Tests</b><br><br>
-                {% if recommended_tests|length %}
+            Threshold &delta;:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
+            </div>
+            <div class="hide-arrows">
+                <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}" value="{{ mu }}" {% else %} value=0.0 {% endif %} class="form-control" step="any" style="-webkit-appearance: none; margin:0;"> <br><br>
+                <!-- class="form-control input-md" -->
+            </div>
+            <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
+            <b>Recommended Tests</b><br><br> {% if recommended_tests|length %}
+            <table border=1>
+                <col style="width:140px">
+
+                <tr>
+                    <th>Test</th>
+                    <th>Reason</th>
+                </tr>
+
+                {% for tuple in recommended_tests %}
+                <tr>
+                    <td>
+                        <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                    </td>
+                    <td>{{ tuple[1] }}</td>
+                </tr>
+                {% endfor %}
+            </table> <br>
+            <!-- End Recommended Tests Table -->
+            {% endif %}
+
+            <div id="non_preferred_div_st" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
+                <b>Appropriate but Non-Preferred Tests</b><br><br> {% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:<br><br>
                 <table border=1>
-                      <col style="width:140px">
-                          
+                    <col style="width:140px">
+
                     <tr>
                         <th>Test</th>
                         <th>Reason</th>
                     </tr>
 
-                    {% for tuple in recommended_tests %}
+                    {% for tuple in not_preferred_tests %}
                     <tr>
                         <td>
-                            <input type="radio"
-                                   name="target_sig_test"
-                                       id="target_sig_test-{{ sig_test_name }}" required
-                                       onclick="show_sig_boot_div('{{ tuple[0] }}')"
-                                    {% if sig_test_name %}
-                                        {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
-                                    {% endif %} value="{{ tuple[0] }}">
-                            {% if tuple[0]=='t' %}Student t test
-                            {% elif tuple[0]=='bootstrap' %}Bootstrap
-                            {% elif tuple[0]=='permutation' %}Permutation
-                            {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                            {% elif tuple[0]=='sign' %}Sign test
-                            {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                            {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                            {% else %}{{ tuple[0] }}
-                            {% endif %}
+                            <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                         </td>
                         <td>{{ tuple[1] }}</td>
                     </tr>
                     {% endfor %}
-                </table> <br> <!-- End Recommended Tests Table -->
-                {% endif %}
-
-                <div id="non_preferred_div_st"
-                     {% if show_non_preferred %} style="display: block;"
-                        {% else %} style="display: none"
-                     {% endif %}  >
-                <b>Appropriate but Non-Preferred Tests</b><br><br>
-                    {% if not_preferred_tests|length %}
-    The folllowing tests are appropriate but not preferred:<br><br>
-                    <table border=1>
-                          <col style="width:140px">
-
-                        <tr>
-                            <th>Test</th>
-                            <th>Reason</th>
-                        </tr>
-
-                        {% for tuple in not_preferred_tests %}
-                        <tr>
-                            <td>
-                                <input type="radio"
-                                       name="target_sig_test"
-                                           id="target_sig_test-{{ sig_test_name }}" required
-                                           onclick="show_sig_boot_div('{{ tuple[0] }}')"
-                                        {% if sig_test_name %}
-                                            {% if tuple[0]==sig_test_name %} checked="checked" {% endif %}
-                                        {% endif %} value="{{ tuple[0] }}">
-                                {% if tuple[0]=='t' %}Student t test
-                                {% elif tuple[0]=='bootstrap' %}Bootstrap
-                                {% elif tuple[0]=='permutation' %}Permutation
-                                {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                                {% elif tuple[0]=='sign' %}Sign test
-                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                                {% else %}{{ tuple[0] }}
-                                {% endif %}
-                            </td>
-                            <td>{{ tuple[1] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>  <!-- End Non-Preferred Tests Table -->
-                        {% else %} There are no tests in this category.<br><br>
-                    {% endif %}
-                </div>
-                <div id="non_recommended_div_st"
-                     {% if show_non_recommended %} style="display: block;"
-                        {% else %} style="display: none"
-                     {% endif %}>
+                </table>
+                <!-- End Non-Preferred Tests Table -->
+                {% else %} There are no tests in this category.<br><br> {% endif %}
+            </div>
+            <div id="non_recommended_div_st" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
                 <br>
-                <b>Inappropriate Tests</b><br><br>
-                    {% if not_recommended_tests|length %}
-                    <table border=1>
-                          <col style="width:140px">
+                <b>Inappropriate Tests</b><br><br> {% if not_recommended_tests|length %}
+                <table border=1>
+                    <col style="width:140px">
 
-                        <tr>
-                            <th>Test</th>
-                            <th>Reason</th>
-                        </tr>
+                    <tr>
+                        <th>Test</th>
+                        <th>Reason</th>
+                    </tr>
 
-                        {% for tuple in not_recommended_tests %}
-                        <tr>
-                            <td>
-                                {% if tuple[0]=='t' %}Student t test
-                                {% elif tuple[0]=='bootstrap' %}Bootstrap
-                                {% elif tuple[0]=='permutation' %}Permutation
-                                {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test
-                                {% elif tuple[0]=='sign' %}Sign test
-                                {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median)
-                                {% elif tuple[0]=='permutation_med' %}Permutation (median)
-                                {% else %}{{ tuple[0] }}
-                                {% endif %}
-                            </td>
-                            <td>{{ tuple[1] }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>  <!-- End Non-Recommended Tests Table -->
-                        {% else %}
-                        No tests fall into this category. <br><br>
-                    {% endif %}
-                </div>
+                    {% for tuple in not_recommended_tests %}
+                    <tr>
+                        <td>
+                            {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                        </td>
+                        <td>{{ tuple[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!-- End Non-Recommended Tests Table -->
+                {% else %} No tests fall into this category. <br><br> {% endif %}
+            </div>
+<div class="interface">
+            <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_st" onclick="toggle_non_recommended('non_preferred_div_st',
+                           'checkbox_show_non_preferred_st')"> List less-preferred significance tests.
+            <input type="checkbox" name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_st" onclick="toggle_non_recommended('non_recommended_div_st',
+                           'checkbox_show_non_recommended_st')"> List inappropriate significance tests.
+</div>
+            <br>
 
-                <input type="checkbox" name="checkbox_show_non_preferred"
-                       {% if show_non_preferred %} checked {% endif %}
-                       id="checkbox_show_non_preferred_st"
-                       onclick="toggle_non_recommended('non_preferred_div_st',
-                           'checkbox_show_non_preferred_st')">
-                       List less-preferred significance tests.
-                <input type="checkbox" name="checkbox_show_non_recommended"
-                       {% if show_non_recommended %} checked {% endif %}
-                       id="checkbox_show_non_recommended_st" onclick="toggle_non_recommended('non_recommended_div_st',
-                           'checkbox_show_non_recommended_st')">
-                       List inappropriate significance tests.
+            <!-- SIGNIFICANCE alpha -->
 
-      <br>
+            Required significance level &alpha;:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
+            </div>
 
-                <!-- SIGNIFICANCE alpha -->
+            <input id="significance_level" name="significance_level" type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
 
-                Required significance level &alpha;:
-                <div class="tooltip">?
-                    <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
-                </div>
-
-                <input id="significance_level" name="significance_level"
-                       type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}"
-                {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
-
-                <br><br>
-                <!-- Bootstrap (for bootstrap and permutation tests) -->
-                <div id="sig_boot_div" style="display: none">
+            <br><br>
+            <!-- Bootstrap (for bootstrap and permutation tests) -->
+            <div id="sig_boot_div" style="display: none">
                 Number of iterations for bootstrap or permutation significance tests:
-                <div class="tooltip">?<span class="tooltiptext">The number of iterations.</span></div>:
-                <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200">  <!-- todo: disable if not bootstrap -->
+                <div class="tooltip interface">?<span class="tooltiptext">The number of iterations.</span></div>:
+                <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200">
+                <!-- todo: disable if not bootstrap -->
                 <br><br>
-                    </div>
-                <!-- mu (for t-test and bootstrap) -->
+            </div>
+            <!-- mu (for t-test and bootstrap) -->
             <!-- disable if not t or bootstrap (or disable altogether) -->
             <!--
                 Expected mean difference for null hypothesis &mu;:
-                <div class="tooltip">?<span class="tooltiptext">The expected value of the mean for the null hypothesis.</span></div>:
+                <div class="tooltip interface">?<span class="tooltiptext">The expected value of the mean for the null hypothesis.</span></div>:
                 <input id="mu" name="mu" type="number" value="0">   -->
 
+            <!-- Significance: Submit Button -->
 
-                <!-- Significance: Submit Button -->
+            <input type="hidden" id="sa_hidden" value="hidden101">
+            <!-- Is type=submit implied by class="btn btn-success" ? -->
+            <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-                <input type="hidden" id="sa_hidden" value="hidden101">
-                <!-- Is type=submit implied by class="btn btn-success" ? -->
-                <input type="hidden" id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
-             
-                <button id="submit" name="submit" class="button1">Run</button>
-
+            <button id="submit" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -663,21 +525,14 @@ margin: 0 auto;>
             <table border="1">
 
                 {% if sig_test_name %}
-                    <tr> <th>significance test</th>
-                        <td>
-                                {% if sig_test_name=='t' %}Student t test
-                                {% elif sig_test_name=='bootstrap' %}Bootstrap
-                                {% elif sig_test_name=='permutation' %}Permutation
-                                {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test
-                                {% elif sig_test_name=='sign' %}Sign test
-                                {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median)
-                                {% elif sig_test_name=='permutation_med' %}Permutation (median)
-                                {% else %}{{ sig_test_name}}
-                                {% endif %}
-                        </td>
-                    </tr>
+                <tr>
+                    <th>significance test</th>
+                    <td>
+                        {% if sig_test_name=='t' %}Student t test {% elif sig_test_name=='bootstrap' %}Bootstrap {% elif sig_test_name=='permutation' %}Permutation {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test {% elif sig_test_name=='sign' %}Sign test {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median) {% elif sig_test_name=='permutation_med' %}Permutation (median) {% else %}{{ sig_test_name}} {% endif %}
+                    </td>
+                </tr>
                 {% endif %}
-                            <!-- Hide test statistic
+                <!-- Hide test statistic
                 {% if sig_test_name != 'bootstrap' %}
                  <tr>
                     <th>
@@ -703,27 +558,19 @@ margin: 0 auto;>
             {% endif %}
         </div>
         <!-- End Significance Test results div -->
+        <h1></h1>
     </div>
     <!-- end Significance Results Tab -->
 
     <div id='Effect Size' class="tabcontent" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative; top: -18px;">
-            <form   id="frmEffectSize"
-                    action="/effectsize" class="form-horizontal"
-                  onsubmit="SubmitHandler('frmEffectSize')"
-                  enctype="multipart/form-data" method="post">
-                <b>Effect Size Estimator Options</b><br><br>
-                Required significance level &alpha;:
-                <div class="tooltip">?
+            <form id="frmEffectSize" action="/effectsize" class="form-horizontal" onsubmit="SubmitHandler('frmEffectSize')" enctype="multipart/form-data" method="post">
+                <b>Effect Size Estimator Options</b><br><br> Required significance level &alpha;:
+                <div class="tooltip interface">?
                     <span class="tooltiptext">&alpha; for computing the confidence interval.</span>
                 </div>
-                <input id="effectsize_significance_level" name="effectsize_significance_level"
-                       type="number"
-                        {% if effectsize_sig_alpha %}
-                            placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}"
-                        {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}"
-                {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
+                <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
                 <!-- Effect Size list of tests -->
                 {% if effect_size_estimators|length %}
 
@@ -737,16 +584,7 @@ margin: 0 auto;>
                     {% for key, value in effect_size_estimators.items() %}
                     <tr>
                         <td>
-                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}"
-                                   {% for est in estimator_value_list %}
-                                        {% if est[0]==key%} checked="checked" {% endif %}
-                                    {% endfor %}
-                                   value={{ key }}>
-                                        {% if key=='hl' %}Hodges-Lehmann Estimator
-                                            {% elif key=='wilcoxonr' %}Wilcoxon r
-                                            {% elif key=='hedgesg' %}Hedges' g
-                                            {% elif key=='cohend' %}Cohen's d
-                                        {% else %}{{ key }}{% endif %}
+                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='hl' %}Hodges-Lehmann Estimator {% elif key=='wilcoxonr' %}Wilcoxon r {% elif key=='hedgesg' %}Hedges' g {% elif key=='cohend' %}Cohen's d {% else %}{{ key }}{% endif %}
                         </td>
                         <td>{{ value }}</td>
                     </tr>
@@ -755,20 +593,15 @@ margin: 0 auto;>
 
                 {% endif %}
 
-              <br><br>
+                <br><br>
 
-              <!-- effect size Submit Button -->
-                    <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
-                    <!-- Is type=submit implied by class="btn btn-success" -->
-                  <button id="ef_submit"
-                          name="ef_submit"
-                          type=submit
-                          class="button1"
-                          onclick="GetSelectedCheckboxes('tblEffectEstimator')"
-                          >Run</button>
-                    <!-- Button for JS script-->
-                    <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
-        
+                <!-- effect size Submit Button -->
+                <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
+                <!-- Is type=submit implied by class="btn btn-success" -->
+                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator')">Run</button>
+                <!-- Button for JS script-->
+                <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
+
             </form>
         </div>
         <!-- end Effect Size purple input -->
@@ -776,32 +609,29 @@ margin: 0 auto;>
         <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
             <p></p>
             <!-- New table to make into estimator, value instead of est, desc: -->
-                {% if estimator_value_list|length %}
-                <b>Results</b><br><br>
-                <table border=1 id="tblEffectEstimator">
+            {% if estimator_value_list|length %}
+            <b>Results</b><br><br>
+            <table border=1 id="tblEffectEstimator">
 
-                    <tr>
-                        <th>Effect Size Estimator</th>
-                        <th>Value</th>
-                        <th>Confidence Interval</th>
-                    </tr>
+                <tr>
+                    <th>Effect Size Estimator</th>
+                    <th>Value</th>
+                    <th>Confidence Interval</th>
+                </tr>
 
-                    {% for key_value_tuple in estimator_value_list %}
-                    <tr>
-                        <td>
-                                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann Estimator
-                                            {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon r
-                                            {% elif key_value_tuple[0]=='hedgesg' %}Hedges' g
-                                            {% elif key_value_tuple[0]=='cohend' %}Cohen's d
-                                        {% else %}{{ key_value_tuple[0] }}{% endif %}
-                        </td>
-                        <td>{{ key_value_tuple[1][0] }}</td>
-                        <td>{{ key_value_tuple[1][1] }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
+                {% for key_value_tuple in estimator_value_list %}
+                <tr>
+                    <td>
+                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann Estimator {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon r {% elif key_value_tuple[0]=='hedgesg' %}Hedges' g {% elif key_value_tuple[0]=='cohend' %}Cohen's d {% else %}{{ key_value_tuple[0] }}{% endif %}
+                    </td>
+                    <td>{{ key_value_tuple[1][0] }}</td>
+                    <td>{{ key_value_tuple[1][1] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
+        <h1></h1>
     </div>
 
     <div id='Post-test Power Analysis' class="tabcontent" style="display:none">
@@ -810,78 +640,64 @@ margin: 0 auto;>
 
             <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group">
-    <b>Post-test power analysis:</b> this test involves plotting a power curve that shows how the statistical power
-                increases as sample size increases. <!-- This test performs an analysis to measure
+                    <b>Post-test power analysis:</b> this test involves plotting a power curve that shows how the statistical power increases as sample size increases.
+                    <!-- This test performs an analysis to measure
                 the power at evenly spaced increasing sample sizes. -->
-                <ul><li>For example, if you have 100 evaluation units, and want to take 5 power measurements, this test calculates
-                the power for partitions of your data into 20, 40, 60, 80 and 100 evaluation units. At each of these sample sizes
-                the test uses either the Monte Carlo or bootstrap method to run the specified number of iterations.</li>
-                    <li>The power analysis is done using either a bootstrap simulation or a Monte Carlo simulation.
-                        The Monte Carlo simulation is only available if your data has a normal distribution.</li></ul>
+                    <ul>
+                        <li>For example, if you have 100 evaluation units, and want to take 5 power measurements, this test calculates the power for partitions of your data into 20, 40, 60, 80 and 100 evaluation units. At each of these sample sizes the test uses either the Monte Carlo or bootstrap method to run the specified number of iterations.</li>
+                        <li>The power analysis is done using either a bootstrap simulation or a Monte Carlo simulation. The Monte Carlo simulation is only available if your data has a normal distribution.</li>
+                    </ul>
 
-
-
-            <p><!--The evaluation unit size is {{ eval_unit_size }}, and the number of evaluation units is {{ num_eval_units }}.-->
-            The largest number of power measurements you can make is the number of evaluation units in your data.</p>
-                <!--
+                    <p>
+                        <!--The evaluation unit size is {{ eval_unit_size }}, and the number of evaluation units is {{ num_eval_units }}.-->
+                        The largest number of power measurements you can make is the number of evaluation units in your data.</p>
+                    <!--
                     Minimum sample size:
 
                     <input id="min_sample_size" name="min_sample_size" type="number"
                        placeholder="min" class="form-control input-md" value="1">
-                                    <div class="tooltip">?<span class="tooltiptext">"lower bound on number of samples (minimum number of evaluation units)"</span> </div>
+                                    <div class="tooltip interface">?<span class="tooltiptext">"lower bound on number of samples (minimum number of evaluation units)"</span> </div>
                 <br/><br>
 
                     <b>Maximum sample size:</b>
 
                     <input id="max_sample_size" name="max_sample_size" type="number"
                        placeholder="max" class="form-control input-md" value="{{ num_eval_units }}">
-                                    <div class="tooltip">?<span class="tooltiptext">
+                                    <div class="tooltip interface">?<span class="tooltiptext">
                                         "upper bound on number of samples (max number of evaluation units)"</span> </div>
                 <br/><br> -->
 
-                    Number of power measurements: <!-- was number of intervals, # of subsamples, 20-ish -->
-                <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals"
-                       class="form-control input-md"
-                       {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %}
-                       min=1 max="50">
-                                    <div class="tooltip">?<span class="tooltiptext">
+                    Number of power measurements:
+                    <!-- was number of intervals, # of subsamples, 20-ish -->
+                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals" class="form-control input-md" {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %} min=1 max="50">
+                    <div class="tooltip interface">?<span class="tooltiptext">
                                       Specify the number of subsamples between the minimum and maximum number of evaluation units,
                                         at which to calculate power.</span> </div>
 
-                    <br> <br>
+                    <br> <br> Iterations at each sample size:
+                    <!-- TODO: add required range like '1 to 200'-->
 
-                    Iterations at each sample size:<!-- TODO: add required range like '1 to 200'-->
-
-                    <input id="iterations" name="power_iterations" type="number" placeholder="default"
-                           {% if power_iterations %}value="{{ power_iterations }}" {% else %}value="200"{% endif %}
-                           min="10" max="200"
-                       class="form-control input-md">
-                    <div class="tooltip">?<span class="tooltiptext">The number of bootstrap iterations at each sample size.</span></div>
-                <br><br>
-
+                    <input id="iterations" name="power_iterations" type="number" placeholder="default" {% if power_iterations %}value="{{ power_iterations }}" {% else %}value="200" {% endif %} min="10" max="200" class="form-control input-md">
+                    <div class="tooltip interface">?<span class="tooltiptext">The number of bootstrap iterations at each sample size.</span></div>
+                    <br><br>
 
                     <!-- TODO: Display advice that takes into account the
                      actual size of evaluation unit and the limits on min and max -->
 
-                {% if is_normal %}
-                Method of power analysis:
-                <input type="radio" name="target_pow_test" id="target_pow_test-1"
-                       value='montecarlo' onclick="show_montecarlo_div()" checked="checked" required>
-                        Monte Carlo
-                    <div class="tooltip">?
+                    {% if is_normal %} Method of power analysis:
+                    <input type="radio" name="target_pow_test" id="target_pow_test-1" value='montecarlo' onclick="show_montecarlo_div()" checked="checked" required> Monte Carlo
+                    <div class="tooltip interface">?
                         <span class="tooltiptext">Conduct retrospective power analysis using Monte Carlo simulation.</span></div>
 
-                <input type="radio" name="target_pow_test" id="target_pow_test-2"
-                       value='bootstrap' onclick="show_bootstrap_div()" {% if power_test == 'bootstrap' %}checked{% endif %}>
-                    Bootstrap
-                    <div class="tooltip">?  <!-- todo: get significance tests -->
-                    <span class="tooltiptext">Conduct retrospective power analysis using bootstrap simulation.</span></div>
-                {% endif %}
-                 <input type="hidden" name="target_pow_test_bootstrap" id="target_pow_test-bootstrap"
-                        value="bootstrap">
-                        
-                        <hr>
-                        <!--
+                    <input type="radio" name="target_pow_test" id="target_pow_test-2" value='bootstrap' onclick="show_bootstrap_div()" {% if power_test=='bootstrap' %}checked{% endif %}> Bootstrap
+                    <div class="tooltip interface">?
+                        <!-- todo: get significance tests -->
+                        <span class="tooltiptext">Conduct retrospective power analysis using bootstrap simulation.</span></div>
+                    {% endif %}
+                    <input type="hidden" name="target_pow_test_bootstrap" id="target_pow_test-bootstrap" value="bootstrap">
+
+                    <hr>
+                    <!--
                                             <td>
                         {% if key=='t' %}Student t test
                         {% elif key=='bootstrap' %}Bootstrap
@@ -892,84 +708,50 @@ margin: 0 auto;>
                             {% elif key=='permutation_med' %}Permutation (median)
                     {% endif %} </td>
                         -->
-                <div class="hiddendiv" id="power_boot_fields"
-                     {% if is_normal %}style="display:none"{% else %}style="display:block"{% endif %} >
+                    <div class="hiddendiv" id="power_boot_fields" {% if is_normal %}style="display:none" {% else %}style="display:block" {% endif %}>
 
-                        <b>Bootstrap Parameters</b><br><br>
-                        Significance test:<br>
-                        {% for sigtest in recommended_tests %}
-                        <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}"
-                            {% if sigtest[0] == sig_test_name %}checked="checked"{% endif %} required>
-                            {% if sigtest[0] == 't' %}Student t-test<br>
-                            {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br>
-                            {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br>
-                            {% elif sigtest[0]=='sign' %}Sign test<br>
-                            {% elif sigtest[0]=='permutation' %}Permutation<br>
-                            {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br>
-                            {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br>
-                                {% else %}{{ sigtest[0] }}
-                            {% endif %}
-
-                        {% endfor %}
-                        <br>
-                        Significance level &alpha;: <input type="number" name="power_alpha"
-                             {% if sig_test_alpha %}
-                                              value="{{ sig_test_alpha }}"
-                             {% else %}
-                                              value="0.05"
-                             {% endif %} step="0.01">
-                        <div class="tooltip">?
+                        <b>Bootstrap Parameters</b><br><br> Significance test:<br> {% for sigtest in recommended_tests %}
+                        <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}" {% if sigtest[0]==sig_test_name %}checked="checked" {% endif %} required> {% if sigtest[0] == 't' %}Student t-test<br> {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br> {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br> {% elif sigtest[0]=='sign' %}Sign test<br> {% elif sigtest[0]=='permutation' %}Permutation<br> {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br> {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br> {% else %}{{ sigtest[0] }} {% endif %} {% endfor %}
+                        <br> Significance level &alpha;: <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01">
+                        <div class="tooltip interface">?
                             <span class="tooltiptext">&alpha; value for significance test.</span></div>
-                        <br><br>
-                        Bootstrap Iterations:
-                        <input type="number" name="power_boot_B"
-                               {% if sig_boot_iteration %}
-                                   value="{{ sig_boot_iteration }}"
-                               {% else %}
-                                   value="200"
-                               {% endif %}>  <div class="tooltip">?
+                        <br><br> Bootstrap Iterations:
+                        <input type="number" name="power_boot_B" {% if sig_boot_iteration %} value="{{ sig_boot_iteration }}" {% else %} value="200" {% endif %}>
+                        <div class="tooltip interface">?
                             <span class="tooltiptext">Iterations for bootstrap significance test.</span></div>
- 
 
-                </div>
-                                              <br>
-                <div class="hiddendiv" id="power_montecarlo_fields" style="display:none" >
-                        <b>Monte Carlo Parameters:</b><br><br>
-                        &alpha;: <input type="number" name="power_alpha"
-                             {% if sig_test_alpha %}
-                                              value="{{ sig_test_alpha }}"
-                             {% else %}
-                                              value="0.05"
-                             {% endif %} step="0.01"><div class="tooltip">?
+                    </div>
+                    <br>
+                    <div class="hiddendiv" id="power_montecarlo_fields" style="display:none">
+                        <b>Monte Carlo Parameters:</b><br><br> &alpha;: <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01">
+                        <div class="tooltip interface">?
                             <span class="tooltiptext">&alpha value for significance test.</span></div>
                         <br><br>
 
-                </div>
+                    </div>
 
+                    <!-- Power Submit Button -->
 
-                
-
-                <!-- Power Submit Button -->
-
-             
-                <button id="pa_submit" name="pa_submit" type=submit class="button1" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
-    </div>
+            <br>
+            <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+        </div>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenPowerTest">
 
-                <!-- Images -->
-                {% if power_file %}
-                    <b>Results</b><br><br>
-                    <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
+            <!-- Images -->
+            {% if power_file %}
+            <b>Results</b><br><br>
+            <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
         </div>
-        </div>
+    </div>
 
     <div id="about" class="modal">
         <div class="modal-content">
-            <button  class="button1" id="close_btn_about">&#x2715;</button>
+            <button class="button1" id="close_btn_about" >&#x2715;</button>
             <p>This is a demonstration of NLPStatTest, a program for comparing NLP system performance. See our paper for details. </p>
 
         </div>
@@ -979,21 +761,16 @@ margin: 0 auto;>
         <div class="modal-content">
             <button class="button1" id="close_btn_settings">&#x2715;</button>
             <p>You can download the configuration, edit it, and upload a new configuration file.</p> <br>
-     <!-- download config button -->
-     <form  action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}"
-           method="get" target="_blank">
-         <button class="button1" type="submit">Download Settings File</button>
-     </form>
-     <!-- upload config button -->
-         <form  action="{{ url_for('.upload_config')}}"
-                enctype="multipart/form-data" method="post"
-                target="_blank">
+            <!-- download config button -->
+            <form action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}" method="get" target="_blank">
+                <button class="button1" type="submit">Download Settings File</button>
+            </form>
+            <!-- upload config button -->
+            <form action="{{ url_for('.upload_config')}}" enctype="multipart/form-data" method="post" target="_blank">
 
                 <button class="button1" type="submit">Upload Settings File</button>
-                <input type="file" id="system_file"
-                             name="system_file"
-                                        {% if error_str %}required{% endif %}/>
-         </form>
+                <input type="file" id="system_file" name="system_file" {% if error_str %}required{% endif %}/>
+            </form>
 
         </div>
     </div>
@@ -1022,43 +799,43 @@ margin: 0 auto;>
             modals.forEach(make_modal);
     </script>
 
-<!-- Checkboxes (effect sizes) click handler -->
+    <!-- Checkboxes (effect sizes) click handler -->
     <script type="text/javascript">
-    // get the checkbox values from effect Sizes into an array
-    // "tblEffectEstimator" is the effect size table ID
-    function GetSelectedCheckboxes(tableName) {
-            console.log("*** IN: GetSelectedCheckbox()");
-        //Create an Array.
-        var selected = new Array();
-
-        //Reference the Table.
-        var tblCheckboxes = document.getElementById(tableName);
-
-        //Reference all the CheckBoxes in Table.
-        var chks = tblCheckboxes.getElementsByTagName("INPUT");
-
-        // Loop and push the checked CheckBox value in Array.
-        for (var i = 0; i < chks.length; i++) {
-            if (chks[i].checked) {
-                selected.push(chks[i].value);
+        // get the checkbox values from effect Sizes into an array
+        // "tblEffectEstimator" is the effect size table ID
+        function GetSelectedCheckboxes(tableName) {
+                console.log("*** IN: GetSelectedCheckbox()");
+            //Create an Array.
+            var selected = new Array();
+    
+            //Reference the Table.
+            var tblCheckboxes = document.getElementById(tableName);
+    
+            //Reference all the CheckBoxes in Table.
+            var chks = tblCheckboxes.getElementsByTagName("INPUT");
+    
+            // Loop and push the checked CheckBox value in Array.
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].checked) {
+                    selected.push(chks[i].value);
+                }
             }
-        }
-        // "hiddenEffectEstimators" update INPUT value
-        var hiddenInputCheckArrayID = "hiddenEffectEstimators"
-        var hiddenInputCheckArray = document.getElementById(hiddenInputCheckArrayID)
-        hiddenInputCheckArray.value = selected
-        //Display the selected CheckBox values.
-        if (selected.length > 0) {
-            console.log("Checkbox selected values: " + selected.join(","));
-            //alert("Selected values: " + selected.join(",") + " HIDDEN INPUT VALUE=" + hiddenInputCheckArray.value);
-        }
-
-        return selected
-        // what can we do with selected? we need to get it into POST on submit of the form,
-        // Can we set a hidden input value in an onSubmit handler and get that inside the python?
-        // if not, then we need to get the checkbox elements one by one.
-    };
-</script>
+            // "hiddenEffectEstimators" update INPUT value
+            var hiddenInputCheckArrayID = "hiddenEffectEstimators"
+            var hiddenInputCheckArray = document.getElementById(hiddenInputCheckArrayID)
+            hiddenInputCheckArray.value = selected
+            //Display the selected CheckBox values.
+            if (selected.length > 0) {
+                console.log("Checkbox selected values: " + selected.join(","));
+                //alert("Selected values: " + selected.join(",") + " HIDDEN INPUT VALUE=" + hiddenInputCheckArray.value);
+            }
+    
+            return selected
+            // what can we do with selected? we need to get it into POST on submit of the form,
+            // Can we set a hidden input value in an onSubmit handler and get that inside the python?
+            // if not, then we need to get the checkbox elements one by one.
+        };
+    </script>
 
     <!-- hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
     <script>
@@ -1129,7 +906,24 @@ margin: 0 auto;>
                   }
               }
         }
+    
+        function show_print() {
+          document.getElementById('Data Analysis').style.display='block';
+          document.getElementById('Significance Test').style.display='block';
+          document.getElementById('Effect Size').style.display='block';
+          return false;
+        }
 
+
+        function hide_print() {
+    
+            document.getElementById('Data Analysis').style.display='none';
+            document.getElementById('Data Analysis').style.display='none';
+            document.getElementById('Significance Test').style.display='none';
+            document.getElementById('Effect Size').style.display='none';
+            return false;
+          
+        }
     </script>
 
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
@@ -1174,7 +968,9 @@ margin: 0 auto;>
 
         }, false);
     </script>
-    </div> <!-- width specified here -->
+    <h1></h1>
+    </div>
+    <!-- width specified here -->
 </body>
 
 </html>
