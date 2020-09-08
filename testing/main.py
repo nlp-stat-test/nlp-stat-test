@@ -61,6 +61,7 @@ if __name__ == '__main__':
 	# output dir
 	fig_output_dir = str(config['fig_output_dir'])
 	report_output_dir = str(config['report_output_dir'])
+	sample_output_dir = str(config['sample_output_dir'])
 
 	if not os.path.exists(report_output_dir):
 		os.makedirs(report_output_dir)
@@ -137,6 +138,11 @@ if __name__ == '__main__':
 		method = testCase_new.eda.calc_method,
 		output_dir = fig_output_dir)
 
+
+	if not os.path.exists(sample_output_dir):
+		os.makedirs(sample_output_dir)
+
+	logic.fileReader.print_eu(testCase_new.score1, testCase_new.score2, testCase_new.score_diff_par, ind_shuffled, sample_output_dir)
 
 	# check for minimum sample size requirement for power analysis
 	# this check is here because wilcoxon test needs more than 10 data points

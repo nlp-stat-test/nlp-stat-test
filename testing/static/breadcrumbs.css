@@ -3,7 +3,7 @@
 ul.breadcrumb {
   border: 2px solid #4b2e83; /* Color Scheme (School Color) */
   position: relative;
-  border-radius: 25px 25px 0px 0px;
+  border-radius: 0px 0px 0px 0px;
   padding: 16px;
   list-style: none;
   background-color: #eee;
