@@ -238,7 +238,7 @@ function show_montecarlo_div() {
 
                 <!-- HISTOGRAM Images -->
                 <br> {% if hist_score1_file %}
-                <button id="hist_button" class="button1" onclick="showdiv()">View Histograms</button> {% endif %} <br><br>
+                <button id="hist_button" class="button1 interface" onclick="showdiv()">View Histograms</button> {% endif %} <br><br>
                 <div class="hiddendiv" id="hidden_graph">
 
                     <!-- new way -->
@@ -351,10 +351,12 @@ function show_montecarlo_div() {
                     <!-- End Non-Recommended Tests Table -->
                     {% else %} There are no inappropriate tests.<br><br> {% endif %}
                 </div>
+                <div class="interface">
                 <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_da" onclick="toggle_non_recommended('non_preferred_div_da',
                            'checkbox_show_non_preferred_da')"> List less-preferred significance tests.
-                <input type="checkbox" name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_da" onclick="toggle_non_recommended('non_recommended_div_da',
+                <input type="checkbox"  name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_da" onclick="toggle_non_recommended('non_recommended_div_da',
                            'checkbox_show_non_recommended_da')"> List inappropriate significance tests.
+                           </div>
                 <!-- (Bulleted list example) -->
                 <!--
                        The following tests are recommended:
@@ -367,6 +369,7 @@ function show_montecarlo_div() {
 
             </div>
             <!-- end round green (data analysis) -->
+            <h1></h1>
         </div>
         <!-- End data analysis -->
 
@@ -470,12 +473,12 @@ function show_montecarlo_div() {
                 <!-- End Non-Recommended Tests Table -->
                 {% else %} No tests fall into this category. <br><br> {% endif %}
             </div>
-
+<div class="interface">
             <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_st" onclick="toggle_non_recommended('non_preferred_div_st',
                            'checkbox_show_non_preferred_st')"> List less-preferred significance tests.
             <input type="checkbox" name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_st" onclick="toggle_non_recommended('non_recommended_div_st',
                            'checkbox_show_non_recommended_st')"> List inappropriate significance tests.
-
+</div>
             <br>
 
             <!-- SIGNIFICANCE alpha -->
@@ -555,6 +558,7 @@ function show_montecarlo_div() {
             {% endif %}
         </div>
         <!-- End Significance Test results div -->
+        <h1></h1>
     </div>
     <!-- end Significance Results Tab -->
 
@@ -627,6 +631,7 @@ function show_montecarlo_div() {
             </table>
             {% endif %}
         </div>
+        <h1></h1>
     </div>
 
     <div id='Post-test Power Analysis' class="tabcontent" style="display:none">
@@ -963,6 +968,7 @@ function show_montecarlo_div() {
 
         }, false);
     </script>
+    <h1></h1>
     </div>
     <!-- width specified here -->
 </body>
