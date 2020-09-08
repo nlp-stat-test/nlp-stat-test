@@ -780,9 +780,9 @@ def download_file(markdown_only=True):
     rand = np.random.randint(10000)
     gen_report(options, str(rand))
     if markdown_only:
-        return send_file("user/report.md", as_attachment=True)
+        return send_file("user/report.md", as_attachment=True, cache_timeout=0)
     else:
-        return send_file("user/report.zip", as_attachment=True)
+        return send_file("user/report.zip", as_attachment=True, cache_timeout=0)
 
 
 #@app.route('/download2')  # @app.route('/download2')
@@ -802,7 +802,7 @@ def download_config(config_file_name):   # was download_config() no param
     with io.open(config_file_path, 'w', encoding='utf8') as outfile:
         yaml.dump(cookie_dict, outfile, default_flow_style=False, allow_unicode=True)
 
-    return send_file(config_file_path, as_attachment=True)
+    return send_file(config_file_path, as_attachment=True, cache_timeout=0)
     #return send_file('user/config_cookies.yaml', as_attachment=True)
 
 @app.route('/img_url/<image_path>')
@@ -815,7 +815,7 @@ def send_img_file(image_path, debug=False):
     @return:
     '''
     if debug: print('display image: {}'.format(image_path))
-    return send_file(image_path)
+    return send_file(image_path, cache_timeout=0)
 
 
 @app.route('/img_url_dir/<image_name>')
@@ -842,9 +842,9 @@ def request_help_file(help_file_name='about.html', debug=True):
         file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
     except FileNotFoundError:
         if 'manual' in help_file_name or 'help' in help_file_name:
-            file = send_file('./static/{}'.format('manual.html'))
+            file = send_file('./static/{}'.format('manual.html'), cache_timeout=0)
         elif 'about' in help_file_name:
-            file = send_file('./static/{}'.format('about.html'))
+            file = send_file('./static/{}'.format('about.html'), cache_timeout=0)
         else:
             # go to step 1 (todo: use previous state)
             file = render_template(template_filename, rand_str=get_rand_state_str())
@@ -866,9 +866,9 @@ def get_help(help_file_name, debug=True):
         file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
     except:
         if 'manual' in help_file_name:
-            file = send_file('./static/{}'.format('manual.html'))
+            file = send_file('./static/{}'.format('manual.html'), cache_timeout=0)
         elif 'about' in help_file_name:
-            file = send_file('./static/{}'.format('about.html'))
+            file = send_file('./static/{}'.format('about.html'), cache_timeout=0)
         else:
             file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
