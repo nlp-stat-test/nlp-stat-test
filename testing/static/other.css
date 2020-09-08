@@ -7,14 +7,14 @@ html * { font-family: sans-serif }
    
 .roundpurplebottom {
    
-    border-radius: 0px 0px 25px 25px;
+    border-radius: 0px 0px 0px 0px;
     border: 2px solid #4b2e83; /* Color Scheme (School Color) */
     padding: 16px;
 }
    
    
 .roundgreen {
-    border-radius: 25px;
+    border-radius: 0px;
     border: 2px solid DarkSeaGreen; /* Runs */
     padding: 16px;
 }
