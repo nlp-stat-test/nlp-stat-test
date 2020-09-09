@@ -17,7 +17,9 @@ from logic.effectSize import calc_eff_size
 from logic.dataAnalysis import partition_score, \
     skew_test, normality_test, recommend_test
 from logic.sigTesting import run_sig_test
-import logic.powerAnalysis
+
+# filenames
+from logic.filenames import get_path
 
 # Report Function
 from logic.report import gen_report
@@ -390,14 +392,15 @@ def sigtest(debug=True):
             mu = 0.0
         alternative = request.form.get('alternative')
         sig_boot_iterations = int(request.form.get('sig_boot_iterations'))
-
+        wilcoxon_ci_rec = request.form.get('checkbox_wilcoxon_ci1')
+        wilcoxon_ci_nonpref = request.form.get('checkbox_wilcoxon_ci2')
         if debug:
             print(' ********* Running /sig_test')
             print('Sig_test_name={}, sig_alpha={}'.format(sig_test_name, sig_alpha))
 
         # ------- Test if 'last_tab' was sent
         last_tab_name_clicked = 'Significance Test'  # request.form.get('last_tab_input')
-        print("***** LAST TAB (from POST): {}".format(last_tab_name_clicked))
+        if debug: print("***** LAST TAB (from POST): {}".format(last_tab_name_clicked))
 
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
         # get old dif
@@ -409,13 +412,21 @@ def sigtest(debug=True):
                                 shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
         score_dif = partitions[2]
 
-
+        # Adjust conf_int for Wilcoxon case
+        #conf_inf = True
+        if sig_test_name == 'wilcoxon':
+            if wilcoxon_ci_rec or wilcoxon_ci_nonpref:
+                conf_inf = True
+            else:
+                conf_inf = False
+        else:
+            conf_inf = True
         test_stat_val, pval, CI, rejection = run_sig_test(sig_test_name,  # 't'
                                                       score_dif,
                                                       float(sig_alpha),  # 0.05,
                                                       B=sig_boot_iterations,
                                                       alternative=alternative,
-                                                      conf_int=True,
+                                                      conf_int=conf_inf,
                                                       mu=mu)
         if debug: print("test_stat_val={}, pval={},"
                         "alternative={}, mu={}, CI={}, rejection={}".format(
@@ -464,6 +475,8 @@ def sigtest(debug=True):
                                    rejectH0=rejection,
                                    sig_alpha=sig_alpha,
                                    sig_test_name=sig_test_name,
+                                   wilcoxon_ci_rec=wilcoxon_ci_rec,
+                                   wilcoxon_ci_nonpref=wilcoxon_ci_nonpref,
                                    rand_str=get_rand_state_str()
                                    )
         resp = make_response(rendered)
@@ -484,6 +497,14 @@ def sigtest(debug=True):
             resp.set_cookie('show_non_preferred', show_non_preferred)
         else:
             resp.set_cookie('show_non_preferred', '')
+        if wilcoxon_ci_nonpref:
+            resp.set_cookie('wilcoxon_ci_nonpref', wilcoxon_ci_nonpref)
+        else:
+            resp.set_cookie('wilcoxon_ci_nonpref', '')
+        if wilcoxon_ci_nonpref:
+            resp.set_cookie('wilcoxon_ci_rec', wilcoxon_ci_rec)
+        else:
+            resp.set_cookie('wilcoxon_ci_rec', '')
         resp.set_cookie('sig_boot_iterations', str(sig_boot_iterations))
         resp.set_cookie('mu', str(mu))
         resp.set_cookie('pval', str(pval))
@@ -588,6 +609,8 @@ def effectsize(debug=True):
                                    sig_test_name=request.cookies.get('sig_test_name'),
                                    alternative=request.cookies.get('alternative'),
                                    mu=request.cookies.get('mu'),
+                                   wilcoxon_ci_rec=request.cookies.get('wilcoxon_ci_rec'),
+                                   wilcoxon_ci_nonpref=request.cookies.get('wilcoxon_ci_nonpref'),
                                    rand_str=get_rand_state_str()
                                    )
 
@@ -854,7 +877,8 @@ def request_help_file(help_file_name='about.html', debug=True):
 def get_manual(debug=True):
     if debug: print('getting manual')
     try:
-        file = send_file('./static/manual.html', as_attachment=False, cache_timeout=0)
+        # file = send_file('./static/manual.html', as_attachment=False, cache_timeout=0)
+        file = send_file(get_path('manual_path'), as_attachment=False, cache_timeout=0)
     except FileNotFoundError:
         file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
