@@ -767,10 +767,42 @@ def upload_config():
             print('Data loaded from config.yml: {}'.format(data_loaded))
             # TODO: get each field out of data_loaded to use in render_template parameters
             resp = render_template(template_filename,
-                                   normality_alpha= data_loaded.get('normality_alpha'),
-                                   shuffle_seed= data_loaded.get('shuffle_seed'),
-                                   rand_str=get_rand_state_str()
-                                   )
+                CI = data_loaded.get('CI'),
+                alternative = data_loaded.get('alternative'),
+                effect_estimator_dict = json.loads(data_loaded.get('effect_estimator_dict')),
+                effectsize_sig_alpha = data_loaded.get('effectsize_sig_alpha'),
+                estimator_value_list = json.loads(data_loaded.get('estimator_value_list')),
+                eval_unit_size = data_loaded.get('eval_unit_size'),
+                eval_unit_stat = data_loaded.get('eval_unit_stat'),
+                fileName = data_loaded.get('fileName'),
+                hist_diff_file = data_loaded.get('hist_diff_file'),
+                hist_diff_par_file = data_loaded.get('hist_diff_par_file'),
+                hist_score1_file = data_loaded.get(('hist_score1_file')),
+                hist_score2_file = data_loaded.get(('hist_score2_file')),
+                is_normal = data_loaded.get('is_normal'),
+                mean_or_median = data_loaded.get('mean_or_median'),
+                mu = data_loaded.get('mu'),
+                normality_alpha= data_loaded.get('normality_alpha'),
+                not_preferred_tests= json.loads(data_loaded.get('not_preferred_tests')),
+                not_recommended_tests= json.loads(data_loaded.get('not_recommended_tests')),
+                num_eval_units=  data_loaded.get('num_eval_units'),
+                power_num_intervals= data_loaded.get('power_num_intervals'),
+                power_test= data_loaded.get('power_test'),
+                pval=data_loaded.get('pval'),
+                recommended_tests = json.loads(data_loaded.get('recommended_tests')),
+                rejectH0 = data_loaded.get('rejectH0'),
+                show_non_preferred = data_loaded.get('show_non_preferred'),
+                show_non_recommended = data_loaded.get(('show_non_recommended')),
+                shuffle_seed= data_loaded.get('shuffle_seed'),
+                sig_boot_iterations = json.loads(data_loaded.get('sig_boot_iterations')),
+                sig_test_alpha = json.loads(data_loaded.get('sig_test_alpha')),
+                sig_test_heading = data_loaded.get('sig_test_heading'),
+                sig_test_name = data_loaded.get('sig_test_name'),
+                sig_test_stat_val = data_loaded.get('sig_test_stat_val'),
+                skewness_gamma = json.loads(data_loaded.get('skewness_gamma')),
+                summary_stats_dict = json.loads(data_loaded.get('summary_stats_dict')),
+                summary_str = data_loaded.get('summary_str'),
+                rand_str=get_rand_state_str())
     else:
         # todo: handle exceptions, print or indicate that no file was chosen.
         resp = render_template(template_filename,
@@ -814,10 +846,12 @@ def download_config(config_file_name):   # was download_config() no param
 
     rand_str = str(np.random.randint(10000))
     config_file_path = 'user/'+config_file_name + rand_str + '.yml'
+    # Note: this will also get cookies saved by other sites
     items = request.cookies.items()
     cookie_dict = {}
     for k,v in items:
         #print('key={}, value={}'.format(k,v))
+        # todo: check if cookie in master list before adding
         cookie_dict[k]=v
 
     #Write YAML file
