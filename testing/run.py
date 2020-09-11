@@ -142,35 +142,29 @@ def format_digits(num, sig_digits=5):
     return str
 
 
-def create_summary_stats_dict(tc, debug=False):
+def create_summary_stats_list(tc, debug=False):
     if debug: print('Score 1: mean={}, med={}, sd={}, min={}, max={}'.format(tc.eda.summaryStat_score1.mu,
                                                                              tc.eda.summaryStat_score1.med,
                                                                              tc.eda.summaryStat_score1.sd,
                                                                              tc.eda.summaryStat_score1.min_val,
                                                                              tc.eda.summaryStat_score1.max_val))
-    summary_dict = {}
-    summary_dict['score1'] = {'mean': format_digits(tc.eda.summaryStat_score1.mu),
-                              'median': format_digits(tc.eda.summaryStat_score1.med),
-                              'std.dev.': format_digits(tc.eda.summaryStat_score1.sd),
-                              'min': format_digits(tc.eda.summaryStat_score1.min_val),
-                              'max': format_digits(tc.eda.summaryStat_score1.max_val)}
-    summary_dict['score2'] = {'mean': format_digits(tc.eda.summaryStat_score2.mu),
-                              'median': format_digits(tc.eda.summaryStat_score2.med),
-                              'std.dev.': format_digits(tc.eda.summaryStat_score2.sd),
-                              'min': format_digits(tc.eda.summaryStat_score2.min_val),
-                              'max': format_digits(tc.eda.summaryStat_score2.max_val)}
-    '''
-    summary_dict['difference'] = {'mean': format_digits(tc.eda.summaryStat_score_diff.mu),
-                                  'median': format_digits(tc.eda.summaryStat_score_diff.med),
-                                  'std.dev.': format_digits(tc.eda.summaryStat_score_diff.sd),
-                                  'min': format_digits(tc.eda.summaryStat_score_diff.min_val),
-                                  'max': format_digits(tc.eda.summaryStat_score_diff.max_val)}
-                                  '''
-    summary_dict['difference'] = {'mean': format_digits(tc.eda.summaryStat_score_diff_par.mu),
-                                  'median': format_digits(tc.eda.summaryStat_score_diff_par.med),
-                                  'std.dev.': format_digits(tc.eda.summaryStat_score_diff_par.sd),
-                                  'min': format_digits(tc.eda.summaryStat_score_diff_par.min_val),
-                                  'max': format_digits(tc.eda.summaryStat_score_diff_par.max_val)}
+    summary_dict = []
+    # 'score1'
+    summary_dict.append(('score1', [('mean', format_digits(tc.eda.summaryStat_score1.mu)),
+                                    ('median', format_digits(tc.eda.summaryStat_score1.med)),
+                                    ('std.dev.', format_digits(tc.eda.summaryStat_score1.sd)),
+                                    ('min', format_digits(tc.eda.summaryStat_score1.min_val)),
+                                    ('max', format_digits(tc.eda.summaryStat_score1.max_val))]))
+    summary_dict.append(('score2', [('mean', format_digits(tc.eda.summaryStat_score2.mu)),
+                                     ('median', format_digits(tc.eda.summaryStat_score2.med)),
+                                    ('std.dev.', format_digits(tc.eda.summaryStat_score2.sd)),
+                                    ('min', format_digits(tc.eda.summaryStat_score2.min_val)),
+                                    ('max', format_digits(tc.eda.summaryStat_score2.max_val))]))
+    summary_dict.append(('difference', [('mean', format_digits(tc.eda.summaryStat_score_diff_par.mu)),
+                                        ('median', format_digits(tc.eda.summaryStat_score_diff_par.med)),
+                                        ('std.dev.', format_digits(tc.eda.summaryStat_score_diff_par.sd)),
+                                        ('min', format_digits(tc.eda.summaryStat_score_diff_par.min_val)),
+                                        ('max', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
 
@@ -251,7 +245,7 @@ def data_analysis(debug=True):
                           num_eval_units)
             tc.get_summary_stats()
 
-            summary_stats_dict = create_summary_stats_dict(tc)
+            summary_stats_list = create_summary_stats_list(tc)
 
             # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
             mean_or_median = skew_test(score_diff_par[2])[1]
@@ -295,7 +289,7 @@ def data_analysis(debug=True):
                                            shuffle_seed=seed,
                                            sig_test_heading=sig_test_heading,
                                            summary_str=summary_str,
-                                           summary_stats_dict=summary_stats_dict,
+                                           summary_stats_list=summary_stats_list,
                                            teststat_heading=teststat_heading,
                                            sigtest_heading=sig_test_heading,
                                            mean_or_median=mean_or_median,  # 'mean' if not skewed, 'median' if skewed.
@@ -325,8 +319,8 @@ def data_analysis(debug=True):
                 resp.set_cookie('shuffle_seed', seed)
 
                 resp.set_cookie('summary_str', summary_str)
-                serialized_summary_stats_dict = json.dumps(summary_stats_dict)
-                resp.set_cookie('summary_stats_dict', serialized_summary_stats_dict)
+                serialized_summary_stats_list = json.dumps(summary_stats_list)
+                resp.set_cookie('summary_stats_list', serialized_summary_stats_list)
 
                 resp.set_cookie('teststat_heading', teststat_heading)
                 resp.set_cookie('mean_or_median', mean_or_median)
@@ -369,7 +363,7 @@ def data_analysis(debug=True):
                                tooltip_post_power_analysis=helper("post_power_analysis"),
                                file_uploaded="Upload a file.",
                                recommended_tests=[],
-                               summary_stats_dict={},
+                               summary_stats_list={},
                                rand_str=get_rand_state_str()
                                )
 
@@ -434,7 +428,7 @@ def sigtest(debug=True):
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
         not_preferred_tests = json.loads(request.cookies.get('not_preferred_tests'))
-        summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
+        summary_stats_list = json.loads(request.cookies.get('summary_stats_list'))
 
         rendered = render_template(template_filename,
                                    skewness_gamma=json.loads(request.cookies.get('skewness_gamma')),
@@ -460,7 +454,7 @@ def sigtest(debug=True):
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    show_non_recommended=show_non_recommended,
                                    show_non_preferred=show_non_preferred,
-                                   summary_stats_dict=summary_stats_dict,
+                                   summary_stats_list=summary_stats_list,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
                                    hist_diff_file=request.cookies.get('hist_diff_file'),
@@ -569,7 +563,7 @@ def effectsize(debug=True):
         # For completing previous tabs: target_stat is 'mean' or 'median'
         previous_selected_test = request.cookies.get('sig_test_name')
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
-        summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
+        summary_stats_list = json.loads(request.cookies.get('summary_stats_list'))
         print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
@@ -595,7 +589,7 @@ def effectsize(debug=True):
                                    not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
                                    show_non_preferred=request.cookies.get('show_non_preferred'),
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
-                                   summary_stats_dict=summary_stats_dict,
+                                   summary_stats_list=summary_stats_list,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
                                    hist_diff_file=request.cookies.get('hist_diff_file'),
@@ -690,7 +684,7 @@ def power(debug=True):
         # power_path = os.path.join(app.config['FOLDER'], power_file)
 
         recommended_tests = json.loads(request.cookies.get('recommended_tests'))
-        summary_stats_dict = json.loads(request.cookies.get('summary_stats_dict'))
+        summary_stats_list = json.loads(request.cookies.get('summary_stats_list'))
 
         skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
         rendered = render_template(template_filename,
@@ -728,7 +722,7 @@ def power(debug=True):
                                    recommended_tests=recommended_tests,
                                    show_non_recommended=request.cookies.get('show_non_recommended'),
                                    show_non_preferred=request.cookies.get('show_non_preferred'),
-                                   summary_stats_dict=summary_stats_dict,
+                                   summary_stats_list=summary_stats_list,
                                    hist_score1_file=request.cookies.get('hist_score1_file'),
                                    hist_score2_file=request.cookies.get('hist_score2_file'),
                                    hist_diff_file=request.cookies.get('hist_diff_file'),
@@ -800,7 +794,7 @@ def upload_config():
                 sig_test_name = data_loaded.get('sig_test_name'),
                 sig_test_stat_val = data_loaded.get('sig_test_stat_val'),
                 skewness_gamma = json.loads(data_loaded.get('skewness_gamma')),
-                summary_stats_dict = json.loads(data_loaded.get('summary_stats_dict')),
+                summary_stats_list = json.loads(data_loaded.get('summary_stats_list')),
                 summary_str = data_loaded.get('summary_str'),
                 rand_str=get_rand_state_str())
     else:
@@ -824,7 +818,7 @@ def download_file(markdown_only=True):
     options["normality_message"] = request.cookies.get('is_normal')
     options["skewness_message"] = request.cookies.get('skewness_gamma')
     options["test_statistic_message"] = \
-        request.cookies.get('mean_or_median') # or is this 'summary_stats_dict'
+        request.cookies.get('mean_or_median')
     options["significance_tests_table"] = json.loads(request.cookies.get('recommended_tests'))
     options["significance_alpha"] = request.cookies.get('sig_test_alpha')
     options["bootstrap iterations"] = "200"
