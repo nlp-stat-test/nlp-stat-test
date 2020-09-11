@@ -65,12 +65,12 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	plt.legend(loc='upper right')
 	plt.xlabel("Score")
 	plt.ylabel("Frequency")
-	plt.title("Histogram of score1 (Partitioned)")
+	plt.title("Histogram of score1 (EUs)")
 
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
 
-	plt.savefig(output_dir+'/hist_score1_partitioned.svg')
+	plt.savefig(output_dir+'/hist_score1_EUs.svg')
 
 	# plot score2_new
 	y = list(score2_new.values())
@@ -81,9 +81,9 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	plt.legend(loc='upper right')
 	plt.xlabel("Score")
 	plt.ylabel("Frequency")
-	plt.title("Histogram of score2 (Partitioned)")
+	plt.title("Histogram of score2 (EUs)")
 
-	plt.savefig(output_dir+'/hist_score2_partitioned.svg')
+	plt.savefig(output_dir+'/hist_score2_EUs.svg')
 
 	# plot score_diff_new
 	z = list(score_diff_new.values())
@@ -94,11 +94,37 @@ def partition_score(score1, score2, score_diff, eval_unit_size, shuffled, random
 	plt.legend(loc='upper right')
 	plt.xlabel("Score")
 	plt.ylabel("Frequency")
-	plt.title("Histogram of Score Difference (Partitioned)")
+	plt.title("Histogram of Score Difference (EUs)")
 
-	plt.savefig(output_dir+'/hist_score_diff_partitioned.svg')
+	plt.savefig(output_dir+'/hist_score_diff_EUs.svg')
 
 	return([score1_new, score2_new, score_diff_new, ind_shuffled])
+
+
+
+def random_sampling(score_diff, MAX_num_of_sample):
+	"""
+	This function down-samples the original score difference if the size is greater than the specified MAX sample size
+	The down-sampling is done by taking the ratio between the max sample size and sample size of original score difference
+
+	@param score_diff: score difference, dict
+	@param MAX_num_of_sample: maximal sample size
+	@return new_score_diff: down-sampled new score difference, dict
+	@return choice_vec: a vector of 0 and 1 indicating whether the original score difference is selected or not
+	"""
+	z = score_diff.values()
+	n = len(z)
+	down_sampling_ratio = MAX_num_of_sample/float(n)
+
+	choice_vec = np.random.choice([0,1], size=n, replace=True, p=[1-down_sampling_ratio,down_sampling_ratio])
+
+	new_score_diff = {}
+	ind = 0
+	for i in score_diff.keys():
+		if choice_vec[i] == 1:
+			new_score_diff[ind] = score_diff[i]
+			ind+=1
+	return([new_score_diff, choice_vec])
 
 
 def normality_test(score, alpha):
