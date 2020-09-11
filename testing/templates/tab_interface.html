@@ -224,27 +224,23 @@ function show_montecarlo_div() {
             <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
 
                 <!-- SUMMARY STATISTICS -->
-                <b>{{ summary_str }}</b><br><br> {% if summary_stats_dict|length %}
+                <b>{{ summary_str }}</b><br><br> {% if summary_stats_list|length %}
                 <table>
 
                     <tr>
                         <th>Score</th>
-                        <th>Mean</th>
-                        <th>Median</th>
-                        <th>Standard Deviation</th>
-                        <th>Minimum</th>
-                        <th>Maximum</th>
+                            {% for tuple in summary_stats_list[0][1] %} <th>{{ tuple[0] }}</th>
+                            {% endfor %}
+                        <!--<th>Mean</th><th>Median</th><th>Standard Deviation</th><th>Minimum</th><th>Maximum</th> -->
                     </tr>
 
-                    {% for key, value in summary_stats_dict.items() %}
-
+                    {% for tuple in summary_stats_list %}
                     <tr>
-                        <!--
-                                  <td> {{ key }} </td> <td>{{ value }}</td> -->
-                        <td> {{ key }} </td>
-                        {% for k, v in value.items() %}
-                        <td>{{ v }}</td>
-                        {% endfor %}
+                        <td> {{ tuple[0] }} <!--score1, score2, diff--> </td>
+                            {% for stat_tuple in tuple[1] %}
+                            <td>{{ stat_tuple[1] }}</td>
+
+                            {% endfor %}
                     </tr>
                     {% endfor %}
                 </table>
