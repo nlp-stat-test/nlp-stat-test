@@ -1069,14 +1069,31 @@ function show_montecarlo_div() {
           
         }
     </script>
+    <!-- custom input validation -->
     <script>
-        function checkForZero() {
-            var prospectiveMu = document.getElementById("prospective_mu");
-            console.log('**** checking for zero in prospective Mu!')
-            if (prospectiveMu.value == '0' || prospectiveMu.value == '0.0') {
-                console.log('**** got invalid value for prospective_mu ****')
-                prospectiveMu.setCustomValidity("The value of the difference between means cannot be 0.")
+        function isZero(strValue) {
+            var zeroPattern = new RegExp('^0+(.0+)*$', "")
+            console.log(zeroPattern)
+            if (zeroPattern.test(strValue)) {
+                console.log("Detected Zero: value = " + strValue)
+                return true
+            } else {
+                console.log("No Zero: value = " + strValue)
+                return false
             }
+        }
+        function checkForZero() {
+            // todo: take inputElementID as parameter
+            var prospectiveMu = document.getElementById("prospective_mu");
+            var prospectiveStdDev = document.getElementById("prospective_stddev");
+            if (isZero(prospectiveMu.value)) {
+                console.log('**** got invalid value for prospective_mu: ' + prospectiveMu.value)
+                prospectiveMu.setCustomValidity("The value of the difference between means cannot be 0.")
+            } else {
+                console.log('**** valid value for prospective_mu ****')
+                prospectiveMu.setCustomValidity("")
+            }
+
         }
     </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
