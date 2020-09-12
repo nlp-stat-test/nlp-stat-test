@@ -20,7 +20,7 @@ from logic.sigTesting import run_sig_test
 from logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
-from logic.filenames import get_path
+# from logic.filenames import get_path
 
 # Report Function
 from logic.report import gen_report
