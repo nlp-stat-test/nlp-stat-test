@@ -56,11 +56,12 @@
               greyOut(cur)
             }
 
+// Gray out a button
 function greyOut(itemName) {
-  //  document.getElementById("BtnTab1").style.backgroundColor = #eee;
-    //document.getElementById("BtnTab2").style.backgroundColor = #eee;
-  //  document.getElementById("BtnTab3").style.backgroundColor = #eee;
-    //document.getElementById("BtnTab4").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab1").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab2").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab3").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab4").style.backgroundColor = #eee;
     document.getElementById(itemName).style.backgroundColor = 'Gainsboro';
 }
 </script>
@@ -141,12 +142,129 @@ function show_montecarlo_div() {
 
         <div class='roundpurple interface'>
             <ul class="breadcrumb">
+                <li><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power</button></li>
+                <br><br>
                 <li><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis →</button></li>
                 <li><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance → </button></li>
                 <li><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size →</button></li>
                 <li><button class="button1" id='BtnTab4' onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></li>
+
             </ul>
         </div>
+        <div id='Prospective Power' class="tabcontent" style="display:none">
+
+            <div class="roundpurplebottom" style="position:relative; top: -18px;">
+        A prospective power test is a test that you use before analyzing data to
+        determine whether the sample size is large enough so that the significance
+        test will have enough power.
+            The power of a hypothesis test is the probability that the test correctly rejects
+                the null hypothesis. <br><br>Power is affected
+                by the sample size, the difference, the variability of the data, and the significance level of the test.
+                <br><br>
+            Here, we assume data in a normal distribution, to calculate the sample size you'll need to achieve the power level you specify, given the type of
+            alternative hypothesis, the difference between the means, the standard deviation of the data, and significance level.
+                <form action="/prospective_power" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    <!-- 3 alternatives, less, greater, two sided -->
+                    <br><b>Choose the alternative hypothesis </b><br><br>
+
+            <!-- u1 > u2 -->
+            <input type="radio" name="prospective_alternative" id="alternative_greater" value="greater"
+                   {% if prospective_alternative=='greater' %}checked {% endif %}>
+                    <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is
+                    greater than &delta;.</span>
+            </div> <br>
+            <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
+                   {% if prospective_alternative=='two-sided' %}checked{% endif %}>
+                   <b>Two-sided:</b> \( \mu_1 - \mu_2
+                \mathrel{\mathtt{!=}} \delta \)
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between
+                        the first and second system is not equal to &delta;.</span>
+            </div>
+            <br><br>
+            <!-- Mu -->
+            Difference between means (&delta;):
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
+            </div>
+
+                <input class="form-control input-md"
+                        id="prospective_mu" name="prospective_mu" type="number"
+                        {% if prospective_mu %} placeholder="{{ prospective_mu }}" value="{{ prospective_mu }}"
+                        {% else %} value=0.1 {% endif %} class="form-control" step="any" min="0"
+                       style="-webkit-appearance: none; margin:0;" onchange="checkForZero()"> <br><br>
+
+            <!-- Std Dev-->
+            Standard deviation:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The standard deviation of the data.</span>
+            </div>
+            <div class="hide-arrows">
+                <input id="prospective_stddev" name="prospective_stddev" type="number"
+                        {% if prospective_stddev %} placeholder="{{ prospective_stddev }}"
+                       value="{{ prospective_stddev }}" {% else %}
+                       value=0.1 placeholder="standard deviation"{% endif %}
+                       class="form-control" step="any" min='0' style="-webkit-appearance: none; margin:0;"> <br><br>
+                <!-- class="form-control input-md" -->
+            </div>
+            <!-- Desired Power Level-->
+            Desired power level:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The power level you want to achieve.</span>
+            </div>
+            <div class="hide-arrows">
+                <input id="prospective_desired_power" name="prospective_desired_power" type="number" {% if prospective_desired_power %}
+                       placeholder="{{ prospective_desired_power }}"
+                       value="{{ prospective_desired_power }}" {% else %} value=0.90 {% endif %}
+                       min="0"
+                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;"> <br><br>
+                <!-- class="form-control input-md" -->
+            </div>
+            <!-- Prospective significance alpha -->
+            Required significance level &alpha;:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
+            </div>
+
+            <input id="prospective_signifcance_level" name="prospective_signifcance_level" type="number"
+                    {% if prospective_sig_alpha %} placeholder="{{ prospective_sig_alpha }}" value="{{ prospective_sig_alpha }}"
+                    {% else %} placeholder="0.05" value=0.05 {% endif %} class="form-control input-md"
+                   required="" step="0.01" min="0" max="1">
+            <br><br>
+
+            <button id="submit" class='interface button1' name="submit" >Run</button>
+
+            </form> <!-- End Prospective Power form -->
+        </div>
+
+        <div class="roundgreen" class="hiddendiv" id="hiddenProspectivePowerTest">
+
+            <b>Results</b><br><br>
+
+            <table border="1">
+
+
+                <tr>
+                    <th>Requested Power level</th>
+                    <td>
+                        {{ prospective_desired_power}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Required minimum sample size</th>
+                    <td> {{ prospective_required_sample }}
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <!-- End Prospective Power results div -->
+        <h1></h1>
+    </div>
+    <!-- end Prospective Power Tab -->
 
         <div id='Data Analysis' class="tabcontent" style="display:block">
             <!-- Data Analysis form -->
@@ -888,6 +1006,13 @@ function show_montecarlo_div() {
                   console.log(lastTabClicked + 'was POSTED')
                   for (i = 0; i < greenDivs.length; i++) {
                       switch (lastTabClicked) {
+                        case 'Prospective Power':
+                            // todo: if the green div is not matching lastNameClicked
+                            if (greenDivs[i].id != 'hiddenProspectivePowerTest') {
+                                  console.log(lastTabClicked + ': hiding other tabs')
+                                  greenDivs[i].style.display = "none"
+                            }
+                            break;
                         case 'Data Analysis':
                             // todo: if the green div is not matching lastNameClicked
                             if (greenDivs[i].id != 'hiddenDataAnalysis') {
@@ -944,13 +1069,21 @@ function show_montecarlo_div() {
           
         }
     </script>
-
+    <script>
+        function checkForZero() {
+            var prospectiveMu = document.getElementById("prospective_mu");
+            console.log('**** checking for zero in prospective Mu!')
+            if (prospectiveMu == '0' || prospectiveMu == '0.0') {
+                prospectiveMu.setCustomValidity("The value of the difference between means cannot be 0.")
+            }
+        }
+    </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
     <script>
         {% if last_tab_name_clicked %}
               window.onload = showLastTab('{{ last_tab_name_clicked }}')
               // todo: hide the greendivs in other tabs
-            {% else %}
+        {% else %}
               console.log('about to call hideGreenDivs')
               window.onload = hideGreenDivs('{{ last_tab_name_clicked }}')
         {% endif %}
@@ -961,7 +1094,8 @@ function show_montecarlo_div() {
 
                 // sig_test_name radio button
                 var sig_test_button_id = "target_sig_test-{{ sig_test_name }}"
-                document.getElementById(sig_test_button_id).clicked = "clicked"
+                if ('{{ sig_test_name }}')
+                    document.getElementById(sig_test_button_id).clicked = "clicked"
 
                 // hide green divs that aren't the current or previous divs
                 hideGreenDivs('{{ last_tab_name_clicked }}')
@@ -984,6 +1118,9 @@ function show_montecarlo_div() {
                     {% endif %}
                 }
             {% endif %}
+
+            // Form validation - check for zero because built-in types only check for >= 0.
+            //document.getElementById('prospective_mu').oninput = checkForZero;
 
         }, false);
     </script>
