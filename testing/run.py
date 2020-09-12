@@ -17,6 +17,7 @@ from logic.effectSize import calc_eff_size
 from logic.dataAnalysis import partition_score, \
     skew_test, normality_test, recommend_test
 from logic.sigTesting import run_sig_test
+from logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
 from logic.filenames import get_path
@@ -367,7 +368,123 @@ def data_analysis(debug=True):
                                rand_str=get_rand_state_str()
                                )
 
+# ************************************************************
+#   PROSPECTIVE POWER
+# ************************************************************
+@app.route('/prospective_power', methods=["GET", "POST"])
+def prospective_power(debug=True):
+    if request.method == "POST":
+        # ------- Get cookies
+        fileName = request.cookies.get('fileName')
+        # ------- Get form data
+        prospective_mu = request.form.get('prospective_mu')
+        prospective_sig_alpha = request.form.get('prospective_signifcance_level')
+        prospective_stddev = request.form.get('prospective_stddev')
+        prospective_alternative = request.form.get('prospective_alternative')
+        prospective_desired_power = request.form.get('prospective_desired_power')
+        # data analysis
+        show_non_recommended = request.form.get('checkbox_show_non_recommended')
+        show_non_preferred = request.form.get('checkbox_show_non_preferred')
+        sig_test_name = request.form.get('target_sig_test')
+        sig_alpha = request.form.get('significance_level')
+        # mu = float(request.form.get('mu'))
+        # if not mu:
+        #     mu = 0.0
 
+
+        # ------- Test if 'last_tab' was sent
+        last_tab_name_clicked = 'Prospective power'  # request.form.get('last_tab_input')
+        if debug: print("***** LAST TAB (from POST): {}".format(last_tab_name_clicked))
+
+        prospective_required_sample = prosp_power_analysis_norm( float(prospective_mu),
+                                                                 float(prospective_stddev),
+                                                                 float(prospective_desired_power),
+                                                                 float(prospective_sig_alpha),
+                                                                 prospective_alternative)
+        if debug: print("PROSPECTIVE_POWER: required sample size = {} for power = {}".format(
+            prospective_required_sample, prospective_desired_power
+        ))
+
+        rendered = render_template(template_filename,
+                                   prospective_mu = prospective_mu,
+                                   prospective_sig_alpha = prospective_sig_alpha,
+                                   prospective_stddev = prospective_stddev,
+                                   prospective_alternative= prospective_alternative,
+                                   prospective_desired_power=prospective_desired_power,
+                                   prospective_required_sample=prospective_required_sample,
+                                   last_tab_name_clicked='Prospective Power',
+                                   # # data analysis tab
+                                   # skewness_gamma=json.loads(request.cookies.get('skewness_gamma')),
+                                   # normality_alpha=json.loads(request.cookies.get('normality_alpha')),
+                                   # eval_unit_size=request.cookies.get('eval_unit_size'),
+                                   # eval_unit_stat=request.cookies.get('eval_unit_stat'),
+                                   # num_eval_units=request.cookies.get('num_eval_units'),
+                                   # shuffle_seed=request.cookies.get('shuffle_seed'),
+                                   # sigtest_heading=request.cookies.get('sig_test_heading'),
+                                   # summary_str=request.cookies.get('summary_str'),
+                                   # mean_or_median=request.cookies.get('mean_or_median'),
+                                   # is_normal=json.loads(request.cookies.get('is_normal')),
+                                   # recommended_tests=json.loads(request.cookies.get('recommended_tests')),
+                                   # not_preferred_tests=json.loads(request.cookies.get('not_preferred_tests')),  # list of tuples
+                                   # not_recommended_tests=json.loads(request.cookies.get('not_recommended_tests')),
+                                   # show_non_recommended=request.form.get('checkbox_show_non_recommended'),
+                                   # show_non_preferred=request.form.get('checkbox_show_non_preferred'),
+                                   # summary_stats_list=json.loads(request.cookies.get('summary_stats_list')),
+                                   # hist_score1_file=request.cookies.get('hist_score1_file'),
+                                   # hist_score2_file=request.cookies.get('hist_score2_file'),
+                                   # hist_diff_file=request.cookies.get('hist_diff_file'),
+                                   # hist_diff_par_file=request.cookies.get('hist_diff_par_file'),
+                                   # # specific to sig_test
+                                   # mu=mu,
+                                   # sig_test_stat_val=test_stat_val,
+                                   # CI=CI,
+                                   # pval=pval,
+                                   # rejectH0=rejection,
+                                   # sig_alpha=sig_alpha,
+                                   # sig_test_name=sig_test_name,
+                                   #wilcoxon_ci_rec=wilcoxon_ci_rec,
+                                   #wilcoxon_ci_nonpref=wilcoxon_ci_nonpref,
+                                   # specific to effect size test
+                                   effect_size_estimators=estimators,
+                                   eff_estimator=request.cookies.get('eff_estimator'),
+                                   eff_size_val=request.cookies.get('eff_size_val'),
+                                   rand_str=get_rand_state_str()
+                                   )
+        resp = make_response(rendered)
+        # -------- WRITE TO COOKIES ----------
+        # resp.set_cookie('sig_test_name', sig_test_name)
+        # resp.set_cookie('sig_test_alpha', sig_alpha)
+        # resp.set_cookie('alternative', alternative)
+        # if test_stat_val:
+        #     resp.set_cookie('sig_test_stat_val', json.dumps(float(test_stat_val)))
+        #     print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(float(test_stat_val))))
+        # if CI:
+        #     resp.set_cookie('CI', json.dumps(CI))
+        # if show_non_recommended:
+        #     resp.set_cookie('show_non_recommended', show_non_recommended)
+        # else:
+        #     resp.set_cookie('show_non_recommended', '')
+        # if show_non_preferred:
+        #     resp.set_cookie('show_non_preferred', show_non_preferred)
+        # else:
+        #     resp.set_cookie('show_non_preferred', '')
+        # if wilcoxon_ci_nonpref:
+        #     resp.set_cookie('wilcoxon_ci_nonpref', wilcoxon_ci_nonpref)
+        # else:
+        #     resp.set_cookie('wilcoxon_ci_nonpref', '')
+        # if wilcoxon_ci_nonpref:
+        #     resp.set_cookie('wilcoxon_ci_rec', wilcoxon_ci_rec)
+        # else:
+        #     resp.set_cookie('wilcoxon_ci_rec', '')
+        # resp.set_cookie('sig_boot_iterations', str(sig_boot_iterations))
+        # resp.set_cookie('mu', str(mu))
+        # resp.set_cookie('pval', str(pval))
+        # resp.set_cookie('rejectH0', str(rejection))
+        return resp
+    # GET
+    return render_template(template_filename,
+                           rand_str=get_rand_state_str()
+                           )
 # ********************************************************************************************
 #   SIGNIFICANCE TEST
 # ********************************************************************************************
