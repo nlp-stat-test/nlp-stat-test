@@ -29,4 +29,4 @@ You'll see output like the following:
 
 ## How to run NLPStatTest on the web
 
-Simply go to https://nlpstats.ling.washington.edu to run the wbe version.
+Visit https://nlpstats.ling.washington.edu to run the web version.
