@@ -189,12 +189,13 @@ function show_montecarlo_div() {
             <div class="tooltip interface">?
                 <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
             </div>
-
-                <input class="form-control input-md"
+            <div class="hide-arrows">
+                <input
                         id="prospective_mu" name="prospective_mu" type="number"
                         {% if prospective_mu %} placeholder="{{ prospective_mu }}" value="{{ prospective_mu }}"
                         {% else %} value=0.1 {% endif %} class="form-control" step="any" min="0"
-                       style="-webkit-appearance: none; margin:0;" onchange="checkForZero()"> <br><br>
+                       style="-webkit-appearance: none; margin:0;" onchange="checkForZero('prospective_mu')"> <br><br>
+            </div>
 
             <!-- Std Dev-->
             Standard deviation:
@@ -206,7 +207,8 @@ function show_montecarlo_div() {
                         {% if prospective_stddev %} placeholder="{{ prospective_stddev }}"
                        value="{{ prospective_stddev }}" {% else %}
                        value=0.1 placeholder="standard deviation"{% endif %}
-                       class="form-control" step="any" min='0' style="-webkit-appearance: none; margin:0;"> <br><br>
+                       class="form-control" step="any" min='0' style="-webkit-appearance: none; margin:0;"
+                       onchange="checkForZero('prospective_stddev')"> <br><br>
                 <!-- class="form-control input-md" -->
             </div>
             <!-- Desired Power Level-->
@@ -219,7 +221,8 @@ function show_montecarlo_div() {
                        placeholder="{{ prospective_desired_power }}"
                        value="{{ prospective_desired_power }}" {% else %} value=0.90 {% endif %}
                        min="0"
-                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;"> <br><br>
+                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;"
+                onchange="checkForZero('prospective_desired_power')"> <br><br>
                 <!-- class="form-control input-md" -->
             </div>
             <!-- Prospective significance alpha -->
@@ -228,10 +231,10 @@ function show_montecarlo_div() {
                 <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
             </div>
 
-            <input id="prospective_signifcance_level" name="prospective_signifcance_level" type="number"
+            <input id="prospective_significance_level" name="prospective_signifcance_level" type="number"
                     {% if prospective_sig_alpha %} placeholder="{{ prospective_sig_alpha }}" value="{{ prospective_sig_alpha }}"
                     {% else %} placeholder="0.05" value=0.05 {% endif %} class="form-control input-md"
-                   required="" step="0.01" min="0" max="1">
+                   required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             <br><br>
 
             <button id="submit" class='interface button1' name="submit" >Run</button>
@@ -1082,18 +1085,17 @@ function show_montecarlo_div() {
                 return false
             }
         }
-        function checkForZero() {
+        function checkForZero(inputElementId) {
             // todo: take inputElementID as parameter
-            var prospectiveMu = document.getElementById("prospective_mu");
-            var prospectiveStdDev = document.getElementById("prospective_stddev");
-            if (isZero(prospectiveMu.value)) {
-                console.log('**** got invalid value for prospective_mu: ' + prospectiveMu.value)
-                prospectiveMu.setCustomValidity("The value of the difference between means cannot be 0.")
+            var elementToCheck = document.getElementById(inputElementId);
+            // var prospectiveStdDev = document.getElementById("prospective_stddev");
+            if (isZero(elementToCheck.value)) {
+                console.log('**** got invalid value for prospective_mu: ' + elementToCheck.value)
+                elementToCheck.setCustomValidity("Enter a value greater than 0.")
             } else {
                 console.log('**** valid value for prospective_mu ****')
-                prospectiveMu.setCustomValidity("")
+                elementToCheck.setCustomValidity("")
             }
-
         }
     </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
