@@ -1073,7 +1073,8 @@ function show_montecarlo_div() {
         function checkForZero() {
             var prospectiveMu = document.getElementById("prospective_mu");
             console.log('**** checking for zero in prospective Mu!')
-            if (prospectiveMu == '0' || prospectiveMu == '0.0') {
+            if (prospectiveMu.value == '0' || prospectiveMu.value == '0.0') {
+                console.log('**** got invalid value for prospective_mu ****')
                 prospectiveMu.setCustomValidity("The value of the difference between means cannot be 0.")
             }
         }
