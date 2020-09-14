@@ -1,65 +1,52 @@
-"""
-Power analysis for normal data
-
-Description: this script is for a simple illustration of power analysis limited to
-data that are known a priori normally distributed with known mean and known sd. 
-We conduct power analysis using Monte Carlo simulation which directly simulates 
-data points from the known distribution for many times (B) with different sample size, 
-do one-sample t test and count how many times the tests reject the null. 
-The final power curve w.t.r sample size is thus obtained.
-"""
-
 # imports
 import numpy as np
 from scipy import stats
-import sys
 
 
-
-
-def prosp_power_analysis_norm(mu_diff, sd, pow_lev, alpha, alternative):
+def prosp_power_analysis_norm(d, sigma, pow_lev, alpha, direction):
     """
-    This is a function fot prospective power analysis for normal data
-    based on Monte Carlo simulation. We only consider doing one sample testing
-    in this case, and the null hypothesis is that the population mean is 0.
+    This function conducts pre-testing power analysis and
+    calculates the minimally required sample size for a normal sample.
 
-    @param mu: mean difference
-    @param sd: population standard deviation
-    @param pow_lev: desired power level
-    @param alpha: significance level or type II error (default 0.05)
-
+    @param d: difference between the mean differences under H1 and H0
+    @param sigma: standard deviation
+    @param pow_lev: power level
+    @param alpha: significance level
+    @param direction: direction of the test, two-sided or one-sided
     @return: required minimal sample size
     """
+    # first calculates for a z test
+
+    n_z = np.ceil(z_test_sample_size(d, sigma, alpha, pow_lev, direction))
+
+    # first iteration for t test
+
+    n_t_1 = np.ceil(t_test_sample_size(d, sigma, n_z-1, alpha, pow_lev, direction))
+
+
+    # second iteration for t test
+
+    n_t_2 = np.ceil(t_test_sample_size(d, sigma, n_t_1-1, alpha, pow_lev, direction))
+
+    return(np.ceil(n_t_2 ))
 
 
 
-    delta = (sd**2)/(mu_diff**2)
+def z_test_sample_size(d, sigma, alpha, pow_lev, direction):
+    if direction == "one-sided":
+        n = ((stats.norm.ppf(1-alpha)+stats.norm.ppf(pow_lev))**2)*(float(sigma)/float(d))**2
+    elif direction == "two-sided":
+        n = ((stats.norm.ppf(1-alpha/2)+stats.norm.ppf(pow_lev))**2)*(float(sigma)/float(d))**2
+    return(n) 
 
 
-    if alternative == "less" or "greater":
-        n = ((stats.norm.ppf(1-alpha)+stats.norm.ppf(pow_lev))**2)*delta
-
-    if alternative == "two-sided":
-        n = ((stats.norm.ppf(1-alpha/2)+stats.norm.ppf(pow_lev))**2)*delta
-
-
-    return(np.ceil(n))
+def t_test_sample_size(d, sigma, dof, alpha, pow_lev, direction):
+    if direction == "one-sided":
+        n = ((stats.t.ppf(1-alpha, df=dof)+stats.t.ppf(pow_lev, df=dof))**2)*(float(sigma)/float(d))**2
+    elif direction == "two-sided":
+        n = ((stats.t.ppf(1-alpha/2, df=dof)+stats.t.ppf(pow_lev, df=dof))**2)*(float(sigma)/float(d))**2
+    return(n) 
 
 
-
-if __name__ == '__main__':
-    mu_diff = float(sys.argv[1])
-    sd = float(sys.argv[2])
-    pow_lev = float(sys.argv[3])     
-    alpha = float(sys.argv[4])
-    h1= str(sys.argv[5])
-
-    n = prosp_power_analysis_norm(mu_diff, sd, pow_lev, alpha, h1)
-
-    print(n)
-
-
-    
-    
 
 
