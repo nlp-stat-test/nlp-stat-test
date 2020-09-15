@@ -200,7 +200,7 @@ def data_analysis(debug=True):
             shuffle = True
 
         # ------- File ----------------
-        f = request.files['system_file']  # new
+        f = request.files['data_file']  # new
         have_file = False
         have_filename = False
         if f.filename:

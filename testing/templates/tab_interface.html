@@ -10,7 +10,8 @@
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
     
-    
+    <!-- CONSTANTS todo: remove this if not used -->
+    <script src="{{ url_for('static', filename='constants.js') }}"></script>
     
     
     
@@ -66,23 +67,6 @@ function greyOut(itemName) {
 }
 </script>
 
-<script>
-    //UPLOAD BUTTON CLICK HANDLER
-        // change file upload message when upload button is clicked
-        window.pressed = function(){
-            console.log('UPLOAD BUTTON click handler')
-        var a = document.getElementById('system_file');
-        if(a.value == "")
-        {
-            fileLabel.innerHTML = "<i>Upload a file.</i>";
-        }
-        else
-        {
-            var theSplit = a.value.split('\\');
-            fileLabel.innerHTML = "<i>File selected:</i> " + theSplit[theSplit.length-1] + ".";
-        }
-    };
-</script>
 
 <script>
     // toggle the histogram div
@@ -168,12 +152,12 @@ function show_montecarlo_div() {
                     <br><b>Choose the alternative hypothesis </b><br><br>
 
             <!-- u1 > u2 -->
-            <input type="radio" name="prospective_alternative" id="alternative_greater" value="greater"
-                   {% if prospective_alternative=='greater' %}checked {% endif %}>
+            <input type="radio" name="prospective_alternative" id="alternative_greater" value="one-sided"
+                   {% if prospective_alternative=='one-sided' %}checked {% endif %}>
                     <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
             <div class="tooltip interface">?
-                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is
-                    greater than &delta;.</span>
+                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is either
+                    greater than, or less than &delta;, but not both.</span>
             </div> <br>
             <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
                    {% if prospective_alternative=='two-sided' %}checked{% endif %}>
@@ -200,7 +184,7 @@ function show_montecarlo_div() {
             <!-- Std Dev-->
             Standard deviation:
             <div class="tooltip interface">?
-                <span class="tooltiptext">The standard deviation of the data.</span>
+                <span class="tooltiptext">The standard deviation of the differences between the samples.</span>
             </div>
             <div class="hide-arrows">
                 <input id="prospective_stddev" name="prospective_stddev" type="number"
@@ -280,12 +264,15 @@ function show_montecarlo_div() {
                         <span class="tooltiptext">Upload a text file containing metrics comparing two systems.
                         The file should have two colummns, one for each system.</span></div>
                     <!-- Original (works):
-                <input id="system_file" name="system_file" class="input-file" type="file" />
+                <input id="data_file" name="data_file" class="input-file" type="file" />
                 -->
                     <!-- Display name of previously uploaded file in file_uploaded -->
-                    <input type="file" id="system_file" onchange="pressed()" name="system_file" style="display:none;" {% if error_str %}required{% endif %}/>
+                        <!-- onchange="pressed()" -->
+                    <input type="file" id="data_file"
+                           onchange="checkFileSize()"
+                           name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
-                    <a href="#" class="button1 interface"><label for="system_file">Upload</label></a>
+                    <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
 
@@ -333,7 +320,7 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
                     <!-- Is type=submit implied by class="btn btn-success" -->
-                    <button id="submit" name="submit" type=submit class="button1 interface" onclick="document.getElementById('hidden').style.display = 'block'">Run</button>
+                    <button id="submit" name="submit" type=submit class="button1 interface">Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -1096,6 +1083,34 @@ function show_montecarlo_div() {
                 console.log('**** valid value for prospective_mu ****')
                 elementToCheck.setCustomValidity("")
             }
+        }
+        function checkFileSize() {
+            var fileInput = document.getElementById("data_file");
+            var files = fileInput.files;
+            if (fileInput.value == "") {
+                document.getElementById("fileLabel").innerHTML = '<i>Upload a file.</i>'
+            } else {
+                var strSplit = fileInput.value.split('\\');
+                document.getElementById("fileLabel").innerHTML = "<i>File selected:</i> " + strSplit[strSplit.length-1] + ".";
+            }
+            console.log('*** checking file size***')
+            // If there is at least one file selected
+            if (files.length > 0) {
+                if (files[0].size > MAX_FILE_SIZE_IN_KB * 1024) {
+                    console.log("File too large. Size = " + files[0].size)
+                    if (LARGE_FILE_ACTION == 'invalid') {
+                        fileInput.setCustomValidity('msgTooLarge');
+                        document.getElementById("fileLabel").innerHTML =
+                        document.getElementById("fileLabel").innerHTML + ' ' + FILE_TOO_LARGE_MESSAGE
+                    } else if (LARGE_FILE_ACTION == 'warn') {
+                        document.getElementById("fileLabel").innerHTML =
+                        document.getElementById("fileLabel").innerHTML + ' ' + WARN_MESSAGE
+                    }
+                    return;
+                }
+            }
+            // No constraint violation
+            fileInput.setCustomValidity("");
         }
     </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
