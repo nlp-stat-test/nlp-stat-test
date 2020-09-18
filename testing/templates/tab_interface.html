@@ -287,7 +287,9 @@ function show_montecarlo_div() {
                         <span class="tooltiptext">This should be a whole number between one and the number of data points.</span>
                     </div>
 
-                    <input id="eval_unit_size" name="eval_unit_size" type="number" {% if eval_unit_size %} value="{{ eval_unit_size }}" {% else %} value="1" {% endif %} class="form-control input-md" required="">
+                    <input id="eval_unit_size" name="eval_unit_size" type="number"
+                            {% if eval_unit_size %} value="{{ eval_unit_size }}" {% else %} value="1"
+                            {% endif %} class="form-control input-md" required="" >
 
                     <br><br>
                     <!-- Data Analysis: Radio Buttons (mean, median)  -->
@@ -1096,7 +1098,8 @@ function show_montecarlo_div() {
                 document.getElementById("fileLabel").innerHTML = '<i>Upload a file.</i>'
             } else {
                 var strSplit = fileInput.value.split('\\');
-                document.getElementById("fileLabel").innerHTML = "<i>File selected:</i> " + strSplit[strSplit.length-1] + ".";
+                document.getElementById("fileLabel").innerHTML =
+                    "<i>File selected: " + strSplit[strSplit.length-1] + ".</i>";
             }
             console.log('*** checking file size***')
             // If there is at least one file selected
@@ -1141,15 +1144,29 @@ function show_montecarlo_div() {
             var allTextLines = csv.split(/\r\n|\n/);
             var lines = [];
             for (var i=0; i<allTextLines.length; i++) {
-                var data = allTextLines[i].split(';');
+                var data = allTextLines[i].split(/\s+/).filter(Boolean);
+                    if (data.length != 2) {
+                        console.log('WARNING: num vals in line='+data.length)
+                        document.getElementById("fileLabel").innerHTML += '<i style=\'color:red\'>Warning: Line ' + (i+1) +
+                         ' should have 2 values but has ' + data.length + ' values.</i>'
+                    }
                     var tarr = [];
                     for (var j=0; j<data.length; j++) {
                         tarr.push(data[j]);
+                        //console.log(data[j])
                     }
+
                     lines.push(tarr);
             }
             console.log(lines);
             console.log('number of lines = ' + lines.length)
+            // if lines > MAX_NUM_SAMPLES, eval size min must be such that lines/eu_size < max_num_samples
+            // -> lines/max_num_samples < eu_size
+            min_eu_size = Math.ceil(lines.length/MAX_NUM_SAMPLES).toString()
+            console.log('min_eu_size='+ min_eu_size)
+            document.getElementById('eval_unit_size').setAttribute('min', min_eu_size)
+            document.getElementById('eval_unit_size').setAttribute('value', min_eu_size)
+            // todo: warning message if min_eu_size > 1
         }
     </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
