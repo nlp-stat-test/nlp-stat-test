@@ -9,7 +9,6 @@
     <title>NLPStatTest</title>
     
     <link href="{{ url_for('static', filename='modal.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='breadcrumbs.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
@@ -121,28 +120,32 @@ function show_montecarlo_div() {
     <div margin: 100 auto;>
         <div class="header">
             <h1>NlpStatTest</h1>
-        </div>
-
-        <div class="top_bar interface">
+            
+             <div class="top_bar interface">
             <button class='interface button1' id="btn_about" >About</button>
             <button class='interface button1' id="btn_settings" >Save/Restore Settings</button>
             <button class='interface button1' id="btn_download" >Download Report</button>
+             </div>
+           <br>
         </div>
 
-        <div class='roundpurple interface'>
-            <ul class="breadcrumb">
-                <li><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power</button></li>
-                <br><br>
-                <li><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis →</button></li>
-                <li><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance → </button></li>
-                <li><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size →</button></li>
-                <li><button class="button1" id='BtnTab4' onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></li>
+       
+        <div class="roundpurplebottom interface" 
+        style="background-color: #eee; padding: 16;   top: 0;
+               position: -webkit-sticky;
+               position: sticky;    z-index: 2;">
+       
+                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power</button> | </span>
+                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis </button> → </span>
+                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance </button> → </span>
+                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size </button> → </span>
+                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></span>
 
-            </ul>
         </div>
+        
         <div id='Prospective Power' class="tabcontent" style="display:none">
 
-            <div class="roundpurplebottom" style="position:relative; top: -18px;">
+            <div class="roundpurplebottom" style="position:relative;">
         A prospective power test is a test that you use before analyzing data to
         determine whether the sample size is large enough so that the significance
         test will have enough power.
@@ -156,7 +159,6 @@ function show_montecarlo_div() {
                     <!-- 3 alternatives, less, greater, two sided -->
                     <br><b>Choose the alternative hypothesis </b><br><br>
 
-            <!-- u1 > u2 -->
             <input type="radio" name="prospective_alternative" id="alternative_greater" value="one-sided"
                    {% if prospective_alternative=='one-sided' %}checked {% endif %}>
                     <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
@@ -262,7 +264,7 @@ function show_montecarlo_div() {
             <!-- Data Analysis form -->
             <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- Begin Data Analysis div -->
-                <div class="roundpurplebottom" style="position:relative; top: -18px;">
+                <div class="roundpurplebottom" style="position:relative;">
 
                     <b>Data and Parameters</b><br><br> System File:
                     <div class="tooltip interface">?
@@ -500,7 +502,7 @@ function show_montecarlo_div() {
 
         <div id='Significance Test' class="tabcontent" style="display:none">
 
-            <div class="roundpurplebottom" style="position:relative; top: -18px;">
+            <div class="roundpurplebottom" style="position:relative;">
 
                 <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
@@ -698,7 +700,7 @@ function show_montecarlo_div() {
 
     <div id='Effect Size' class="tabcontent" style="display:none">
 
-        <div class="roundpurplebottom" style="position:relative; top: -18px;">
+        <div class="roundpurplebottom" style="position:relative;">
             <form id="frmEffectSize" action="/effectsize" class="form-horizontal" onsubmit="SubmitHandler('frmEffectSize')" enctype="multipart/form-data" method="post">
                 <b>Effect Size Estimator Options</b><br><br> Required significance level &alpha;:
                 <div class="tooltip interface">?
@@ -770,7 +772,7 @@ function show_montecarlo_div() {
 
     <div id='Post-test Power Analysis' class="tabcontent" style="display:none">
 
-        <div class="roundpurplebottom" style="position:relative; top: -18px;">
+        <div class="roundpurplebottom" style="position:relative;">
 
             <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group">
