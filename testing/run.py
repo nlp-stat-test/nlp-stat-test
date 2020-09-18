@@ -25,7 +25,7 @@ from logic.power_analysis_norm import prosp_power_analysis_norm
 # Report Function
 from logic.report import gen_report
 
-from logic.errorHandling import InputError
+from testing.logic.errorHandling import InputError
 
 FOLDER = os.path.join('user')
 from logic.powerAnalysis import post_power_analysis
