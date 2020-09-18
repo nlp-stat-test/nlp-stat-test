@@ -1107,10 +1107,44 @@ function show_montecarlo_div() {
                         document.getElementById("fileLabel").innerHTML + ' ' + WARN_MESSAGE
                     }
                     return;
+                } else {
+                        getAsText(files[0])
                 }
             }
             // No constraint violation
             fileInput.setCustomValidity("");
+        }
+
+        function getAsText(fileToRead) {
+            var reader = new FileReader();
+            // read file into memory as UTF-8
+            reader.readAsText(fileToRead);
+            reader.onload = loadHandler;
+            reader.onerror = errorHandler;
+        }
+        function loadHandler(event) {
+            var lines = event.target.result;
+            processData(lines);
+        }
+        function errorHandler(evt) {
+            if(evt.target.error.name == "NotReadableError") {
+              alert("Cannot read file !");
+            }
+        }
+
+        function processData(csv) {
+            var allTextLines = csv.split(/\r\n|\n/);
+            var lines = [];
+            for (var i=0; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(';');
+                    var tarr = [];
+                    for (var j=0; j<data.length; j++) {
+                        tarr.push(data[j]);
+                    }
+                    lines.push(tarr);
+            }
+            console.log(lines);
+            console.log('number of lines = ' + lines.length)
         }
     </script>
     <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
