@@ -1,5 +1,8 @@
 import sys
 
+from testing.logic.errorHandling import InputError
+
+
 def read_score_file(score_file):
 	"""
 	This is a function to read the input score file. We assume the file contains two
@@ -20,6 +23,8 @@ def read_score_file(score_file):
 		if len(line_tokens) > 0:
 			if len(line_tokens) != 2:
 				sys.stderr.write("Input file not in the correct format (separated by a whitespace)!")
+				# also raise error
+				raise InputError(ind+1, "Each line must be two values separated by whitespace.")
 				return
 			else:
 				score1[ind] = float(line_tokens[0])

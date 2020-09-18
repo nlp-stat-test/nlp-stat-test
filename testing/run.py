@@ -25,6 +25,8 @@ from logic.power_analysis_norm import prosp_power_analysis_norm
 # Report Function
 from logic.report import gen_report
 
+from testing.logic.errorHandling import InputError
+
 FOLDER = os.path.join('user')
 from logic.powerAnalysis import post_power_analysis
 import logic.powerAnalysis
@@ -203,6 +205,7 @@ def data_analysis(debug=True):
         f = request.files['data_file']  # new
         have_file = False
         have_filename = False
+        have_data = False
         if f.filename:
             have_filename = True
             data_filename = f.filename
@@ -213,23 +216,32 @@ def data_analysis(debug=True):
             have_filename = True
         else:
             # no filename, print error message
+            str_err = 'You must submit a file.'
             print('ERROR: submitted without filename! You must resubmit!')
 
         if have_filename:
             if debug: print('have filename:{}'.format(data_filename))
             try:
-                # todo: Throw FormatException if scores1 or scores2 empty due to bad file
+                # todo: raise InputException if scores1 or scores2 empty due to bad file
                 scores1, scores2 = read_score_file(FOLDER + "/" + data_filename)
+                # if not scores1 or not scores2:
+                #     raise InputError('linewitherror','each line must be two values separated by whitespace')
+
                 if len(scores1) > 0 and len(scores2):
                     score_dif = calc_score_diff(scores1, scores2)
                     # todo: display how many samples there are
                     num_eval_units = int(np.floor(len(list(score_dif)) / float(eval_unit_size)))
                     if debug: print('SAMPLE SIZE (#eval units)={}'.format(num_eval_units))
-                    have_file = True
+                    have_data = True
+            except InputError as e:
+                print('Exception: InputError. Line={}. {}'.format(e.line_num, e.message))
+                str_err = 'Error in line {} of file {}. {}'.format(e.line_num, data_filename, e.message)
             except:
+                # Todo: Can we print sys.stderr message here?
                 print('Exception occurred reading file: filename={}'.format(data_filename))
+                str_err = 'Exception occurred reading file: filename={}'.format(data_filename)
 
-        if have_file:
+        if have_data:
             # partition score difference and save svg
             score_diff_par = partition_score(scores1, scores2, score_dif, float(eval_unit_size),
                                              shuffle,  # shuffle if we have seed
@@ -341,7 +353,8 @@ def data_analysis(debug=True):
         else:
             # no file
             rendered = render_template(template_filename,
-                                       error_str='You must submit a file.', )
+                                       rand_str=get_rand_state_str(),
+                                       error_str=str_err, )
             return rendered
     elif request.method == 'GET':
         # You got to the main page by navigating to the URL, not by clicking submit
