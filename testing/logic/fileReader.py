@@ -1,6 +1,6 @@
 import sys
 
-from testing.logic.errorHandling import InputError
+from logic.errorHandling import InputError
 
 
 def read_score_file(score_file):
