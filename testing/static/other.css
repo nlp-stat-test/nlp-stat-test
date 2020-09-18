@@ -1,9 +1,13 @@
 .header { text-align: center;
           font-variant: small-caps;}
    
-.top_bar { text-align: center;}
+.top_bar { text-align: center; padding: 16;}
    
-   
+ 
+.katex { 
+  font-size: 1em; 
+}
+
 .roundpurplebottom {
    
     border-radius: 0px 0px 0px 0px;
@@ -18,9 +22,6 @@
     padding: 16px;
 }
    
-   
-.footer { text-align: center; }
-
 .button1 {
   text-decoration: none;
   border: 1px solid black;
