@@ -1,6 +1,9 @@
 .header { text-align: center;
-          font-variant: small-caps;}
+          font-variant: small-caps;
+         }
    
+
+
 .top_bar { text-align: center; padding: 16;}
    
  
@@ -23,6 +26,7 @@
 }
    
 .button1 {
+  font-family: 'Old Standard TT', serif;
   text-decoration: none;
   border: 1px solid black;
   background-color: #eee;
