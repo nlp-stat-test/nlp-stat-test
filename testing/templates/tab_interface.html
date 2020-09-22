@@ -294,6 +294,7 @@ function show_montecarlo_div() {
  <div id="Upload Files" class="tabcontent interface" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative;">
+                    <form action="/upload_data" class="form-horizontal" enctype="multipart/form-data" method="post">
      System File:
                     <div class="tooltip interface">?
                         <span class="tooltiptext">Upload a text file containing metrics comparing two systems.
@@ -310,20 +311,12 @@ function show_montecarlo_div() {
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
-
-
+                    <button id="submit" onclick="warn = false;"
+                            name="submit" type=submit class="button1 interface">Submit File</button>
+                    </form>
         </div>
 
      </div>
-
-
-
-
-
-
-
-
-
 
 
         <div id='Data Analysis' class="tabcontent" style="display:block">
@@ -379,7 +372,7 @@ function show_montecarlo_div() {
                     <!-- Data Analysis Submit Button -->
 
                     <input type="hidden" id="da_hidden" value="hidden101">
-                    <!-- Is type=submit implied by class="btn btn-success" -->
+
                     <button id="submit" onclick="warn = false;" name="submit" type=submit class="button1 interface">Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
