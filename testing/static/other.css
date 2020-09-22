@@ -11,6 +11,9 @@
   font-size: 1em; 
 }
 
+/* http://xahlee.info/js/css_animation.html */
+.spinner {animation: beat46564 1s 0s 300}
+
 .roundpurplebottom {
    
     border-radius: 0px 0px 0px 0px;
