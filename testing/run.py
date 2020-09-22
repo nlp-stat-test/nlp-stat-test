@@ -51,6 +51,15 @@ estimators = {"cohend": "This function calculates the Cohen's d effect size esti
               "wilcoxonr": "This function calculates the standardized z-score (r) for the Wilcoxon signed-rank test.",
               "hl": "This function estimates the Hodges-Lehmann estimator for the input score."}
 
+def update_consistency(tab_submitted, consistency_dict):
+    '''
+
+    @param tab_submitted: name of tab, like 'Upload Files', 'Data Analysis', 'Significance Testing',
+    'Effect Size', Retrospective Power Analysis, 'Download Report'
+    @param consistency_dict:
+    @return: updated
+    '''
+
 def get_rand_state_str():
     '''
     This is a random string that's generate every time a 'submit' operation happens.
@@ -170,6 +179,52 @@ def create_summary_stats_list(tc, debug=False):
                                         ('max', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
+@app.route('/upload_data', methods=["POST"])
+def upload_data(debug=True):
+    if request.method == "POST":
+        # ------- File ----------------
+        f = request.files['data_file']  # new
+        have_file = False
+        have_filename = False
+        have_data = False
+        str_err = ''
+        if f.filename:
+            have_filename = True
+            data_filename = f.filename
+            f.save(FOLDER + "/" + secure_filename(data_filename))
+            have_file = True  # assume the above worked
+        elif request.cookies.get('fileName'):
+            data_filename = request.cookies.get('fileName')
+            have_filename = True
+        else:
+            # no filename, print error message
+            str_err = 'You must submit a file.'
+            print('ERROR: submitted without filename! You must resubmit!')
+        if have_filename:
+            if debug: print('have filename:{}'.format(data_filename))
+            try:
+                # todo: raise InputException if scores1 or scores2 empty due to bad file
+                scores1, scores2 = read_score_file(FOLDER + "/" + data_filename)
+                # if not scores1 or not scores2:
+                #     raise InputError('linewitherror','each line must be two values separated by whitespace')
+                if len(scores1) > 0 and len(scores2):
+                    have_data = True
+            except InputError as e:
+                print('Exception: InputError. Line={}. {}'.format(e.line_num, e.message))
+                str_err = 'Error in line {} of file {}. {}'.format(e.line_num, data_filename, e.message)
+            except:
+                # Todo: Can we print sys.stderr message here?
+                print('Exception occurred reading file: filename={}'.format(data_filename))
+                str_err = 'Exception occurred reading file: filename={}'.format(data_filename)
+
+        rendered = render_template(template_filename,
+                                           rand_str=get_rand_state_str(),
+                                           error_str=str_err, )
+        resp = make_response(rendered)
+        if have_data:
+            if f.filename:
+                resp.set_cookie('fileName', f.filename)
+        return resp
 
 @app.route('/', methods=["GET", "POST"])
 def data_analysis(debug=True):
@@ -202,16 +257,17 @@ def data_analysis(debug=True):
             shuffle = True
 
         # ------- File ----------------
-        f = request.files['data_file']  # new
         have_file = False
+        # f = request.files['data_file']  # old use of file input
+
         have_filename = False
         have_data = False
-        if f.filename:
-            have_filename = True
-            data_filename = f.filename
-            f.save(FOLDER + "/" + secure_filename(data_filename))
-            have_file = True  # assume the above worked
-        elif request.cookies.get('fileName'):
+        # if f.filename:
+        #     have_filename = True
+        #     data_filename = f.filename
+        #     f.save(FOLDER + "/" + secure_filename(data_filename))
+        #     have_file = True  # assume the above worked
+        if request.cookies.get('fileName'):
             data_filename = request.cookies.get('fileName')
             have_filename = True
         else:
@@ -322,8 +378,8 @@ def data_analysis(debug=True):
                 resp = make_response(rendered)
 
                 # -------------- Set all cookies -------------
-                if f.filename:
-                    resp.set_cookie('fileName', f.filename)
+                # if f.filename:
+                #     resp.set_cookie('fileName', f.filename)
                 resp.set_cookie('normality_alpha', json.dumps(normality_alpha))
                 resp.set_cookie('skewness_gamma', json.dumps(skewness_gamma))
                 resp.set_cookie('eval_unit_size', eval_unit_size)
