@@ -862,13 +862,14 @@ def power(debug=True):
         print('In PowerAnalysis: sig_test_name={} alpha={} mu={} bootB={} pow_iter={}'.format(
             sig_test_name, alpha, mu, boot_B, power_iterations))
         print("score dif: {}".format(score_dif))
+        dir_str = request.cookies.get("dir_str")
         pow_sampsizes = post_power_analysis(sig_test_name, power_test, score_dif, power_num_intervals,
                                             dist_name='normal',  # todo: handle not normal
                                             B=power_iterations,
                                             alpha=alpha,
                                             mu=mu,
                                             boot_B=boot_B,
-                                            output_dir=FOLDER)
+                                            output_dir=FOLDER + "/" + dir_str)
         print(pow_sampsizes)
 
         power_file = 'power_samplesizes.svg'
