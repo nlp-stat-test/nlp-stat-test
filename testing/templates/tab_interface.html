@@ -39,7 +39,7 @@
 
 <script>
     // Keeping track of consistency
-    let max = 1;
+    var max = 0 ; console.log(max);
 </script>
 
 <script>
@@ -59,7 +59,7 @@
 <script>
     // BREADCRUMBS!
         function openTab(evt, tabName, cur) {
-              if (Number(cur.slice(-1)) <= max){
+              if (Number(cur.slice(-1)) <= max + 1){
               var i, tabcontent, tablinks;
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
@@ -137,7 +137,7 @@ function show_montecarlo_div() {
 
   // https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
 
-  let warn = true;
+  var warn = true;
 
     $(window).on("beforeunload", function() {
        if (warn) {warn = true; return "Do you really want to close and clear all data?"}
@@ -259,7 +259,7 @@ function show_montecarlo_div() {
                    required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             <br><br>
 
-            <button id="submit" class='interface button1' onclick="warn = false;" name="submit" >Run</button>
+            <button id="submit" class='interface button1' onclick="warn = false; console.log(warn);" name="submit" >Run</button>
 
             </form> <!-- End Prospective Power form -->
         </div>
@@ -317,7 +317,7 @@ function show_montecarlo_div() {
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
-                    <button id="submit" onclick="warn = false;"
+                    <button id="submit" onclick="warn = false;  console.log(warn); max = 1; console.log(max);"
                             name="submit" type=submit class="button1 interface">Submit File</button>
                     </form>
         </div>
@@ -378,8 +378,8 @@ function show_montecarlo_div() {
                     <!-- Data Analysis Submit Button -->
 
                     <input type="hidden" id="da_hidden" value="hidden101">
-                
-                    <button id="submit" onclick="warn = false; max = 2; " name="submit" type=submit class="button1 interface">Run</button>
+
+                    <button id="submit" onclick="warn = false;  console.log(warn); max = 2; console.log(max);" name="submit" type=submit class="button1 interface">Run</button>
 
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
@@ -696,7 +696,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false; max = 3; " class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max = 3; console.log(max);" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -785,7 +785,7 @@ function show_montecarlo_div() {
                 <!-- effect size Submit Button -->
                 <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false; max = 4;">Run</button>
+                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max = 4; console.log(max);">Run</button>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -919,7 +919,7 @@ function show_montecarlo_div() {
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false; max = 5;" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max = 5; console.log(max);" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -1054,7 +1054,7 @@ function show_montecarlo_div() {
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
                   console.log(lastTabClicked + 'was POSTED')
-                  warn = true;
+                  warn = true;  console.log(warn);
                   for (i = 0; i < greenDivs.length; i++) {
                       switch (lastTabClicked) {
                         case 'Prospective Power':
