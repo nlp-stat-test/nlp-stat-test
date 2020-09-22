@@ -39,7 +39,12 @@
 
 <script>
     // Keeping track of consistency
-    var max = 0 ; console.log(max);
+
+    if (localStorage.getItem("max") === null) {
+      localStorage.setItem("max", "0");
+
+  }
+  console.log(max);
 </script>
 
 <script>
@@ -59,7 +64,8 @@
 <script>
     // BREADCRUMBS!
         function openTab(evt, tabName, cur) {
-              if (Number(cur.slice(-1)) <= max + 1){
+                console.log(localStorage.getItem("max"));
+              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max")) + 1){
               var i, tabcontent, tablinks;
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
@@ -317,7 +323,7 @@ function show_montecarlo_div() {
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
-                    <button id="submit" onclick="warn = false;  console.log(warn); max = 1; console.log(max);"
+                    <button id="submit" onclick="warn = false;  console.log(warn); max = '1'; localStorage.setItem('max', max); console.log(max);"
                             name="submit" type=submit class="button1 interface">Submit File</button>
                     </form>
         </div>
@@ -379,7 +385,7 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
 
-                    <button id="submit" onclick="warn = false;  console.log(warn); max = 2; console.log(max);" name="submit" type=submit class="button1 interface">Run</button>
+                    <button id="submit" onclick="warn = false;  console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);" name="submit" type=submit class="button1 interface">Run</button>
 
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
@@ -696,7 +702,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max = 3; console.log(max);" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max = '3'; localStorage.setItem('max', max); console.log(max);" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -785,7 +791,7 @@ function show_montecarlo_div() {
                 <!-- effect size Submit Button -->
                 <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max = 4; console.log(max);">Run</button>
+                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max = '4'; localStorage.setItem('max', max); console.log(max);">Run</button>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -919,7 +925,7 @@ function show_montecarlo_div() {
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max = 5; console.log(max);" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max = '5'; localStorage.setItem('max', max); console.log(max);" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -1109,7 +1115,8 @@ function show_montecarlo_div() {
           document.getElementById('Effect Size').style.display='block';
           document.getElementById('Retrospective Power Analysis').style.display='block';
           document.getElementById('Download Report').style.display='none';
-          if (max < 5){
+          console.log(localStorage.getItem("max"));
+          if (Number(localStorage.getItem("max")) < 5){
              document.getElementById('warning').style.display='block';
           }
           return false;
