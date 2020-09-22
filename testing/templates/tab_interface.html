@@ -37,6 +37,10 @@
 
 </head>
 
+<script>
+    // Keeping track of consistency
+    let max = 1;
+</script>
 
 <script>
 
@@ -55,6 +59,7 @@
 <script>
     // BREADCRUMBS!
         function openTab(evt, tabName, cur) {
+              if (Number(cur.slice(-1)) <= max){
               var i, tabcontent, tablinks;
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
@@ -67,6 +72,7 @@
               document.getElementById(tabName).style.display = "block";
               evt.currentTarget.className += " active";
               greyOut(cur)
+            }
             }
 
 // Gray out a button
@@ -159,15 +165,15 @@ function show_montecarlo_div() {
                position: -webkit-sticky;
                position: sticky;    z-index: 2; line-height: 2;">
 
-                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power Analysis</button> | </span>
-                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')">Upload Files</button> →  </span>
-                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')">Data Analysis </button> → </span>
-                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')">Significance Testing</button> → </span>
-                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')">Effect Size Estimation</button> → </span>
-                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</button> → </span>
+                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')" readonly>Prospective Power Analysis</button> | </span>
+                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')" readonly>Upload Files</button> →  </span>
+                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" readonly>Data Analysis </button> → </span>
+                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')" readonly>Significance Testing</button> → </span>
+                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')" readonly>Effect Size Estimation</button> → </span>
+                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" readonly>Retrospective Power Analysis</button> → </span>
  <span><button class="button1" id='BtnTab6' onclick="openTab(event, 'Download Report', 'BtnTab6')">Download Report</button></span>
         </div>
-
+    <div id="warning" style="color:red;display:none">The results may be inconsitent.</div>
         <div id='Prospective Power' class="tabcontent" style="display:none">
 
             <div class="roundpurplebottom" style="position:relative;">
@@ -380,7 +386,7 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
                     <!-- Is type=submit implied by class="btn btn-success" -->
-                    <button id="submit" onclick="warn = false;" name="submit" type=submit class="button1 interface">Run</button>
+                    <button id="submit" onclick="warn = false; max = 2; " name="submit" type=submit class="button1 interface">Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -696,7 +702,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false; max = 3; " class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -785,7 +791,7 @@ function show_montecarlo_div() {
                 <!-- effect size Submit Button -->
                 <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator')">Run</button>
+                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false; max = 4;">Run</button>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -919,7 +925,7 @@ function show_montecarlo_div() {
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false; max = 5;" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -940,7 +946,9 @@ function show_montecarlo_div() {
 
  <div id="Download Report" class="tabcontent interface" style="display:none">
 
+
         <div class="roundpurplebottom" style="position:relative;">
+
          <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
         </div>
@@ -1052,7 +1060,7 @@ function show_montecarlo_div() {
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
                   console.log(lastTabClicked + 'was POSTED')
-                  warn=true;
+                  warn = true;
                   for (i = 0; i < greenDivs.length; i++) {
                       switch (lastTabClicked) {
                         case 'Prospective Power':
@@ -1107,6 +1115,9 @@ function show_montecarlo_div() {
           document.getElementById('Effect Size').style.display='block';
           document.getElementById('Retrospective Power Analysis').style.display='block';
           document.getElementById('Download Report').style.display='none';
+          if (max < 5){
+             document.getElementById('warning').style.display='block';
+          }
           return false;
         }
 
@@ -1118,6 +1129,7 @@ function show_montecarlo_div() {
             document.getElementById('Effect Size').style.display='none';
             document.getElementById('Retrospective Power Analysis').style.display='none';
             document.getElementById('Download Report').style.display='block';
+            document.getElementById('warning').style.display='none';
             return false;
 
         }
