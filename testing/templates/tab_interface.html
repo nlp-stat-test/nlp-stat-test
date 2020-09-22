@@ -1201,9 +1201,9 @@ function show_montecarlo_div() {
             var lines = [];
             for (var i=0; i<allTextLines.length; i++) {
                 var data = allTextLines[i].split(/\s+/).filter(Boolean);
-                    if (data.length != 2) {
+                    if ((data.length != 2) && (data.length > 0)) {
                         console.log('WARNING: num vals in line='+data.length)
-                        document.getElementById("fileLabel").innerHTML += '<i style=\'color:red\'>Warning: Line ' + (i+1) +
+                        document.getElementById("fileLabel").innerHTML += '<br><i style=\'color:red\'>Warning: Line ' + (i+1) +
                          ' should have 2 values but has ' + data.length + ' values.</i>'
                     }
                     var tarr = [];
