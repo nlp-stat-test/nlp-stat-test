@@ -7,18 +7,24 @@
 <head>
     <meta charset="UTF-8">
     <title>NLPStatTest</title>
-    
+
+
+
     <link href="{{ url_for('static', filename='modal.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
-    
+
+
+
+
+
     <!-- CONSTANTS todo: remove this if not used -->
     <script src="{{ url_for('static', filename='constants.js') }}"></script>
-    
-    
-    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- KATEX STARTER -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 
@@ -28,10 +34,12 @@
        <!-- To automatically render math in text elements, include the auto-render extension: -->
        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
            onload="renderMathInElement(document.body);"></script>
-       
+
 </head>
 
+
 <script>
+
     // MODALS!
         var modals = ["about",  "settings", "download"];
         function make_modal(val){
@@ -116,33 +124,50 @@ function show_montecarlo_div() {
 }
 </script>
 
-<body>
+<body style="font-family: sans;">
+
+
+  <script>
+
+  // https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
+
+  let warn = true;
+
+    $(window).on("beforeunload", function() {
+       if (warn) {warn = true; return "Do you really want to close and clear all data?"}
+
+    })
+
+
+  </script>
+
     <div margin: 100 auto;>
         <div class="header">
-            <h1>NlpStatTest</h1>
-            
-             <div class="top_bar interface">
+            <h1>NlpStatTest
+
+             <span class="top_bar interface">
             <button class='interface button1' id="btn_about" >About</button>
-            <button class='interface button1' id="btn_settings" >Save/Restore Settings</button>
-            <button class='interface button1' id="btn_download" >Download Report</button>
-             </div>
-           <br>
+            <button class='interface button1' id="btn_settings" >Save Settings</button>
+             </span>
+             </h1>
+
         </div>
 
-       
-        <div class="roundpurplebottom interface" 
+
+        <div class="roundpurplebottom interface"
         style="background-color: #eee; padding: 16;   top: 0;
                position: -webkit-sticky;
-               position: sticky;    z-index: 2;">
-       
-                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power</button> | </span>
-                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab1')">Data Analysis </button> → </span>
-                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab2')">Significance </button> → </span>
-                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab3')">Effect Size </button> → </span>
-                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Post-test Power Analysis', 'BtnTab4')">Power Analysis</button></span>
+               position: sticky;    z-index: 2; line-height: 2;">
 
+                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')">Prospective Power Analysis</button> | </span>
+                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')">Upload Files</button> →  </span>
+                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')">Data Analysis </button> → </span>
+                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')">Significance Testing</button> → </span>
+                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')">Effect Size Estimation</button> → </span>
+                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</button> → </span>
+ <span><button class="button1" id='BtnTab6' onclick="openTab(event, 'Download Report', 'BtnTab6')">Download Report</button></span>
         </div>
-        
+
         <div id='Prospective Power' class="tabcontent" style="display:none">
 
             <div class="roundpurplebottom" style="position:relative;">
@@ -159,7 +184,7 @@ function show_montecarlo_div() {
                     <!-- 3 alternatives, less, greater, two sided -->
                     <br><b>Choose the alternative hypothesis </b><br><br>
 
-            <input type="radio" name="prospective_alternative" id="alternative_greater" value="one-sided"
+            <input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
                    {% if prospective_alternative=='one-sided' %}checked {% endif %}>
                     <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
             <div class="tooltip interface">?
@@ -228,7 +253,7 @@ function show_montecarlo_div() {
                    required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             <br><br>
 
-            <button id="submit" class='interface button1' name="submit" >Run</button>
+            <button id="submit" class='interface button1' onclick="warn = false;" name="submit" >Run</button>
 
             </form> <!-- End Prospective Power form -->
         </div>
@@ -260,13 +285,16 @@ function show_montecarlo_div() {
     </div>
     <!-- end Prospective Power Tab -->
 
-        <div id='Data Analysis' class="tabcontent" style="display:block">
-            <!-- Data Analysis form -->
-            <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
-                <!-- Begin Data Analysis div -->
-                <div class="roundpurplebottom" style="position:relative;">
 
-                    <b>Data and Parameters</b><br><br> System File:
+
+
+
+
+
+ <div id="Upload Files" class="tabcontent interface" style="display:none">
+
+        <div class="roundpurplebottom" style="position:relative;">
+     System File:
                     <div class="tooltip interface">?
                         <span class="tooltiptext">Upload a text file containing metrics comparing two systems.
                         The file should have two colummns, one for each system.</span></div>
@@ -282,6 +310,29 @@ function show_montecarlo_div() {
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
+
+
+        </div>
+
+     </div>
+
+
+
+
+
+
+
+
+
+
+
+        <div id='Data Analysis' class="tabcontent" style="display:block">
+            <!-- Data Analysis form -->
+            <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <!-- Begin Data Analysis div -->
+                <div class="roundpurplebottom" style="position:relative;">
+
+                    <b>Data and Parameters</b><br><br>
 
                     <!-- Data Analysis: Evaluation Unit size-->
                     Evaluation Unit Size:
@@ -329,7 +380,7 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
                     <!-- Is type=submit implied by class="btn btn-success" -->
-                    <button id="submit" name="submit" type=submit class="button1 interface">Run</button>
+                    <button id="submit" onclick="warn = false;" name="submit" type=submit class="button1 interface">Run</button>
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -645,7 +696,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -698,7 +749,7 @@ function show_montecarlo_div() {
     </div>
     <!-- end Significance Results Tab -->
 
-    <div id='Effect Size' class="tabcontent" style="display:none">
+    <div id="Effect Size" class="tabcontent" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative;">
             <form id="frmEffectSize" action="/effectsize" class="form-horizontal" onsubmit="SubmitHandler('frmEffectSize')" enctype="multipart/form-data" method="post">
@@ -770,13 +821,13 @@ function show_montecarlo_div() {
         <h1></h1>
     </div>
 
-    <div id='Post-test Power Analysis' class="tabcontent" style="display:none">
+    <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative;">
 
             <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group">
-                    <b>Post-test power analysis:</b> this test involves plotting a power curve that shows how the statistical power increases as sample size increases.
+                    <b>Retrospective power analysis:</b> this test involves plotting a power curve that shows how the statistical power increases as sample size increases.
                     <!-- This test performs an analysis to measure
                 the power at evenly spaced increasing sample sizes. -->
                     <ul>
@@ -868,13 +919,15 @@ function show_montecarlo_div() {
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
             <br>
-            <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+
         </div>
+
+
 
         <div class="roundgreen" class="hiddendiv" id="hiddenPowerTest">
 
@@ -884,6 +937,16 @@ function show_montecarlo_div() {
             <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
         </div>
     </div>
+
+ <div id="Download Report" class="tabcontent interface" style="display:none">
+
+        <div class="roundpurplebottom" style="position:relative;">
+         <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+
+        </div>
+
+     </div>
+
 
     <div id="about" class="modal">
         <div class="modal-content">
@@ -901,30 +964,16 @@ function show_montecarlo_div() {
             <form action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}" method="get" target="_blank">
                 <button class="button1" type="submit">Download Settings File</button>
             </form>
-            <!-- upload config button -->
-            <form action="{{ url_for('.upload_config')}}" enctype="multipart/form-data" method="post" target="_blank">
 
-                <button class="button1" type="submit">Upload Settings File</button>
-                <input type="file" id="system_file" name="system_file" {% if error_str %}required{% endif %}/>
-            </form>
 
         </div>
     </div>
 
-    <div id="download" class="modal">
-        <div class="modal-content">
-            <button class="button1" id="close_btn_download">&#x2715;</button>
-            <p>
-                <form action="{{ url_for('.download_file') }}" method="get" target="_blank">
-                    <button class="button1" type="submit">Download</button>
-                </form>
-            </p>
 
-        </div>
-    </div>
+
 
     <script>
-        var modals = ["about",  "settings", "download"];
+        var modals = ["about",  "settings"];
             function make_modal(val){
                 eval("var modal_" + val + " = document.getElementById(\"" + val +"\");");
                 eval("var btn_" + val + " = document.getElementById(\"btn_" + val +"\");");
@@ -943,13 +992,13 @@ function show_montecarlo_div() {
                 console.log("*** IN: GetSelectedCheckbox()");
             //Create an Array.
             var selected = new Array();
-    
+
             //Reference the Table.
             var tblCheckboxes = document.getElementById(tableName);
-    
+
             //Reference all the CheckBoxes in Table.
             var chks = tblCheckboxes.getElementsByTagName("INPUT");
-    
+
             // Loop and push the checked CheckBox value in Array.
             for (var i = 0; i < chks.length; i++) {
                 if (chks[i].checked) {
@@ -965,7 +1014,7 @@ function show_montecarlo_div() {
                 console.log("Checkbox selected values: " + selected.join(","));
                 //alert("Selected values: " + selected.join(",") + " HIDDEN INPUT VALUE=" + hiddenInputCheckArray.value);
             }
-    
+
             return selected
             // what can we do with selected? we need to get it into POST on submit of the form,
             // Can we set a hidden input value in an onSubmit handler and get that inside the python?
@@ -1003,6 +1052,7 @@ function show_montecarlo_div() {
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
                   console.log(lastTabClicked + 'was POSTED')
+                  warn=true;
                   for (i = 0; i < greenDivs.length; i++) {
                       switch (lastTabClicked) {
                         case 'Prospective Power':
@@ -1036,7 +1086,7 @@ function show_montecarlo_div() {
                                   greenDivs[i].style.display = "none"
                             }
                             break;
-                        case 'Post-test Power Analysis':
+                        case 'Retrospective Power Analysis':
                             console.log('Power: do not need to hide anything')
                             break;
                         default:
@@ -1049,23 +1099,27 @@ function show_montecarlo_div() {
                   }
               }
         }
-    
+
         function show_print() {
+          document.getElementById('Upload Files').style.display='block';
           document.getElementById('Data Analysis').style.display='block';
           document.getElementById('Significance Test').style.display='block';
           document.getElementById('Effect Size').style.display='block';
+          document.getElementById('Retrospective Power Analysis').style.display='block';
+          document.getElementById('Download Report').style.display='none';
           return false;
         }
 
 
         function hide_print() {
-    
-            document.getElementById('Data Analysis').style.display='none';
+            document.getElementById('Upload Files').style.display='none';
             document.getElementById('Data Analysis').style.display='none';
             document.getElementById('Significance Test').style.display='none';
             document.getElementById('Effect Size').style.display='none';
+            document.getElementById('Retrospective Power Analysis').style.display='none';
+            document.getElementById('Download Report').style.display='block';
             return false;
-          
+
         }
     </script>
     <!-- custom input validation -->
