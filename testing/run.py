@@ -51,14 +51,6 @@ estimators = {"cohend": "This function calculates the Cohen's d effect size esti
               "wilcoxonr": "This function calculates the standardized z-score (r) for the Wilcoxon signed-rank test.",
               "hl": "This function estimates the Hodges-Lehmann estimator for the input score."}
 
-def update_consistency(tab_submitted, consistency_dict):
-    '''
-
-    @param tab_submitted: name of tab, like 'Upload Files', 'Data Analysis', 'Significance Testing',
-    'Effect Size', Retrospective Power Analysis, 'Download Report'
-    @param consistency_dict:
-    @return: updated
-    '''
 
 def get_rand_state_str():
     '''
@@ -191,7 +183,15 @@ def upload_data(debug=True):
         if f.filename:
             have_filename = True
             data_filename = f.filename
-            f.save(FOLDER + "/" + secure_filename(data_filename))
+            dir_str = get_rand_state_str()
+
+            #f.save(FOLDER + "/" + secure_filename(data_filename))
+
+            # save to dir_str
+            if not os.path.exists(FOLDER + "/" + dir_str):
+                os.makedirs(FOLDER + "/" + dir_str)
+            f.save(FOLDER + "/" +dir_str + "/" + secure_filename(data_filename))
+            print('Check directory {} for saved file'.format(dir_str))
             have_file = True  # assume the above worked
         elif request.cookies.get('fileName'):
             data_filename = request.cookies.get('fileName')
@@ -217,6 +217,7 @@ def upload_data(debug=True):
                 print('Exception occurred reading file: filename={}'.format(data_filename))
                 str_err = 'Exception occurred reading file: filename={}'.format(data_filename)
 
+
         rendered = render_template(template_filename,
                                            rand_str=get_rand_state_str(),
                                            error_str=str_err, )
@@ -224,10 +225,12 @@ def upload_data(debug=True):
         if have_data:
             if f.filename:
                 resp.set_cookie('fileName', f.filename)
+                resp.set_cookie('dir_str', dir_str)
         return resp
 
 @app.route('/', methods=["GET", "POST"])
 def data_analysis(debug=True):
+    str_err = ''
     if request.method == 'POST':
         # ------- Test if 'last_tab' was sent
         last_tab_clicked = request.form.get('last_tab')
@@ -279,9 +282,11 @@ def data_analysis(debug=True):
             if debug: print('have filename:{}'.format(data_filename))
             try:
                 # todo: raise InputException if scores1 or scores2 empty due to bad file
-                scores1, scores2 = read_score_file(FOLDER + "/" + data_filename)
-                # if not scores1 or not scores2:
-                #     raise InputError('linewitherror','each line must be two values separated by whitespace')
+                # scores1, scores2 = read_score_file(FOLDER + "/" + data_filename)
+                dir_str = request.cookies.get('dir_str')
+                if dir_str:
+                     scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/" + data_filename)
+                     print ('Just read scores from directory {}'.format(dir_str))
 
                 if len(scores1) > 0 and len(scores2):
                     score_dif = calc_score_diff(scores1, scores2)
@@ -299,11 +304,12 @@ def data_analysis(debug=True):
 
         if have_data:
             # partition score difference and save svg
+            dir_folder = FOLDER + "/" + dir_str
             score_diff_par = partition_score(scores1, scores2, score_dif, float(eval_unit_size),
                                              shuffle,  # shuffle if we have seed
                                              seed,
                                              eval_unit_stat,  # mean or median
-                                             FOLDER)
+                                             dir_folder)
 
             # --------------Summary Stats -------------
             ### initialize a new testCase object to use for summary statistics
@@ -337,8 +343,8 @@ def data_analysis(debug=True):
             USE_JSON = False
             if USE_JSON:
                 return jsonify(result=sig_test_heading,
-                               hist_score1_file='hist_score1_partitioned.svg',
-                               hist_score2_file='hist_score2_partitioned.svg')
+                               hist_score1_file='hist_score1_EUs.svg',
+                               hist_score2_file='hist_score2_EUs.svg')
             else:
                 rand = np.random.randint(10000)
                 if debug: print('random number to append to image url={}'.format(rand))
@@ -346,10 +352,10 @@ def data_analysis(debug=True):
                 rendered = render_template(template_filename,
                                            normality_alpha=normality_alpha,
                                            skewness_gamma=skewness_gamma,
-                                           hist_score1_file='hist_score1_partitioned.svg',
-                                           hist_score2_file='hist_score2_partitioned.svg',
+                                           hist_score1_file='hist_score1_EUs.svg',
+                                           hist_score2_file='hist_score2_EUs.svg',
                                            hist_diff_file='hist_score_diff.svg',
-                                           hist_diff_par_file='hist_score_diff_partitioned.svg',
+                                           hist_diff_par_file='hist_score_diff_EUs.svg',
                                            file_uploaded="File selected: {}".format(data_filename),
                                            last_tab_name_clicked=last_tab_name_clicked,
                                            eval_unit_size=eval_unit_size,
@@ -401,10 +407,10 @@ def data_analysis(debug=True):
                 resp.set_cookie('not_recommended_tests', json.dumps(not_recommended_tests))
                 resp.set_cookie('not_preferred_tests', json.dumps(not_preferred_tests))
 
-                resp.set_cookie('hist_score1_file', 'hist_score1_partitioned.svg')
-                resp.set_cookie('hist_score2_file', 'hist_score2_partitioned.svg')
+                resp.set_cookie('hist_score1_file', 'hist_score1_EUs.svg')
+                resp.set_cookie('hist_score2_file', 'hist_score2_EUs.svg')
                 resp.set_cookie('hist_diff_file', 'hist_score_diff.svg')
-                resp.set_cookie('hist_diff_par_file', 'hist_score_diff_partitioned.svg')
+                resp.set_cookie('hist_diff_par_file', 'hist_score_diff_EUs.svg')
                 return resp  # return rendered
         else:
             # no file
@@ -1056,7 +1062,7 @@ def send_img_file(image_path, debug=False):
 
 
 @app.route('/img_url_dir/<image_name>')
-def send_img_file_dir(image_name, debug=False):
+def send_img_file_dir(image_name, debug=True):
     '''
     if the file path is known to be a relative path then alternatively:
         return send_from_directory(dir_name, image_name)
@@ -1064,8 +1070,9 @@ def send_img_file_dir(image_name, debug=False):
     @param debug: print out the path
     @return:
     '''
-    dir_name = app.config['FOLDER']  # user
-    if debug: print('display image: {}'.format(image_name))
+    dir_str = request.cookies.get('dir_str')
+    dir_name = app.config['FOLDER']  + '/' + dir_str # user
+    if debug: print('display image: {}/{}'.format(dir_name, image_name))
     return send_from_directory(dir_name, image_name)
 
 
