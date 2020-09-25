@@ -267,7 +267,8 @@ function show_montecarlo_div() {
                    required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             <br><br>
 
-            <button id="submit" class='interface button1' onclick="warn = false; console.log(warn);" name="submit" >Run</button>
+            <button id="submit" class='interface button1' onclick="warn = false; console.log(warn);"; name="submit" >Run</button>
+
 
             </form> <!-- End Prospective Power form -->
         </div>
@@ -292,10 +293,14 @@ function show_montecarlo_div() {
                     </td>
                 </tr>
             </table>
-
+            <br>
+  <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
         </div>
         <!-- End Prospective Power results div -->
         <h1></h1>
+
+
+
     </div>
     <!-- end Prospective Power Tab -->
 
@@ -326,7 +331,7 @@ function show_montecarlo_div() {
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max = '1'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';"
-                            name="submit" type=submit class="button1 interface">Submit File</button>
+                            name="submit" type=submit class="button1 interface" required>Submit File</button>
                     </form>
         </div>
 
