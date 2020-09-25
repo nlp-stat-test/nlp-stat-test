@@ -1119,10 +1119,16 @@ function show_montecarlo_div() {
 
         function show_print() {
           document.getElementById('Upload Files').style.display='block';
+          if (Number(localStorage.getItem("max")) >= 2){
           document.getElementById('Data Analysis').style.display='block';
+          if (Number(localStorage.getItem("max")) >= 3){
           document.getElementById('Significance Test').style.display='block';
+          if (Number(localStorage.getItem("max")) >= 4){
           document.getElementById('Effect Size').style.display='block';
+          if (Number(localStorage.getItem("max")) >= 5){
           document.getElementById('Retrospective Power Analysis').style.display='block';
+          }}}}
+
           document.getElementById('Download Report').style.display='none';
           console.log(localStorage.getItem("max"));
           if (Number(localStorage.getItem("max")) < 5){
