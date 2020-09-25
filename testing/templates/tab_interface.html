@@ -178,7 +178,7 @@ function show_montecarlo_div() {
                 <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" readonly>Retrospective Power Analysis</button> → </span>
  <span><button class="button1" id='BtnTab6.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Download Report</button></span>
         </div>
-    <div id="warning" style="color:red;display:none">The results may be inconsitent.   </div>
+    <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
 
      <div id="loading" style="display:none; animation: pulse 5s infinite;" class="spinner">⌛ Loading ⌛</div>
 
@@ -327,7 +327,7 @@ function show_montecarlo_div() {
                            onchange="checkFileSize()"
                            name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
-                    <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
+                    <a href="#" class="button1"><label for="data_file">Upload</label></a>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max = '1'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';"
