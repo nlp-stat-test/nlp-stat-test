@@ -340,7 +340,7 @@ function show_montecarlo_div() {
 
         <div id='Data Analysis' class="tabcontent" style="display:block">
             <!-- Data Analysis form -->
-            <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
+            <form action="/data_analysis" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- Begin Data Analysis div -->
                 <div class="roundpurplebottom" style="position:relative;">
 
@@ -392,7 +392,11 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
 
-                    <button id="submit" onclick="warn = false;  console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);      document.getElementById('loading').style.display='block';" name="submit" type=submit class="button1 interface">Run</button>
+                    <button id="submit"
+                            onclick="warn = false;
+                            console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);
+                            document.getElementById('loading').style.display='block';" name="submit" type=submit
+                            class="button1 interface">Run</button>
 
 
                     <!-- Button for JS script-->

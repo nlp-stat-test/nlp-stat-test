@@ -229,6 +229,12 @@ def upload_data(debug=True):
         return resp
 
 @app.route('/', methods=["GET", "POST"])
+def landing_page():
+    print('.... Landing page')
+    return render_template('welcome.html')
+    #return redirect(url_for('data_analysis'))
+
+@app.route('/data_analysis', methods=["GET", "POST"])
 def data_analysis(debug=True):
     str_err = ''
     if request.method == 'POST':
