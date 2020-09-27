@@ -1,10 +1,30 @@
-.header { text-align: center;
-          font-variant: small-caps;
-         }
+/* Tables adapted from https://www.w3schools.com/html/html_tables.asp */
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #eee;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
+}
+
+/* General Formatting */
+
+.header { 
+    text-align: center;
+    font-variant: small-caps;
+}
    
 
 
-.top_bar { text-align: center; padding: 16;}
+.top_bar { 
+    text-align: center; padding: 16;
+}
    
  
 .katex { 
@@ -12,7 +32,9 @@
 }
 
 /* http://xahlee.info/js/css_animation.html */
-.spinner {animation: beat46564 1s 0s 300}
+.spinner {
+    animation: beat46564 1s 0s 300
+}
 
 .roundpurplebottom {
    
@@ -20,7 +42,6 @@
     border: 2px solid #4b2e83; /* Color Scheme (School Color) */
     padding: 16px;
 }
-   
    
 .roundgreen {
     border-radius: 0px;
@@ -39,7 +60,6 @@
 
 }
 
-
 .button1:hover {
     color: Black;
     background-color: Gainsboro;
@@ -47,7 +67,7 @@
 }
 
 .hiddendiv{
-  display:none;
+    display:none;
 }
 
 /* Chrome, Safari, Edge, Opera */
