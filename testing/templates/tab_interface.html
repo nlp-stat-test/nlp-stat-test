@@ -12,7 +12,7 @@
 
     
     
-    <link href="{{ url_for('static', filename='modal.css')}}" rel="stylesheet" />
+
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='nlpstattest.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
@@ -44,25 +44,13 @@
 <script>
     // Keeping track of consistency
 
-    if (localStorage.getItem("max") === null) {
+ if (localStorage.getItem("max") === null) {
       localStorage.setItem("max", "0");
   }
   console.log(max);
 </script>
 
 <script>
-
-    // MODALS!
-        var modals = ["about",  "settings", "download"];
-        function make_modal(val){
-            eval("var modal_" + val + " = document.getElementById(\"" + val +"\");");
-            eval("var btn_" + val + " = document.getElementById(\"btn_" + val +"\");");
-            // When the user clicks the button, open the modal
-            eval("btn_" + val + ".onclick = function() { " + val + ".style.display = \"block\"; }");
-            eval("close_btn_" + val + ".onclick = function() { modal_" + val + ".style.display = \"none\"; }");
-        }
-        modals.forEach(make_modal);
-</script>
 
 <script>
     // BREADCRUMBS!
@@ -972,41 +960,9 @@ function show_montecarlo_div() {
      </div>
 
 
-    <div id="about" class="modal">
-        <div class="modal-content">
-            <button class="button1" id="close_btn_about" >&#x2715;</button>
-            <p>This is a demonstration of NLPStatTest, a program for comparing NLP system performance. See our paper for details. </p>
-
-        </div>
-    </div>
-
-    <div id="settings" class="modal">
-        <div class="modal-content">
-            <button class="button1" id="close_btn_settings">&#x2715;</button>
-            <p>You can download the configuration, edit it, and upload a new configuration file.</p> <br>
-            <!-- download config button -->
-            <form action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}" method="get" target="_blank">
-                <button class="button1" type="submit">Download Settings File</button>
-            </form>
-
-
-        </div>
-    </div>
 
 
 
-
-    <script>
-        var modals = ["about",  "settings"];
-            function make_modal(val){
-                eval("var modal_" + val + " = document.getElementById(\"" + val +"\");");
-                eval("var btn_" + val + " = document.getElementById(\"btn_" + val +"\");");
-                // When the user clicks the button, open the modal
-                eval("btn_" + val + ".onclick = function() { " + val + ".style.display = \"block\"; }");
-                eval("close_btn_" + val + ".onclick = function() { modal_" + val + ".style.display = \"none\"; }");
-            }
-            modals.forEach(make_modal);
-    </script>
 
     <!-- Checkboxes (effect sizes) click handler -->
     <script type="text/javascript">
