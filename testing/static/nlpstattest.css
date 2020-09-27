@@ -19,21 +19,13 @@ tr:nth-child(even) {
     text-align: center;
     font-variant: small-caps;
 }
-   
-
 
 .top_bar { 
     text-align: center; padding: 16;
 }
    
- 
 .katex { 
-  font-size: 1em; 
-}
-
-/* http://xahlee.info/js/css_animation.html */
-.spinner {
-    animation: beat46564 1s 0s 300
+    font-size: 1em; 
 }
 
 .roundpurplebottom {
