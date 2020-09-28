@@ -1009,9 +1009,9 @@ def upload_config():
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
 def download_file():
-    zip_file = Folder + "/" + request.cookies.get("dir_str")
+    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
     os.system("zip -r " +  zip_file  + ".zip " + zip_file)
-    return send_file("user/" + zip_file +".zip", as_attachment=True, cache_timeout=0)
+    return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
 
 
 #@app.route('/download2')  # @app.route('/download2')
