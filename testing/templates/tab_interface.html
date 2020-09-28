@@ -10,11 +10,11 @@
 
 
 
-
-
+    
+    
 
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='nlpstattest.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
 
@@ -49,6 +49,8 @@
   }
   console.log(max);
 </script>
+
+<script>
 
 <script>
     // BREADCRUMBS!
@@ -148,7 +150,13 @@ function show_montecarlo_div() {
 
     <div margin: 100 auto;>
         <div class="header">
-            <h1>NlpStatTest             </h1>
+            <h1>NlpStatTest
+
+             <span class="top_bar interface">
+            <button class='interface button1' id="btn_about" >About</button>
+            <button class='interface button1' id="btn_settings" >Save Settings</button>
+             </span>
+             </h1>
 
         </div>
 
