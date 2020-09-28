@@ -10,18 +10,22 @@
 
 
 
-    <link href="{{ url_for('static', filename='modal.css')}}" rel="stylesheet" />
+
+
+
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
 
 
 
 
-    <!-- CONSTANTS todo: remove this if not used -->
+    <!-- External JS -->
     <script src="{{ url_for('static', filename='constants.js') }}"></script>
+    <script src="{{ url_for('static', filename='validation.js') }}"></script>
+    <script src="{{ url_for('static', filename='navigation.js') }}"></script>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -40,24 +44,10 @@
 <script>
     // Keeping track of consistency
 
-    if (localStorage.getItem("max") === null) {
+ if (localStorage.getItem("max") === null) {
       localStorage.setItem("max", "0");
   }
   console.log(max);
-</script>
-
-<script>
-
-    // MODALS!
-        var modals = ["about",  "settings", "download"];
-        function make_modal(val){
-            eval("var modal_" + val + " = document.getElementById(\"" + val +"\");");
-            eval("var btn_" + val + " = document.getElementById(\"btn_" + val +"\");");
-            // When the user clicks the button, open the modal
-            eval("btn_" + val + ".onclick = function() { " + val + ".style.display = \"block\"; }");
-            eval("close_btn_" + val + ".onclick = function() { modal_" + val + ".style.display = \"none\"; }");
-        }
-        modals.forEach(make_modal);
 </script>
 
 <script>
@@ -149,18 +139,16 @@ function show_montecarlo_div() {
 
     })
 
+    $(window).on("unload", function() {
+       console.log("Delete files!");
+    })
+
 
   </script>
 
     <div margin: 100 auto;>
         <div class="header">
-            <h1>NlpStatTest
-
-             <span class="top_bar interface">
-            <button class='interface button1' id="btn_about" >About</button>
-            <button class='interface button1' id="btn_settings" >Save Settings</button>
-             </span>
-             </h1>
+            <h1>NlpStatTest             </h1>
 
         </div>
 
@@ -295,6 +283,8 @@ function show_montecarlo_div() {
             </table>
             <br>
   <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
+
+       
         </div>
         <!-- End Prospective Power results div -->
         <h1></h1>
@@ -340,7 +330,7 @@ function show_montecarlo_div() {
 
         <div id='Data Analysis' class="tabcontent" style="display:block">
             <!-- Data Analysis form -->
-            <form action="/" class="form-horizontal" enctype="multipart/form-data" method="post">
+            <form action="/data_analysis" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- Begin Data Analysis div -->
                 <div class="roundpurplebottom" style="position:relative;">
 
@@ -392,7 +382,11 @@ function show_montecarlo_div() {
 
                     <input type="hidden" id="da_hidden" value="hidden101">
 
-                    <button id="submit" onclick="warn = false;  console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);      document.getElementById('loading').style.display='block';" name="submit" type=submit class="button1 interface">Run</button>
+                    <button id="submit"
+                            onclick="warn = false;
+                            console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);
+                            document.getElementById('loading').style.display='block';" name="submit" type=submit
+                            class="button1 interface">Run</button>
 
 
                     <!-- Button for JS script-->
@@ -958,47 +952,18 @@ function show_montecarlo_div() {
         <div class="roundpurplebottom" style="position:relative;">
 
          <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
-
+         
+         
+       <a class="interface button1" href="{{ url_for('.download_file') }}">Download</a>
+    <a class="interface button1" href="{{ url_for('.delete_data') }}">Delete Data From Server</a>
         </div>
 
      </div>
 
 
-    <div id="about" class="modal">
-        <div class="modal-content">
-            <button class="button1" id="close_btn_about" >&#x2715;</button>
-            <p>This is a demonstration of NLPStatTest, a program for comparing NLP system performance. See our paper for details. </p>
-
-        </div>
-    </div>
-
-    <div id="settings" class="modal">
-        <div class="modal-content">
-            <button class="button1" id="close_btn_settings">&#x2715;</button>
-            <p>You can download the configuration, edit it, and upload a new configuration file.</p> <br>
-            <!-- download config button -->
-            <form action="{{ url_for('.download_config', config_file_name='config'+rand_str) }}?{{ rand_str }}" method="get" target="_blank">
-                <button class="button1" type="submit">Download Settings File</button>
-            </form>
-
-
-        </div>
-    </div>
 
 
 
-
-    <script>
-        var modals = ["about",  "settings"];
-            function make_modal(val){
-                eval("var modal_" + val + " = document.getElementById(\"" + val +"\");");
-                eval("var btn_" + val + " = document.getElementById(\"btn_" + val +"\");");
-                // When the user clicks the button, open the modal
-                eval("btn_" + val + ".onclick = function() { " + val + ".style.display = \"block\"; }");
-                eval("close_btn_" + val + ".onclick = function() { modal_" + val + ".style.display = \"none\"; }");
-            }
-            modals.forEach(make_modal);
-    </script>
 
     <!-- Checkboxes (effect sizes) click handler -->
     <script type="text/javascript">
