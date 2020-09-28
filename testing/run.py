@@ -229,12 +229,6 @@ def upload_data(debug=True):
         return resp
 
 @app.route('/', methods=["GET", "POST"])
-def landing_page():
-    print('.... Landing page')
-    return render_template('welcome.html')
-    #return redirect(url_for('data_analysis'))
-
-@app.route('/data_analysis', methods=["GET", "POST"])
 def data_analysis(debug=True):
     str_err = ''
     if request.method == 'POST':
@@ -1004,15 +998,6 @@ def upload_config():
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
-<<<<<<< HEAD
-<<<<<<< HEAD
-def download_file():
-    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
-    os.system("zip -r " +  zip_file  + ".zip " + zip_file)
-    return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
-=======
-=======
->>>>>>> parent of 6d7e3d0... started on zip and clearing of user dir
 def download_file(markdown_only=True):
     '''
 
@@ -1040,10 +1025,6 @@ def download_file(markdown_only=True):
         return send_file("user/report.md", as_attachment=True, cache_timeout=0)
     else:
         return send_file("user/report.zip", as_attachment=True, cache_timeout=0)
-<<<<<<< HEAD
->>>>>>> parent of 6d7e3d0... started on zip and clearing of user dir
-=======
->>>>>>> parent of 6d7e3d0... started on zip and clearing of user dir
 
 
 #@app.route('/download2')  # @app.route('/download2')
