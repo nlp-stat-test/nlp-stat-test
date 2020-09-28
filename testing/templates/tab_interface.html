@@ -283,6 +283,8 @@ function show_montecarlo_div() {
             </table>
             <br>
   <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
+
+       
         </div>
         <!-- End Prospective Power results div -->
         <h1></h1>
@@ -950,6 +952,9 @@ function show_montecarlo_div() {
         <div class="roundpurplebottom" style="position:relative;">
 
          <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+         
+         
+       <a class="interface button1" href="{{ url_for('.download_file') }}">Download</a>
 
         </div>
 
