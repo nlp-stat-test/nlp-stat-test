@@ -1013,6 +1013,12 @@ def download_file():
     os.system("zip -r " +  zip_file  + ".zip " + zip_file)
     return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
 
+# https://www.roytuts.com/how-to-download-file-using-python-flask/
+@app.route('/delete')
+def delete_data():
+    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
+    os.system("rm -r " +  zip_file)
+    return "deleted"
 
 #@app.route('/download2')  # @app.route('/download2')
 @app.route('/download2/<config_file_name>')
