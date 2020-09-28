@@ -1018,7 +1018,8 @@ def download_file():
 def delete_data():
     zip_file = FOLDER + "/" + request.cookies.get("dir_str")
     os.system("rm -r " +  zip_file)
-    return "deleted"
+    os.system("rm -r " +  zip_file + ".zip")
+    return "Deleted! Thank you."
 
 #@app.route('/download2')  # @app.route('/download2')
 @app.route('/download2/<config_file_name>')
