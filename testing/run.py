@@ -4,10 +4,6 @@ import io
 import yaml
 from flask import *
 from flask import render_template
-# https://stackoverflow.com/questions/37227780/flask-session-persisting-after-close-browser
-#from flask import session
-#from flask_socketio import SocketIO, emit
-#from flask_login import current_user, logout_user
 
 from werkzeug.utils import secure_filename
 import os
@@ -1008,10 +1004,40 @@ def upload_config():
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
+<<<<<<< HEAD
 def download_file():
     zip_file = FOLDER + "/" + request.cookies.get("dir_str")
     os.system("zip -r " +  zip_file  + ".zip " + zip_file)
     return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
+=======
+def download_file(markdown_only=True):
+    '''
+
+    @param markdown_only: Set this to true to debug the case in which you don't want
+    the whole zip file (like if zip isn't working)
+    @return:
+    '''
+
+    options = {}
+    options["filename"] = request.cookies.get('fileName')
+    options["normality_message"] = request.cookies.get('is_normal')
+    options["skewness_message"] = request.cookies.get('skewness_gamma')
+    options["test_statistic_message"] = \
+        request.cookies.get('mean_or_median')
+    options["significance_tests_table"] = json.loads(request.cookies.get('recommended_tests'))
+    options["significance_alpha"] = request.cookies.get('sig_test_alpha')
+    options["bootstrap iterations"] = "200"
+    # This was mu, which we're not letting the user define: options["expected_mean_diff"] = "0"
+    options["chosen_sig_test"] = request.cookies.get('sig_test_name')
+    options["should_reject?"] = request.cookies.get('rejectH0')
+    options["statistic/CI"] = request.cookies.get('sig_test_stat_val')  #
+    rand = np.random.randint(10000)
+    gen_report(options, str(rand))
+    if markdown_only:
+        return send_file("user/report.md", as_attachment=True, cache_timeout=0)
+    else:
+        return send_file("user/report.zip", as_attachment=True, cache_timeout=0)
+>>>>>>> parent of 6d7e3d0... started on zip and clearing of user dir
 
 
 #@app.route('/download2')  # @app.route('/download2')
@@ -1105,15 +1131,6 @@ def get_help(help_file_name, debug=True):
         else:
             file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
-    
-    
-# https://stackoverflow.com/questions/37227780/flask-session-persisting-after-close-browser
-#socketio = SocketIO(app)
-#@socketio.on('disconnect')
-#def disconnect_user():
-   # logout_user()
-    #os.system("rm -r " + FOLDER + "/" + request.cookies.get("dir_str"))
-    #print("Ran: " + "rm -r " + FOLDER + "/" + request.cookies.get("dir_str") )
 
 if __name__ == "__main__":
     app.debug = True
