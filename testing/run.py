@@ -229,6 +229,10 @@ def upload_data(debug=True):
         return resp
 
 @app.route('/', methods=["GET", "POST"])
+def home():
+    return redirect(url_for('landing_page'))
+    
+@app.route('/home', methods=["GET", "POST"])
 def landing_page():
     print('.... Landing page')
     return render_template('welcome.html')
