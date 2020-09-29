@@ -76,65 +76,10 @@ function greyOut(itemName) {
 </script>
 
 
-<script>
-    // toggle the histogram div
-function showdiv() {
-    if (document.getElementById("hidden_graph").style.display=="block"){
-        document.getElementById("hidden_graph").style.display="none"
-        hist_button.innerHTML = "View Histograms"
-    } else {
-        document.getElementById("hidden_graph").style.display="block"
-        hist_button.innerHTML = "Hide Histograms"
-    }
-}
-function toggle_non_recommended(div_id, checkbox_id) {
-    if (!div_id) {
-        div_id = "non_recommended_div"
-    }
-    if (!checkbox_id) {
-        checkbox_id = "checkbox_show_non_recommended"
-    }
-    if (document.getElementById(checkbox_id).checked == true) {
-        document.getElementById(div_id).style.display = "block"
-    } else {
-        document.getElementById(div_id).style.display = "none"
-    }
-}
-
-function show_sig_boot_div(test_name){
-    if (test_name && test_name.includes('boot') || test_name.startsWith('permutation')) {
-        document.getElementById("sig_boot_div").style.display = "block"
-    } else {
-        document.getElementById("sig_boot_div").style.display = "none"
-    }
-}
-// toggle the bootstrap div
-function show_bootstrap_div() {
-        document.getElementById("power_boot_fields").style.display="block"
-        document.getElementById("power_montecarlo_fields").style.display="none"
-}
-// toggle the Monte Carlo div
-function show_montecarlo_div() {
-    document.getElementById("power_montecarlo_fields").style.display="block"
-    document.getElementById("power_boot_fields").style.display="none"
-}
-</script>
-
 <body style="font-family: sans;">
 
 
-  <script>
 
-  // https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
-
-  var warn = true;
-
-    $(window).on("beforeunload", function() {
-       if (warn) {warn = true; return "Do you really want to close and clear all data?"}
-       
-    })
-
-  </script>
 
     <div margin: 100 auto;>
         <div class="header">
