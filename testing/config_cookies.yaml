@@ -1,0 +1,53 @@
+CI: '[-0.00199, 0.01039]'
+alternative: two-sided
+effect_estimator_dict: '{"cohend": "This function calculates the Cohen''s d effect
+  size estimator.", "hedgesg": "This function takes the Cohen''s d estimate as an
+  input and calculates the Hedges''s g.", "hl": "This function estimates the Hodges-Lehmann
+  estimator for the input score.", "wilcoxonr": "This function calculates the standardized
+  z-score (r) for the Wilcoxon signed-rank test."}'
+effectsize_sig_alpha: '0.05'
+estimator_value_list: '[["cohend", [0.07905, [-0.03723, 0.19533]]]]'
+eval_unit_size: '1'
+eval_unit_stat: mean
+fileName: data-file.txt
+hist_diff_file: hist_score_diff.svg
+hist_diff_par_file: hist_score_diff_partitioned.svg
+hist_score1_file: hist_score1_partitioned.svg
+hist_score2_file: hist_score2_partitioned.svg
+is_normal: 'false'
+mean_or_median: mean
+mu: '0.0'
+not_preferred_tests: '[["sign", "The sign test is appropriate for non-normal data
+  but it has lower statistical power due to loss of information."], ["permutation_med",
+  "The permutation test based on median is appropriate for this case, but it is computationally
+  expensive and Wilcoxon test has higher statistical power."], ["permutation", "The
+  permutation test based on mean is appropriate for non-normal data, but it is computationally
+  expensive."], ["bootstrap_med", "The bootstrap test based on median is appropriate
+  for this case, but it is computationally expensive and Wilcoxon test has higher
+  statistical power."], ["bootstrap", "The bootstrap test based on mean is appropriate
+  for non-normal data, but it is computationally expensive."]]'
+not_recommended_tests: '[["t", "The student t test is not appropriate for this case
+  since the data distribution is not normal."]]'
+num_eval_units: '2001'
+power_num_intervals: '20'
+power_test: bootstrap
+pval: '0.18311'
+recommended_tests: '[["wilcoxon", "The Wilcoxon signed rank test is appropriate since
+  it does not assume any specific distribution but only requires symmetry."]]'
+rejectH0: 'False'
+show_non_preferred: ''
+show_non_recommended: ''
+shuffle_seed: ''
+sig_boot_iterations: '200'
+sig_test_alpha: '0.05'
+sig_test_heading: Recommended Significance Tests
+sig_test_name: t
+sig_test_stat_val: '1.33451'
+skewness_gamma: '-0.2637'
+summary_stats_dict: '{"difference": {"max": "0.51108", "mean": "0.00413", "median":
+  "0.00070", "min": "-0.83215", "std.dev.": "0.11228"}, "score1": {"max": "1.00000",
+  "mean": "0.28464", "median": "0.25552", "min": "0.02206", "std.dev.": "0.15964"},
+  "score2": {"max": "1.00000", "mean": "0.28051", "median": "0.24905", "min": "0.01216",
+  "std.dev.": "0.15694"}}'
+summary_str: Summary of Statistics
+teststat_heading: Test Statistic Recommendation

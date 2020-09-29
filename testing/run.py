@@ -1124,6 +1124,23 @@ def get_help(help_file_name, debug=True):
         else:
             file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
+    
+    
+# https://www.roytuts.com/how-to-download-file-using-python-flask/
+@app.route('/download_zip')
+def download_zip():
+    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
+    os.system("zip -r " +  zip_file  + ".zip " + zip_file)
+    return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
+
+# https://www.roytuts.com/how-to-download-file-using-python-flask/
+@app.route('/delete')
+def delete_data():
+    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
+    os.system("rm -r " +  zip_file)
+    os.system("rm -r " +  zip_file + ".zip")
+    return "Deleted! Thank you."
+
 
 if __name__ == "__main__":
     app.debug = True
