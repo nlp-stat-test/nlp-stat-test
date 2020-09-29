@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>NLPStatTest</title>
+
+
+    <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
+
+
+
+
+
+    <!-- CONSTANTS todo: remove this if not used -->
+    <script src="{{ url_for('static', filename='constants.js') }}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- KATEX STARTER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+
+       <!-- The loading of KaTeX is deferred to speed up page rendering -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+       <!-- To automatically render math in text elements, include the auto-render extension: -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+           onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+<script>
+    // Keeping track of consistency
+
+    if (localStorage.getItem("max") === null) {
+      localStorage.setItem("max", "0");
+  }
+  console.log(max);
+</script>
+
+
+<script>
+    // BREADCRUMBS!
+        function openTab(evt, tabName, cur) {
+                console.log(localStorage.getItem("max"));
+              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max")) + 1){
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablinks");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+              }
+              document.getElementById(tabName).style.display = "block";
+              evt.currentTarget.className += " active";
+              greyOut(cur)
+            }
+            }
+
+// Gray out a button
+function greyOut(itemName) {
+//  document.getElementById("BtnTab1").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab2").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab3").style.backgroundColor = #eee;
+//  document.getElementById("BtnTab4").style.backgroundColor = #eee;
+    document.getElementById(itemName).style.backgroundColor = 'Gainsboro';
+}
+</script>
+
+
+<body style="font-family: sans;">
+
+
+
+
+    <div margin: 100 auto;>
+        <div class="header">
+            <h1>NlpStatTest</h1>
+
+        </div>
+
+
+        <div class="roundpurplebottom interface"
+        style="background-color: #eee; padding: 16;   top: 0;
+               position: -webkit-sticky;
+               position: sticky;    z-index: 2; line-height: 2;">
+ <span><button class="button1" id='BtnTab0' onclick="window.location.href='{{ url_for('landing_page')}}';" >Home</button></span> |
+     <span><button class="button1" id='BtnTab0'>Prospective Power Analysis</button> </span>
+            </div>
+        
+        
+        <div id='Prospective Power' class="tabcontent">
+
+            <div class="roundpurplebottom" style="position:relative;">
+        A prospective power test is a test that you use before analyzing data to
+        determine whether the sample size is large enough so that the significance
+        test will have enough power.
+            The power of a hypothesis test is the probability that the test correctly rejects
+                the null hypothesis. <br><br>Power is affected
+                by the sample size, the difference, the variability of the data, and the significance level of the test.
+                <br><br>
+            Here, we assume data in a normal distribution, to calculate the sample size you'll need to achieve the power level you specify, given the type of
+            alternative hypothesis, the difference between the means, the standard deviation of the data, and significance level.
+                <form action="/prospective_power" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    <!-- 3 alternatives, less, greater, two sided -->
+                    <br><b>Choose the alternative hypothesis </b><br><br>
+
+            <input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
+                   {% if prospective_alternative=='one-sided' %}checked {% endif %}>
+                    <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is either
+                    greater than, or less than &delta;, but not both.</span>
+            </div> <br>
+            <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
+                   {% if prospective_alternative=='two-sided' %}checked{% endif %}>
+                   <b>Two-sided:</b> \( \mu_1 - \mu_2
+                \mathrel{\mathtt{!=}} \delta \)
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The alternative hypothesis is that the difference between
+                        the first and second system is not equal to &delta;.</span>
+            </div>
+            <br><br>
+            <!-- Mu -->
+            Difference between means (&delta;):
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
+            </div>
+            <div class="hide-arrows">
+                <input
+                        id="prospective_mu" name="prospective_mu" type="number"
+                        {% if prospective_mu %} placeholder="{{ prospective_mu }}" value="{{ prospective_mu }}"
+                        {% else %} value=0.1 {% endif %} class="form-control" step="any" min="0"
+                       style="-webkit-appearance: none; margin:0;" onchange="checkForZero('prospective_mu')"> <br><br>
+            </div>
+
+            <!-- Std Dev-->
+            Standard deviation:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The standard deviation of the differences between the samples.</span>
+            </div>
+            <div class="hide-arrows">
+                <input id="prospective_stddev" name="prospective_stddev" type="number"
+                        {% if prospective_stddev %} placeholder="{{ prospective_stddev }}"
+                       value="{{ prospective_stddev }}" {% else %}
+                       value=0.1 placeholder="standard deviation"{% endif %}
+                       class="form-control" step="any" min='0' style="-webkit-appearance: none; margin:0;"
+                       onchange="checkForZero('prospective_stddev')"> <br><br>
+                <!-- class="form-control input-md" -->
+            </div>
+            <!-- Desired Power Level-->
+            Desired power level:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">The power level you want to achieve.</span>
+            </div>
+            <div class="hide-arrows">
+                <input id="prospective_desired_power" name="prospective_desired_power" type="number" {% if prospective_desired_power %}
+                       placeholder="{{ prospective_desired_power }}"
+                       value="{{ prospective_desired_power }}" {% else %} value=0.90 {% endif %}
+                       min="0"
+                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;"
+                onchange="checkForZero('prospective_desired_power')"> <br><br>
+                <!-- class="form-control input-md" -->
+            </div>
+            <!-- Prospective significance alpha -->
+            Required significance level &alpha;:
+            <div class="tooltip interface">?
+                <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
+            </div>
+
+            <input id="prospective_significance_level" name="prospective_signifcance_level" type="number"
+                    {% if prospective_sig_alpha %} placeholder="{{ prospective_sig_alpha }}" value="{{ prospective_sig_alpha }}"
+                    {% else %} placeholder="0.05" value=0.05 {% endif %} class="form-control input-md"
+                   required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
+            <br><br>
+
+            <button id="submit" class="interface button1" onclick="warn = false; console.log(warn);  document.getElementById('hiddenProspectivePowerTest').style.display = 'block'"; name="submit" >Run</button>
+
+
+            </form> <!-- End Prospective Power form -->
+        </div>
+
+        <div class="roundgreen" style="display:none;" id="hiddenProspectivePowerTest">
+
+            <b>Results</b><br><br>
+
+            <table border="1">
+
+
+                <tr>
+                    <th>Requested Power level</th>
+                    <td>
+                        {{ prospective_desired_power}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Required minimum sample size</th>
+                    <td> {{ prospective_required_sample }}
+                    </td>
+                </tr>
+            </table>
+            <br>
+  <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
+        </div>
+        <!-- End Prospective Power results div -->
+        <h1></h1>
+
+
+    <!-- width specified here -->
+</body>
+
+</html>

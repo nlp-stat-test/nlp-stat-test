@@ -9,23 +9,17 @@
     <title>NLPStatTest</title>
 
 
-
-
-
-
     <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
 
 
 
 
-    <!-- External JS -->
+    <!-- CONSTANTS todo: remove this if not used -->
     <script src="{{ url_for('static', filename='constants.js') }}"></script>
-    <script src="{{ url_for('static', filename='validation.js') }}"></script>
-    <script src="{{ url_for('static', filename='navigation.js') }}"></script>
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -44,11 +38,12 @@
 <script>
     // Keeping track of consistency
 
- if (localStorage.getItem("max") === null) {
+    if (localStorage.getItem("max") === null) {
       localStorage.setItem("max", "0");
   }
   console.log(max);
 </script>
+
 
 <script>
     // BREADCRUMBS!
@@ -136,19 +131,14 @@ function show_montecarlo_div() {
 
     $(window).on("beforeunload", function() {
        if (warn) {warn = true; return "Do you really want to close and clear all data?"}
-
+       
     })
-
-    $(window).on("unload", function() {
-       console.log("Delete files!");
-    })
-
 
   </script>
 
     <div margin: 100 auto;>
         <div class="header">
-            <h1>NlpStatTest             </h1>
+            <h1>NlpStatTest</h1>
 
         </div>
 
@@ -158,141 +148,18 @@ function show_montecarlo_div() {
                position: -webkit-sticky;
                position: sticky;    z-index: 2; line-height: 2;">
 
-                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Prospective Power', 'BtnTab0')" readonly>Prospective Power Analysis</button> | </span>
-                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')" readonly>Upload Files</button> →  </span>
-                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" readonly>Data Analysis </button> → </span>
-                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')" readonly>Significance Testing</button> → </span>
-                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')" readonly>Effect Size Estimation</button> → </span>
-                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" readonly>Retrospective Power Analysis</button> → </span>
- <span><button class="button1" id='BtnTab6.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Download Report</button></span>
+                <span><button class="button1" id='BtnTab0' onclick="window.location.href='{{ url_for('landing_page')}}';" >Home</button></span> |
+                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</button></span> → 
+                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis </button></span> → 
+                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</button></span> → 
+                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</button></span> → 
+                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</button> </span>
+  | <span><button class="button1" id='BtnTab6.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Download</button></span>
         </div>
     <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
 
-     <div id="loading" style="display:none; animation: pulse 5s infinite;" class="spinner">⌛ Loading ⌛</div>
 
-        <div id='Prospective Power' class="tabcontent" style="display:none">
-
-            <div class="roundpurplebottom" style="position:relative;">
-        A prospective power test is a test that you use before analyzing data to
-        determine whether the sample size is large enough so that the significance
-        test will have enough power.
-            The power of a hypothesis test is the probability that the test correctly rejects
-                the null hypothesis. <br><br>Power is affected
-                by the sample size, the difference, the variability of the data, and the significance level of the test.
-                <br><br>
-            Here, we assume data in a normal distribution, to calculate the sample size you'll need to achieve the power level you specify, given the type of
-            alternative hypothesis, the difference between the means, the standard deviation of the data, and significance level.
-                <form action="/prospective_power" class="form-horizontal" enctype="multipart/form-data" method="post">
-                    <!-- 3 alternatives, less, greater, two sided -->
-                    <br><b>Choose the alternative hypothesis </b><br><br>
-
-            <input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
-                   {% if prospective_alternative=='one-sided' %}checked {% endif %}>
-                    <b>One-sided:</b> \( \mu_1 - \mu_2 > \delta \) <b>or</b> \( \mu_1 - \mu_2 < \delta \)
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is either
-                    greater than, or less than &delta;, but not both.</span>
-            </div> <br>
-            <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
-                   {% if prospective_alternative=='two-sided' %}checked{% endif %}>
-                   <b>Two-sided:</b> \( \mu_1 - \mu_2
-                \mathrel{\mathtt{!=}} \delta \)
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The alternative hypothesis is that the difference between
-                        the first and second system is not equal to &delta;.</span>
-            </div>
-            <br><br>
-            <!-- Mu -->
-            Difference between means (&delta;):
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
-            </div>
-            <div class="hide-arrows">
-                <input
-                        id="prospective_mu" name="prospective_mu" type="number"
-                        {% if prospective_mu %} placeholder="{{ prospective_mu }}" value="{{ prospective_mu }}"
-                        {% else %} value=0.1 {% endif %} class="form-control" step="any" min="0"
-                       style="-webkit-appearance: none; margin:0;" onchange="checkForZero('prospective_mu')"> <br><br>
-            </div>
-
-            <!-- Std Dev-->
-            Standard deviation:
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The standard deviation of the differences between the samples.</span>
-            </div>
-            <div class="hide-arrows">
-                <input id="prospective_stddev" name="prospective_stddev" type="number"
-                        {% if prospective_stddev %} placeholder="{{ prospective_stddev }}"
-                       value="{{ prospective_stddev }}" {% else %}
-                       value=0.1 placeholder="standard deviation"{% endif %}
-                       class="form-control" step="any" min='0' style="-webkit-appearance: none; margin:0;"
-                       onchange="checkForZero('prospective_stddev')"> <br><br>
-                <!-- class="form-control input-md" -->
-            </div>
-            <!-- Desired Power Level-->
-            Desired power level:
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The power level you want to achieve.</span>
-            </div>
-            <div class="hide-arrows">
-                <input id="prospective_desired_power" name="prospective_desired_power" type="number" {% if prospective_desired_power %}
-                       placeholder="{{ prospective_desired_power }}"
-                       value="{{ prospective_desired_power }}" {% else %} value=0.90 {% endif %}
-                       min="0"
-                       class="form-control" step="any" style="-webkit-appearance: none; margin:0;"
-                onchange="checkForZero('prospective_desired_power')"> <br><br>
-                <!-- class="form-control input-md" -->
-            </div>
-            <!-- Prospective significance alpha -->
-            Required significance level &alpha;:
-            <div class="tooltip interface">?
-                <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
-            </div>
-
-            <input id="prospective_significance_level" name="prospective_signifcance_level" type="number"
-                    {% if prospective_sig_alpha %} placeholder="{{ prospective_sig_alpha }}" value="{{ prospective_sig_alpha }}"
-                    {% else %} placeholder="0.05" value=0.05 {% endif %} class="form-control input-md"
-                   required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
-            <br><br>
-
-            <button id="submit" class='interface button1' onclick="warn = false; console.log(warn);"; name="submit" >Run</button>
-
-
-            </form> <!-- End Prospective Power form -->
-        </div>
-
-        <div class="roundgreen" class="hiddendiv" id="hiddenProspectivePowerTest">
-
-            <b>Results</b><br><br>
-
-            <table border="1">
-
-
-                <tr>
-                    <th>Requested Power level</th>
-                    <td>
-                        {{ prospective_desired_power}}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>Required minimum sample size</th>
-                    <td> {{ prospective_required_sample }}
-                    </td>
-                </tr>
-            </table>
-            <br>
-  <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
-
-       
-        </div>
-        <!-- End Prospective Power results div -->
-        <h1></h1>
-
-
-
-    </div>
-    <!-- end Prospective Power Tab -->
+     <div id="loading" style="display: none;">⌛ Loading ⌛</div>
 
 
 
@@ -317,7 +184,8 @@ function show_montecarlo_div() {
                            onchange="checkFileSize()"
                            name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
-                    <a href="#" class="button1"><label for="data_file">Upload</label></a>
+                    <button onclick="warn = false;
+                            console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max); window.location.href='#'" class="button1 interface"><label for="data_file">Upload</label></button>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max = '1'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';"
@@ -953,9 +821,9 @@ function show_montecarlo_div() {
 
          <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
          
-         
-       <a class="interface button1" href="{{ url_for('.download_file') }}">Download</a>
-    <a class="interface button1" href="{{ url_for('.delete_data') }}">Delete Data From Server</a>
+         <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
+    <button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+           <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
         </div>
 
      </div>
