@@ -238,6 +238,12 @@ def landing_page():
     return render_template('welcome.html')
     #return redirect(url_for('data_analysis'))
 
+
+@app.route('/ppa', methods=["GET", "POST"])
+def ppa():
+    return render_template('ppa.html')
+
+    
 @app.route('/data_analysis', methods=["GET", "POST"])
 def data_analysis(debug=True):
     str_err = ''
@@ -490,7 +496,7 @@ def prospective_power(debug=True):
             prospective_required_sample, prospective_desired_power
         ))
 
-        rendered = render_template(template_filename,
+        rendered = render_template("ppa.html",
                                    prospective_mu = prospective_mu,
                                    prospective_sig_alpha = prospective_sig_alpha,
                                    prospective_stddev = prospective_stddev,
@@ -567,7 +573,7 @@ def prospective_power(debug=True):
         # resp.set_cookie('rejectH0', str(rejection))
         return resp
     # GET
-    return render_template(template_filename,
+    return render_template("ppa.html",
                            rand_str=get_rand_state_str()
                            )
 # ********************************************************************************************
