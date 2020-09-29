@@ -68,7 +68,6 @@ tr:nth-child(even) {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 .hide-arrows input[type=number] {
   -moz-appearance: textfield;
