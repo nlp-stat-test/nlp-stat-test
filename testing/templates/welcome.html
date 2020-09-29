@@ -4,20 +4,58 @@
 
 <html>
 
+
 <head>
     <meta charset="UTF-8">
     <title>NLPStatTest</title>
 
-    <div class="header">
-            <h1>NlpStatTest</h1>
-    </div>
-</head>
 
+    <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
+
+
+
+
+
+    <!-- CONSTANTS todo: remove this if not used -->
+    <script src="{{ url_for('static', filename='constants.js') }}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- KATEX STARTER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+
+       <!-- The loading of KaTeX is deferred to speed up page rendering -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+       <!-- To automatically render math in text elements, include the auto-render extension: -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+           onload="renderMathInElement(document.body);"></script>
+
+</head>
 
 <body>
 
-</div>
+  <div margin: 100 auto;>
+        <div class="header">
+            <h1>NlpStatTest</h1>
+      </div>
 
+        <div class="roundpurplebottom interface"
+        style="background-color: #eee; padding: 16;   top: 0;
+               position: -webkit-sticky;
+               position: sticky;    z-index: 2; line-height: 2;">
+
+                <span><button class="button1" id='BtnTab0'>Home</button></span>  | 
+                <span><button class="button1" id='BtnTab0' onclick="window.location.href='{{ url_for('prospective_power') }}'" readonly>Prospective Power Analysis</button></span>  | 
+                <span><button class="button1" id='BtnTab0' onclick="window.location.href='{{ url_for('upload_data') }}'" readonly>Data, Significance, and Retrospective Power Analysis</button></span>
+
+
+        </div>
+
+<div class="roundpurplebottom" style="position:relative;">
 This website is a demonstration of our <a href="url">paper</a>. Please consult
 
 the <a href="url">manual</a> for insturctions and tips.
@@ -46,6 +84,8 @@ have not yet collect data, start with
 </ul>
 
 </div>
+
+    </div>
 </body>
 
 </html>
