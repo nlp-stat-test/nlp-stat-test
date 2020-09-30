@@ -224,7 +224,9 @@ def upload(debug=True):
 
         rendered = render_template(template_filename,
                                            rand_str=get_rand_state_str(),
-                                           error_str=str_err, )
+                                           error_str=str_err,
+                                           file_uploaded=f.filename
+                                   )
         resp = make_response(rendered)
         if have_data:
             if f.filename:
@@ -839,7 +841,7 @@ def effectsize(debug=True):
 @app.route('/power', methods=["GET", "POST"])
 def power(debug=True):
     if request.method == "POST":
-        last_tab_name_clicked = 'Post-test Power Analysis'
+        last_tab_name_clicked = 'Retrospective Power Analysis'
         fileName = request.cookies.get('fileName')
         scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
         # get old dif
