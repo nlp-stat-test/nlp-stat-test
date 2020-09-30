@@ -171,8 +171,8 @@ def create_summary_stats_list(tc, debug=False):
                                         ('max', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
-@app.route('/upload_data', methods=["POST"])
-def upload_data(debug=True):
+@app.route('/upload', methods=["POST"])
+def upload(debug=True):
     if request.method == "POST":
         # ------- File ----------------
         f = request.files['data_file']  # new
@@ -1014,39 +1014,12 @@ def upload_config():
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download')
-def download_file(markdown_only=True):
-    '''
-
-    @param markdown_only: Set this to true to debug the case in which you don't want
-    the whole zip file (like if zip isn't working)
-    @return:
-    '''
-
-    options = {}
-    options["filename"] = request.cookies.get('fileName')
-    options["normality_message"] = request.cookies.get('is_normal')
-    options["skewness_message"] = request.cookies.get('skewness_gamma')
-    options["test_statistic_message"] = \
-        request.cookies.get('mean_or_median')
-    options["significance_tests_table"] = json.loads(request.cookies.get('recommended_tests'))
-    options["significance_alpha"] = request.cookies.get('sig_test_alpha')
-    options["bootstrap iterations"] = "200"
-    # This was mu, which we're not letting the user define: options["expected_mean_diff"] = "0"
-    options["chosen_sig_test"] = request.cookies.get('sig_test_name')
-    options["should_reject?"] = request.cookies.get('rejectH0')
-    options["statistic/CI"] = request.cookies.get('sig_test_stat_val')  #
-    rand = np.random.randint(10000)
-    gen_report(options, str(rand))
-    if markdown_only:
-        return send_file("user/report.md", as_attachment=True, cache_timeout=0)
-    else:
+def download_file():
         return send_file("user/report.zip", as_attachment=True, cache_timeout=0)
 
 
-#@app.route('/download2')  # @app.route('/download2')
-@app.route('/download2/<config_file_name>')
+@app.route('/download_config/<config_file_name>')
 def download_config(config_file_name):   # was download_config() no param
-
     rand_str = str(np.random.randint(10000))
     config_file_path = 'user/'+config_file_name + rand_str + '.yml'
     # Note: this will also get cookies saved by other sites
@@ -1093,33 +1066,20 @@ def send_img_file_dir(image_name, debug=True):
     return send_from_directory(dir_name, image_name)
 
 
-# --- Begin functions relating to help and manual ----
-@app.route('/<help_file_name>', methods=["GET", "POST"])
-def request_help_file(help_file_name='about.html', debug=True):
-    # todo: reuse code from help functions
-    if debug:
-        print('Optional Filename parameter to request_help_file: {}'.format(help_file_name))
-    try:
-        file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
-    except FileNotFoundError:
-        if 'manual' in help_file_name or 'help' in help_file_name:
-            file = send_file('./static/{}'.format('manual.html'), cache_timeout=0)
-        elif 'about' in help_file_name:
-            file = send_file('./static/{}'.format('about.html'), cache_timeout=0)
-        else:
-            # go to step 1 (todo: use previous state)
-            file = render_template(template_filename, rand_str=get_rand_state_str())
-    return file
-
 @app.route('/manual')
-def get_manual(debug=True):
-    if debug: print('getting manual')
+def manual():
+    file = send_file(os.path.join("static", "manual.pdf"), as_attachment=False, cache_timeout=0)
+    return file
+    
+    
+@app.route('/paper')
+def paper():
     try:
-        # file = send_file('./static/manual.html', as_attachment=False, cache_timeout=0)
-        file = send_file(get_path('manual_path'), as_attachment=False, cache_timeout=0)
+        file = send_file(os.path.join("static", "paper.pdf"), as_attachment=False, cache_timeout=0)
     except FileNotFoundError:
         file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
+
 
 @app.route('/help/<help_file_name>/')
 def get_help(help_file_name, debug=True):
