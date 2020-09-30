@@ -36,7 +36,7 @@
 </head>
 
 
-<body style="font-family: sans;" onload="localStorage.setItem('ppa', '0');">
+<body style="font-family: sans;" onload="localStorage.setItem('ppa', '0'); localStorage.setItem('da-warn', '0');">
 
   <div margin: 100 auto;>
         <div class="header">
@@ -85,9 +85,7 @@ have not yet collect data, start with
     month={Dec}
   } </pre></div>
 
-<h3>Data Deletion<h3>
 
-    <button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
 </div>
 
     </div>
