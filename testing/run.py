@@ -208,7 +208,7 @@ def upload(debug=True):
             if debug: print('have filename:{}'.format(data_filename))
             try:
                 # todo: raise InputException if scores1 or scores2 empty due to bad file
-                scores1, scores2 = read_score_file(FOLDER + "/" + data_filename)
+                scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/" + data_filename)
                 # if not scores1 or not scores2:
                 #     raise InputError('linewitherror','each line must be two values separated by whitespace')
                 if len(scores1) > 0 and len(scores2):
