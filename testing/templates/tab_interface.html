@@ -134,6 +134,10 @@ function show_montecarlo_div() {
 
     })
 
+    $(window).on("beforeunload", function() {
+       location.href = {{ url_for('delete_data')}};
+    })
+
   </script>
 
     <div margin: 100 auto;>
