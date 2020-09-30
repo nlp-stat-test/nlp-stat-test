@@ -162,7 +162,7 @@ function greyOut(itemName) {
             \( \alpha = \) <input id="prospective_significance_level" name="prospective_signifcance_level" type="number"
                     {% if prospective_sig_alpha %} placeholder="{{ prospective_sig_alpha }}" value="{{ prospective_sig_alpha }}"
                     {% else %} placeholder="0.05" value=0.05 {% endif %}
-                   required="" step="0.01" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
+                   required="" step="0.0001" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             </p>
 
             <button id="submit" class="interface button1" onclick="warn = false; console.log(warn);  document.getElementById('hiddenProspectivePowerTest').style.display = 'block'"; name="submit" >Run</button>
