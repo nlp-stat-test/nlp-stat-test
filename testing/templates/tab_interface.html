@@ -190,8 +190,8 @@ console.log("executed");
                            onchange="checkFileSize()"
                            name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
-                    <button onclick="warn = false;
-                            console.log(warn); max_tab = '1'; localStorage.setItem('max', max); console.log(max); window.location.href='#'" class="button1 interface"><label for="data_file">Upload</label></button>
+                    <button class="button1 interface">
+                        <label for="data_file">Upload</label></button>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
