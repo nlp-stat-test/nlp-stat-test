@@ -171,6 +171,10 @@ def create_summary_stats_list(tc, debug=False):
                                         ('max', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
+@app.route('/start')
+def start():
+    return render_template('tab_interface.html', rand_str=get_rand_state_str())
+
 @app.route('/upload', methods=["POST"])
 def upload(debug=True):
     if request.method == "POST":

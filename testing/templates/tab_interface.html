@@ -46,7 +46,7 @@
 
 
 <script>
-    // BREADCRUMBS!
+          // BREADCRUMBS! adapted from W3Schools Tutorial
         function openTab(evt, tabName, cur) {
                 console.log(localStorage.getItem("max"));
               if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max")) + 1){
@@ -433,7 +433,7 @@ function show_montecarlo_div() {
 
                 <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
-                    <b>Choose the alternative hypothesis </b><br><br>
+                    <p>Choose the alternative hypothesis </p>
                     <!-- u1 < u2 -->
                     <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> \( \mu_1 - \mu_2 < \delta \) <div class="tooltip interface">?
                         <span class="tooltiptext">The alternative hypothesis is that the difference between systems is less than &delta;.</span>
@@ -443,8 +443,7 @@ function show_montecarlo_div() {
             <div class="tooltip interface">?
                 <span class="tooltiptext">The alternative hypothesis is that the difference between systems is greater than &delta;.</span>
             </div> <br>
-            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> \( \mu_1 - \mu_2
-                \mathrel{\mathtt{!=}} \delta \)
+            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> \( \mu_1 - \mu_2 \neq \delta \)
             <div class="tooltip interface">?
                 <span class="tooltiptext">The alternative hypothesis is that the difference between
                         the first and second system is not equal to &delta;.</span>
