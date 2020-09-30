@@ -8,7 +8,6 @@
     <meta charset="UTF-8">
     <title>NLPStatTest</title>
 
-    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
@@ -16,7 +15,7 @@
 
 
 
-    <!-- CONSTANTS todo: remove this if not used -->
+
     <script src="{{ url_for('static', filename='constants.js') }}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -99,15 +98,10 @@ function greyOut(itemName) {
 
             <div class="roundpurplebottom" style="position:relative;">
 
-        <p>A prospective power test is a test that you use before analyzing data to
-        determine whether the sample size is large enough so that the significance
-        test will have enough power.
-            The power of a hypothesis test is the probability that the test correctly rejects
-                the null hypothesis. </p><p>Power is affected
-                by the sample size, the difference, the variability of the data, and the significance level of the test.
-              </p>
-              <p>Here, we assume data in a normal distribution, to calculate the sample size you'll need to achieve the power level you specify, given the type of
-            alternative hypothesis, the difference between the means, the standard deviation of the data, and significance level.</p>
+        <p>A prospective power test performed before analyzing data to determine if the sample size is large enough to ensure that the significance test will have enough power.
+            The power of a hypothesis test is the probability that the test correctly rejects the null hypothesis. Power is affected
+                by the sample size, the difference between sample means, the variability of the data, and the significance level of the test.
+              It is assumed that the data are in a normal distribution and are independent and identically distributed.</p>
                 <form action="/prospective_power" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
                     <p>Choose the alternative hypothesis: </p>
@@ -123,7 +117,7 @@ function greyOut(itemName) {
                 \neq \delta \)
 
             <!-- Mu -->
-            <p>The <abbr title="The threshold &delta; for difference between the systems.">difference</abbr> between means:
+            <p>The difference threshold between means:
                 <br>
               \( \delta =\)  <input
                         id="prospective_mu" name="prospective_mu" type="number"
@@ -146,10 +140,10 @@ function greyOut(itemName) {
             <!-- Desired Power Level-->
             <p>The desired power level:
   <br>
-                <input id="prospective_desired_power" name="prospective_desired_power" type="number" {% if prospective_desired_power %}
+                  \( \pi = \) <input id="prospective_desired_power" name="prospective_desired_power" type="number" {% if prospective_desired_power %}
                        placeholder="{{ prospective_desired_power }}"
                        value="{{ prospective_desired_power }}" {% else %} value=0.90 {% endif %}
-                       min="0"
+                       min="0" max = "1"
                     step="0.0001"
                 onchange="checkForZero('prospective_desired_power')"> </p>
                 <!-- class="form-control input-md" -->
@@ -165,7 +159,7 @@ function greyOut(itemName) {
                    required="" step="0.0001" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             </p>
 
-            <button id="submit" class="interface button1" onclick="warn = false; console.log(warn);  document.getElementById('hiddenProspectivePowerTest').style.display = 'block'"; name="submit" >Run</button>
+            <button id="submit" class="interface button1" onclick="warn = false; console.log(warn); ; name="submit" >Run</button>
 
 
             </form> <!-- End Prospective Power form -->
