@@ -177,7 +177,9 @@ def start():
 
 @app.route('/upload', methods=["POST"])
 def upload(debug=True):
+    print('In /upload')
     if request.method == "POST":
+        print('In /upload POST')
         # ------- File ----------------
         f = request.files['data_file']  # new
         have_file = False
@@ -197,13 +199,15 @@ def upload(debug=True):
             f.save(FOLDER + "/" +dir_str + "/" + secure_filename(data_filename))
             print('Check directory {} for saved file'.format(dir_str))
             have_file = True  # assume the above worked
-        elif request.cookies.get('fileName'):
-            data_filename = request.cookies.get('fileName')
-            have_filename = True
+        # elif request.cookies.get('fileName'):
+        #     print('no f.filename, getting cookie')
+        #     data_filename = request.cookies.get('fileName')
+        #     have_filename = True
         else:
             # no filename, print error message
+            print('no f.filename, no cookie')
             str_err = 'You must submit a file.'
-            print('ERROR: submitted without filename! You must resubmit!')
+            print('ERROR: submitted without filename! You must (re)submit!')
         if have_filename:
             if debug: print('have filename:{}'.format(data_filename))
             try:
