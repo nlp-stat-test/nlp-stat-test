@@ -466,7 +466,7 @@ def data_analysis(debug=True):
 # ************************************************************
 #   PROSPECTIVE POWER
 # ************************************************************
-@app.route('/prospective_power', methods=["GET", "POST"])
+@app.route('/ppa_results', methods=["GET", "POST"])
 def prospective_power(debug=True):
     if request.method == "POST":
         # ------- Get cookies
