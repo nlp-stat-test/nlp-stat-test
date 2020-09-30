@@ -118,27 +118,37 @@ function show_montecarlo_div() {
     document.getElementById("power_montecarlo_fields").style.display="block"
     document.getElementById("power_boot_fields").style.display="none"
 }
+
+
+
+// https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
+
+var warn = true;
+
+//  $(window).on("beforeunload", function() {
+//     if (warn) {warn = true; return "Do you really want to close and clear all data?"}
+
+  //})
+
+  //$(window).on("unload", function() {
+  // location.href = {{ url_for('delete_data')}};
+ // })
+
+
+ function results_check_da(){
+   if (localStorage.getItem('da-warn') == "5") {
+     document.getElementById('da-warn').style.display = "block";
+   } else {
+       document.getElementById('da-warn').style.display = "none";
+     }
+     return false;
+ }
+console.log("executed");
+
 </script>
 
-<body style="font-family: sans;">
+<body style="font-family: sans;" onload="results_check_da();">
 
-
-  <script>
-
-  // https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
-
-  var warn = true;
-
-  //  $(window).on("beforeunload", function() {
-  //     if (warn) {warn = true; return "Do you really want to close and clear all data?"}
-
-    //})
-
-    //$(window).on("unload", function() {
-    // location.href = {{ url_for('delete_data')}};
-   // })
-
-  </script>
 
     <div margin: 100 auto;>
         <div class="header">
@@ -160,10 +170,11 @@ function show_montecarlo_div() {
                 <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</button> </span>
   | <span><button class="button1" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</button></span>
         </div>
+
     <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
 
 
-     <div id="loading" style="display: none;">⌛ Loading ⌛</div>
+     <div id="loading" style="display: none;"> ⌛ Loading ⌛ </div>
 
 
 
@@ -171,7 +182,7 @@ function show_montecarlo_div() {
 
 
 
- <div id="Upload Files" class="tabcontent interface" style="display:none">
+ <div id="Upload Files" class="tabcontent interface">
 
         <div class="roundpurplebottom" style="position:relative;">
                     <form action="/upload" class="form-horizontal" enctype="multipart/form-data" method="post">
@@ -194,13 +205,14 @@ function show_montecarlo_div() {
                     <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
+
                     </form>
         </div>
 
      </div>
 
 
-        <div id='Data Analysis' class="tabcontent" style="display:block">
+        <div id='Data Analysis' class="tabcontent"  style="display:none">
             <!-- Data Analysis form -->
             <form action="/data_analysis" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <!-- Begin Data Analysis div -->
@@ -260,6 +272,7 @@ function show_montecarlo_div() {
                             document.getElementById('loading').style.display='block';" name="submit" type=submit
                             class="button1 interface">Run</button>
 
+<div id="da-warn"> Warning: clicking this button will write over later tabs.</div>
 
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
@@ -575,7 +588,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); localStorage.setItem('da-warn', '1'); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
