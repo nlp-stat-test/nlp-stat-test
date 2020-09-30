@@ -38,8 +38,8 @@
 <script>
     // Keeping track of consistency
 
-    if (localStorage.getItem("max") === null) {
-      localStorage.setItem("max", "0");
+    if (localStorage.getItem("max_tab") === null) {
+      localStorage.setItem("max_tab", "0");
   }
   console.log(max);
 </script>
@@ -48,8 +48,8 @@
 <script>
           // BREADCRUMBS! adapted from W3Schools Tutorial
         function openTab(evt, tabName, cur) {
-                console.log(localStorage.getItem("max"));
-              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max")) + 1){
+                console.log(localStorage.getItem("max_tab"));
+              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max_tab")) + 1){
               var i, tabcontent, tablinks;
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
@@ -129,10 +129,14 @@ function show_montecarlo_div() {
 
   var warn = true;
 
-    $(window).on("beforeunload", function() {
-       if (warn) {warn = true; return "Do you really want to close and clear all data?"}
+  //  $(window).on("beforeunload", function() {
+  //     if (warn) {warn = true; return "Do you really want to close and clear all data?"}
 
-    })
+    //})
+
+    //$(window).on("unload", function() {
+    // location.href = {{ url_for('delete_data')}};
+   // })
 
   </script>
 
@@ -148,13 +152,13 @@ function show_montecarlo_div() {
                position: -webkit-sticky;
                position: sticky;    z-index: 2; line-height: 2;">
 
-                <span><button class="button1" id='BtnTab0' onclick="window.location.href='{{ url_for('landing_page')}}';" >Home</button></span> |
-                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</button></span> →
-                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis </button></span> →
-                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</button></span> →
-                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</button></span> →
-                <span><button class="button1" id='BtnTab5' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</button> </span>
-  | <span><button class="button1" id='BtnTab6.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Download</button></span>
+                <span><button class="button1" onclick="window.location.href='{{ url_for('landing_page')}}';" >Home</button></span> |
+                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</button></span> →
+                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis </button></span> →
+                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</button></span> →
+                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</button></span> →
+                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</button> </span>
+  | <span><button class="button1" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</button></span>
         </div>
     <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
 
@@ -185,10 +189,10 @@ function show_montecarlo_div() {
                            name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
                     <button onclick="warn = false;
-                            console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max); window.location.href='#'" class="button1 interface"><label for="data_file">Upload</label></button>
+                            console.log(warn); max_tab = '1'; localStorage.setItem('max', max); console.log(max); window.location.href='#'" class="button1 interface"><label for="data_file">Upload</label></button>
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
-                    <button id="submit" onclick="warn = false;  console.log(warn); max = '1'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';"
+                    <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
                     </form>
         </div>
@@ -252,7 +256,7 @@ function show_montecarlo_div() {
 
                     <button id="submit"
                             onclick="warn = false;
-                            console.log(warn); max = '2'; localStorage.setItem('max', max); console.log(max);
+                            console.log(warn); max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
                             document.getElementById('loading').style.display='block';" name="submit" type=submit
                             class="button1 interface">Run</button>
 
@@ -571,7 +575,7 @@ function show_montecarlo_div() {
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max = '3'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -660,7 +664,7 @@ function show_montecarlo_div() {
                 <!-- effect size Submit Button -->
                 <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max = '4'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';">Run</button>
+                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';">Run</button>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -721,7 +725,7 @@ function show_montecarlo_div() {
                                     <div class="tooltip interface">?<span class="tooltiptext">"lower bound on number of samples (minimum number of evaluation units)"</span> </div>
                 <br/><br>
 
-                    <b>Maximum sample size:</b>
+                    <b>max ==imum sample size:</b>
 
                     <input id="max_sample_size" name="max_sample_size" type="number"
                        placeholder="max" class="form-control input-md" value="{{ num_eval_units }}">
@@ -794,7 +798,7 @@ function show_montecarlo_div() {
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max = '5'; localStorage.setItem('max', max); console.log(max); document.getElementById('loading').style.display='block';" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -816,13 +820,23 @@ function show_montecarlo_div() {
  <div id="Download Report" class="tabcontent interface" style="display:none">
 
 
+
         <div class="roundpurplebottom" style="position:relative;">
+
+<h3>Downloads</h3>
 
          <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
          <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
-    <button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+
            <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
+
+<h3>Data Deletion</h3>
+
+<button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+
+
+
         </div>
 
      </div>
@@ -951,19 +965,19 @@ function show_montecarlo_div() {
 
         function show_print() {
           document.getElementById('Upload Files').style.display='block';
-          if (Number(localStorage.getItem("max")) >= 2){
+          if (Number(localStorage.getItem("max_tab")) >= 2){
           document.getElementById('Data Analysis').style.display='block';
-          if (Number(localStorage.getItem("max")) >= 3){
+          if (Number(localStorage.getItem("max_tab")) >= 3){
           document.getElementById('Significance Test').style.display='block';
-          if (Number(localStorage.getItem("max")) >= 4){
+          if (Number(localStorage.getItem("max_tab")) >= 4){
           document.getElementById('Effect Size').style.display='block';
-          if (Number(localStorage.getItem("max")) >= 5){
+          if (Number(localStorage.getItem("max_tab")) >= 5){
           document.getElementById('Retrospective Power Analysis').style.display='block';
           }}}}
 
           document.getElementById('Download Report').style.display='none';
-          console.log(localStorage.getItem("max"));
-          if (Number(localStorage.getItem("max")) < 5){
+          console.log(localStorage.getItem("max_tab"));
+          if (Number(localStorage.getItem("max_tab")) < 5){
              document.getElementById('warning').style.display='block';
           }
           return false;

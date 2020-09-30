@@ -11,7 +11,6 @@
 
 
 
-    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
@@ -54,33 +53,40 @@
         </div>
 
 <div class="roundpurplebottom" style="position:relative;">
-This website is a demonstration of our <a href="{{ url_for('paper') }}">paper</a>. Please consult
 
-the <a href="{{ url_for('manual') }}">manual</a> for instructions and tips.
+<h3>About</h3>
 
-You can find the source code on our <a href="https://github.com/nlp-stat-test/nlp-stat-test">GitHub repository</a> under the terms of the <a href="https://mit-license.org/">MIT License</a>. If you
+This website is a demonstration of <a style="text-decoration: none;" href="{{ url_for('paper') }}">"NLPStatTest: A Toolkit for Comparing NLP System Performance"</a>, by
+<a style="text-decoration: none;"  href = "mailto: haz060@uw.edu">Haotian Zhu</a>,
+<a style="text-decoration: none;"  href = "mailto: dpm3@uw.edu">Denise Mak</a>,
+<a style="text-decoration: none;" href = "mailto: jesse@gioannini.net">Jesse Gioannini</a>, and
+<a style="text-decoration: none;" href = "mailto: fxia@uw.edu">Fei Xia</a>. A video tutorial is availble
+<a style="text-decoration: none;" href="https://vimeo.com/443074846">here</a>. Please consult
+
+the <a style="text-decoration: none;" href="{{ url_for('manual') }}">manual</a> for instructions and tips.
+
+You can find the source code on our <a style="text-decoration: none;" href="https://github.com/nlp-stat-test/nlp-stat-test">GitHub repository</a> under the terms of the <a style="text-decoration: none;"  href="https://mit-license.org/">MIT License</a>. If you
 
 have not yet collect data, start with
-<a href="{{ url_for('ppa') }}">prospective power analysis</a>, otherwise, you can
-<a href="{{ url_for('start') }}">upload your data or restore a previous session</a>.
+<a style="text-decoration: none;"  href="{{ url_for('ppa') }}">prospective power analysis</a>, otherwise, you can
+<a style="text-decoration: none;" href="{{ url_for('start') }}">upload your data or restore a previous session</a>.
 
 
-<ul>
-<li>(1) About</li>
-<li>(2) Tutorial (video)</li>
-<li>(3) web-based GUI: add a button to go back to HOME</li>
-<li>(4) Manual</li>
-<li>(5) Download:
-         can have different versions
-         download python code/local GUI
-         download sample data
- </li>
-<li>(6) Citation (optional)</li>
-<li>(7) contact (optional)</li>
-<li>(8) Sample Data (optional)</li>
-  We can make (8) part of (5)</li>
-</ul>
+<h3>Citation (BibTeX)</h3>
 
+<div><pre>
+  @misc{zhu_mak_gioannini_xia_2020AD,
+    title={NLPStatTest: A Toolkit for Comparing NLP System Performance},
+    url={https://nlpstats.ling.washington.edu/},
+    publisher={University of Washington},
+    author={Zhu, Haotian and Mak, Denise and Gioannini, Jesse and Xia, Fei},
+    year={2020AD},
+    month={Dec}
+  } </pre></div>
+
+<h3>Data Deletion<h3>
+
+    <button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
 </div>
 
     </div>
