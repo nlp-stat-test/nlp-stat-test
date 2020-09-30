@@ -11,13 +11,6 @@
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
-
-
-
-
-
-    <script src="{{ url_for('static', filename='constants.js') }}"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- KATEX STARTER -->
@@ -32,17 +25,20 @@
 
 </head>
 
-<script>
-    // Keeping track of consistency
-
-    if (localStorage.getItem("max") === null) {
-      localStorage.setItem("max", "0");
-  }
-  console.log(max);
-</script>
-
 
 <script>
+
+
+function results_check(){
+  if (localStorage.getItem("ppa") == "1") {
+    document.getElementById('hiddenProspectivePowerTest').style.display = "block";
+  } else {
+      document.getElementById('hiddenProspectivePowerTest').style.display = "none";
+    }
+    return false;
+}
+
+
         // BREADCRUMBS! adapted from W3Schools Tutorial
         function openTab(evt, tabName, cur) {
                 console.log(localStorage.getItem("max"));
@@ -62,18 +58,11 @@
             }
             }
 
-// Gray out a button
-function greyOut(itemName) {
-//  document.getElementById("BtnTab1").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab2").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab3").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab4").style.backgroundColor = #eee;
-    document.getElementById(itemName).style.backgroundColor = 'Gainsboro';
-}
+
 </script>
 
 
-<body style="font-family: sans;">
+<body style="font-family: sans;" onload="results_check()">
 
 
 
@@ -102,7 +91,7 @@ function greyOut(itemName) {
             The power of a hypothesis test is the probability that the test correctly rejects the null hypothesis. Power is affected
                 by the sample size, the difference between sample means, the variability of the data, and the significance level of the test.
               It is assumed that the data are in a normal distribution and are independent and identically distributed.</p>
-                <form action="/prospective_power" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <form action="/ppa_results" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
                     <p>Choose the alternative hypothesis: </p>
 
@@ -159,13 +148,13 @@ function greyOut(itemName) {
                    required="" step="0.0001" min="0" max="1" onchange="checkForZero('prospective_significance_level')">
             </p>
 
-            <button id="submit" class="interface button1" onclick="warn = false; console.log(warn); ; name="submit" >Run</button>
+            <button id="submit" class="interface button1" onclick="warn = false; console.log(warn); localStorage.setItem('ppa', '1');" name="submit" >Run</button>
 
 
             </form> <!-- End Prospective Power form -->
         </div>
 
-        <div class="roundgreen" style="display:none;" id="hiddenProspectivePowerTest">
+        <div class="roundgreen" id="hiddenProspectivePowerTest">
 
             <h3>Results</h3>
 
@@ -186,7 +175,7 @@ function greyOut(itemName) {
                 </tr>
             </table>
 
-  <button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button>
+  <p><button id="download-ppa" class="interface button1" onclick="window.print();" >Download Report</button></p>
         </div>
         <!-- End Prospective Power results div -->
 
