@@ -13,7 +13,13 @@ tr:nth-child(even) {
   background-color: #eee;
 }
 
+
+
 /* General Formatting */
+
+.a1 {
+    text-decoration: none;
+}
 
 .header { 
     text-align: center;
@@ -62,14 +68,3 @@ tr:nth-child(even) {
     display:none;
 }
 
-/* Chrome, Safari, Edge, Opera */
-.hide-arrows input[type=number]::-webkit-outer-spin-button,
-.hide-arrows input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-.hide-arrows input[type=number] {
-  -moz-appearance: textfield;
-}
