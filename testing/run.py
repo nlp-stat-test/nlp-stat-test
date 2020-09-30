@@ -467,7 +467,7 @@ def data_analysis(debug=True):
 #   PROSPECTIVE POWER
 # ************************************************************
 @app.route('/ppa_results', methods=["GET", "POST"])
-def prospective_power(debug=True):
+def ppa_results(debug=True):
     if request.method == "POST":
         # ------- Get cookies
         fileName = request.cookies.get('fileName')
