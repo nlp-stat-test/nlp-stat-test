@@ -195,6 +195,14 @@ console.log("executed");
                     <!-- </button> -->
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     <br><br>
+     Config File (optional):
+
+                    <input type="file" id="config_file"
+                           onchange="checkConfigFile()"
+                           name="config_file" style="display:none"/>
+                    <!-- link shows as button -->
+                        <a href="#" class="button1 interface"><label for="config_file">Configure parameters</label></a>
+                    <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
 
