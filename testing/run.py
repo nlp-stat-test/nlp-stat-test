@@ -180,8 +180,9 @@ def upload(debug=True):
     print('In /upload')
     if request.method == "POST":
         print('In /upload POST')
-        # ------- File ----------------
-        f = request.files['data_file']  # new
+        # ------- Data File ----------------
+        f = request.files['data_file']
+
         have_file = False
         have_filename = False
         have_data = False
@@ -225,13 +226,65 @@ def upload(debug=True):
                 print('Exception occurred reading file: filename={}'.format(data_filename))
                 str_err = 'Exception occurred reading file: filename={}'.format(data_filename)
 
+        if have_data:
+            # ------------- Config file (save only if data file was provided -----------
+            config = request.files['config_file']
+            if config.filename:
+                print('saving config file: {}'.format(config.filename))
+                config.save(FOLDER + "/" + dir_str + "/" + secure_filename(config.filename))
+                # Read YAML file
+                with open(FOLDER + "/" + dir_str + "/" + config.filename,
+                          'r') as stream:  # read_score_file(FOLDER + "/" + data_filename)
+                    data_loaded = yaml.safe_load(stream)
+                    print('Data loaded from config.yml: {}'.format(data_loaded))
+                    # TODO: check type of data_loaded (should be 'dict'. string will have no .get method)
+                    # if there's no .get method need separate function
+                    rendered = render_template(template_filename,
+                                           CI=data_loaded.get('CI'),
+                                           alternative=data_loaded.get('alternative'),
+                                           effect_estimator_dict=json.loads(data_loaded.get('effect_estimator_dict')),
+                                           effectsize_sig_alpha=data_loaded.get('effectsize_sig_alpha'),
+                                           estimator_value_list=json.loads(data_loaded.get('estimator_value_list')),
+                                           eval_unit_size=data_loaded.get('eval_unit_size'),
+                                           eval_unit_stat=data_loaded.get('eval_unit_stat'),
+                                           fileName=data_loaded.get('fileName'),
+                                           hist_diff_file=data_loaded.get('hist_diff_file'),
+                                           hist_diff_par_file=data_loaded.get('hist_diff_par_file'),
+                                           hist_score1_file=data_loaded.get(('hist_score1_file')),
+                                           hist_score2_file=data_loaded.get(('hist_score2_file')),
+                                           is_normal=data_loaded.get('is_normal'),
+                                           mean_or_median=data_loaded.get('mean_or_median'),
+                                           mu=data_loaded.get('mu'),
+                                           normality_alpha=data_loaded.get('normality_alpha'),
+                                           not_preferred_tests=json.loads(data_loaded.get('not_preferred_tests')),
+                                           not_recommended_tests=json.loads(data_loaded.get('not_recommended_tests')),
+                                           num_eval_units=data_loaded.get('num_eval_units'),
+                                           power_num_intervals=data_loaded.get('power_num_intervals'),
+                                           power_test=data_loaded.get('power_test'),
+                                           pval=data_loaded.get('pval'),
+                                           recommended_tests=json.loads(data_loaded.get('recommended_tests')),
+                                           rejectH0=data_loaded.get('rejectH0'),
+                                           show_non_preferred=data_loaded.get('show_non_preferred'),
+                                           show_non_recommended=data_loaded.get(('show_non_recommended')),
+                                           shuffle_seed=data_loaded.get('shuffle_seed'),
+                                           sig_boot_iterations=json.loads(data_loaded.get('sig_boot_iterations')),
+                                           sig_test_alpha=json.loads(data_loaded.get('sig_test_alpha')),
+                                           sig_test_heading=data_loaded.get('sig_test_heading'),
+                                           sig_test_name=data_loaded.get('sig_test_name'),
+                                           sig_test_stat_val=data_loaded.get('sig_test_stat_val'),
+                                           skewness_gamma=json.loads(data_loaded.get('skewness_gamma')),
+                                           summary_stats_list=json.loads(data_loaded.get('summary_stats_list')),
+                                           summary_str=data_loaded.get('summary_str'),
+                                           rand_str=get_rand_state_str())
+            else:  # no config file
 
-        rendered = render_template(template_filename,
+                rendered = render_template(template_filename,
                                            rand_str=get_rand_state_str(),
                                            error_str=str_err,
                                            file_uploaded=f.filename
                                    )
         resp = make_response(rendered)
+        # Set cookies
         if have_data:
             if f.filename:
                 resp.set_cookie('fileName', f.filename)
@@ -259,10 +312,10 @@ def data_analysis(debug=True):
     str_err = ''
     if request.method == 'POST':
         # ------- Test if 'last_tab' was sent
-        last_tab_clicked = request.form.get('last_tab')
+        last_tab_clicked = request.form.get('last_tab') #todo: remove this line?
         # todo: make this a cookie
         last_tab_name_clicked = 'Data Analysis'  # request.form.get('last_tab_name')
-        print("***** LAST TAB: {}".format(last_tab_clicked))
+        print("***** LAST TAB: {}".format(last_tab_clicked)) #todo: remove this line?
         print("***** LAST TAB: {}".format(last_tab_name_clicked))
 
         eval_unit_size = request.form.get('eval_unit_size')
@@ -410,6 +463,7 @@ def data_analysis(debug=True):
                 resp = make_response(rendered)
 
                 # -------------- Set all cookies -------------
+                resp.set_cookie('last_tab', last_tab_name_clicked)
                 # if f.filename:
                 #     resp.set_cookie('fileName', f.filename)
                 resp.set_cookie('normality_alpha', json.dumps(normality_alpha))
@@ -614,7 +668,9 @@ def sigtest(debug=True):
         last_tab_name_clicked = 'Significance Test'  # request.form.get('last_tab_input')
         if debug: print("***** LAST TAB (from POST): {}".format(last_tab_name_clicked))
 
-        scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        dir_str = request.cookies.get('dir_str')
+        scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/"+ fileName)
+
         # get old dif
         score_dif = calc_score_diff(scores1, scores2)
 
@@ -693,6 +749,7 @@ def sigtest(debug=True):
                                    )
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
+        resp.set_cookie('last_tab', last_tab_name_clicked)
         resp.set_cookie('sig_test_name', sig_test_name)
         resp.set_cookie('sig_test_alpha', sig_alpha)
         resp.set_cookie('alternative', alternative)
@@ -733,7 +790,8 @@ def effectsize(debug=True):
     if request.method == 'POST':
         last_tab_name_clicked = 'Effect Size'
         fileName = request.cookies.get('fileName')
-        scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        dir_str = request.cookies.get('dir_str')
+        scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/"+ fileName)
         # alpha for significance, boostrap iterations
         sig_test_alpha = json.loads(request.cookies.get('sig_test_alpha'))
         effectsize_sig_alpha = request.form.get('effectsize_significance_level')
@@ -828,6 +886,7 @@ def effectsize(debug=True):
 
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
+        resp.set_cookie('last_tab', last_tab_name_clicked)
         resp.set_cookie('effect_estimator_dict', json.dumps(estimators))
         resp.set_cookie('estimator_value_list', json.dumps(estimator_value_list))
         resp.set_cookie('effectsize_sig_alpha', effectsize_sig_alpha)
@@ -847,7 +906,8 @@ def power(debug=True):
     if request.method == "POST":
         last_tab_name_clicked = 'Retrospective Power Analysis'
         fileName = request.cookies.get('fileName')
-        scores1, scores2 = read_score_file(FOLDER + "/" + fileName)  # todo: different FOLDER for session/user
+        dir_str = request.cookies.get('dir_str')
+        scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/"+ fileName)
         # get old dif
         score_dif = calc_score_diff(scores1, scores2)
         # use Partition Score to get new dif
@@ -959,6 +1019,7 @@ def power(debug=True):
         resp = make_response(rendered)
         # -------- WRITE TO COOKIES ----------
         # resp.set_cookie('pow_sampsizes', json.dumps(pow_sampsizes))
+        resp.set_cookie('last_tab', last_tab_name_clicked)
         resp.set_cookie('power_test', power_test)
         resp.set_cookie('sig_test_name', sig_test_name)
         resp.set_cookie('power_num_intervals', str(power_num_intervals))
@@ -969,6 +1030,12 @@ def power(debug=True):
 
 @app.route('/upload_config', methods=["POST"])
 def upload_config():
+    '''
+    TODO:
+       * add last_tab_name_clicked parameter.
+       * make sure last_tab is previously saved in cookies in other steps
+    @return:
+    '''
     print('Uploading from config file.')
     f = request.files['system_file']
     if f.filename:
