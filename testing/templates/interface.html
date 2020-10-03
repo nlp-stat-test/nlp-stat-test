@@ -7,10 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <title>NLPStatTest</title>
-
-
-    <link href="{{ url_for('static', filename='tooltip.css')}}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='tables.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
 
@@ -126,13 +122,7 @@ var warn = true;
  // })
 
 
- function results_check_da(){
-   if (localStorage.getItem('da-warn') == "5") {
-     document.getElementById('da-warn').style.display = "block";
-   } else {
-       document.getElementById('da-warn').style.display = "none";
-     }
-     return false;
+
  }
 console.log("executed");
 
@@ -175,16 +165,18 @@ console.log("executed");
 
  <div id="Upload Files" class="tabcontent interface">
 
+
         <div class="roundpurplebottom" style="position:relative;">
+
+          <h3>File Upload</h3>
+
+          <p>Upload a text file containing metrics comparing two systems.
+          The file should have two colummns, one for each system. A configuration file can also be uploaded (this is optional).</p>
+
                     <form action="/upload" class="form-horizontal" enctype="multipart/form-data" method="post">
-     System File:
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext">Upload a text file containing metrics comparing two systems.
-                        The file should have two colummns, one for each system.</span></div>
-                    <!-- Original (works):
-                <input id="data_file" name="data_file" class="input-file" type="file" />
-                -->
-                    <!-- Display name of previously uploaded file in file_uploaded -->
+
+    <p> System file:
+<br>
                         <!-- onchange="pressed()" -->
                     <input type="file" id="data_file"
                            onchange="checkFileSize()"
@@ -194,15 +186,19 @@ console.log("executed");
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <!-- </button> -->
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
-                    <br><br>
-     Config File (optional):
+                    </p>
 
+
+  <p>   Configuration file (optional):
+<br>
                     <input type="file" id="config_file"
                            onchange="checkConfigFile()"
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
-                        <a href="#" class="button1 interface"><label for="config_file">Configure parameters</label></a>
-                    <br><br>
+                        <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
+                    </p>
+
+
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
 
@@ -218,50 +214,43 @@ console.log("executed");
                 <!-- Begin Data Analysis div -->
                 <div class="roundpurplebottom" style="position:relative;">
 
-                    <b>Data and Parameters</b><br><br>
+                    <h3>Data Analysis</h3>
 
-                    <!-- Data Analysis: Evaluation Unit size-->
-                    Evaluation Unit Size:
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext">This should be a whole number between one and the number of data points.</span>
-                    </div>
+<p>Many statistics tests make certain assumptions
+about the sample. For example, the \( t \) test assumes normality. In order
+to choose significance tests that are appropriate for
+this particular sample, the system will estimate sample skewness
+and test normality.</p>
+
+
+
+                    <p>Evaluation unit <abbr title="This should be a whole number between one and the number of data points.">size</abbr>:
+                  <br>
 
                     <input id="eval_unit_size" name="eval_unit_size" type="number"
                             {% if eval_unit_size %} value="{{ eval_unit_size }}" {% else %} value="1"
                             {% endif %} class="form-control input-md" required="" >
+</p>
 
-                    <br><br>
-                    <!-- Data Analysis: Radio Buttons (mean, median)  -->
 
-                    Evaluation Unit Metric:
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext"> The metric to use as the representative value for each evaluation unit.
-                          <!-- TODO: Use "{{help2}}" or another server side help string -->
-                      </span></div>
-
+                  <p>  Choose a metric to represent each evaluation unit:
+      <br>
                     <input type="radio" name="target_statistic" id="target_statistic-0" value="mean" checked="checked" {% if eval_unit_stat=="mean" %} checked="checked" {% else %} checked="checked" {% endif %}> Mean
-
+<br>
                     <input type="radio" name="target_statistic" id="target_statistic-1" value="median" {% if eval_unit_stat=="median" %} checked="checked" {% endif %}> Median
+                </p>
 
-                    <br> <br>
-                    <!-- Data Analysis: seed-->
 
-                    Random Seed:
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext">If you would like to provide a (real number) seed for random shuffling, enter it here.
-                      Otherwise, we will not shuffle.</span>
-                    </div>
 
-                    <input id="seed" name="seed" type="number" placeholder="don't shuffle" {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
+                <p>Random <abbr title="A real number seed for random shuffling can be entered here. Otherwise, the data will not be shuffled.">Seed</abbr>:
+<br>
+                    <input id="seed" name="seed" type="number" placeholder="Do not shuffle" {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
+</p>
 
-                    <br><br> Significance level &alpha; (for calculating normality):
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext">A significance threshold value for the normality test. Default value is 0.05.</span>
-                    </div>
-
-                    <input id="normality_alpha" name="normality_alpha" type="number" step="0.001" {% if normality_alpha %} value="{{ normality_alpha }}" {% else %}value="0.05" {% endif %} class="form-control input-md">
-
-                    <br><br>
+                    <p>Significance level threshold (for calculating normality):
+              <br>
+                    \( \alpha = \) <input id="normality_alpha" name="normality_alpha" type="number" step="0.001" {% if normality_alpha %} value="{{ normality_alpha }}" {% else %}value="0.05" {% endif %} class="form-control input-md">
+</p>
                     <!-- Data Analysis Submit Button -->
 
                     <input type="hidden" id="da_hidden" value="hidden101">
@@ -271,8 +260,6 @@ console.log("executed");
                             console.log(warn); max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
                             document.getElementById('loading').style.display='block';" name="submit" type=submit
                             class="button1 interface">Run</button>
-
-<div id="da-warn" style="display: hidden;"> Warning: clicking this button will write over later tabs.</div>
 
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
@@ -285,7 +272,7 @@ console.log("executed");
             <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
 
                 <!-- SUMMARY STATISTICS -->
-                <b>{{ summary_str }}</b><br><br> {% if summary_stats_list|length %}
+                <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}
                 <table>
 
                     <tr>
@@ -308,8 +295,8 @@ console.log("executed");
                 {% endif %}
 
                 <!-- HISTOGRAM Images -->
-                <br> {% if hist_score1_file %}
-                <button id="hist_button" class="button1 interface" onclick="showdiv()">View Histograms</button> {% endif %} <br><br>
+                <p> {% if hist_score1_file %}
+                <button id="hist_button" class="button1 interface" onclick="showdiv()">View Histograms</button> {% endif %} </p>
                 <div class="hiddendiv" id="hidden_graph">
 
                     <!-- new way -->
@@ -322,7 +309,7 @@ console.log("executed");
 
                 <!-- RECOMMENDATION for test statistics -->
 
-                <b id=teststat_heading align='left'>{{ teststat_heading }}</b><br><br> {% if mean_or_median %}
+                <h3 id=teststat_heading align='left'>{{ teststat_heading }}</h3> {% if mean_or_median %}
                 <table border=1>
 
                     <tr>
@@ -349,11 +336,13 @@ console.log("executed");
                     </tr>
 
                 </table>
-                {% endif %} <br>
+                {% endif %}
 
                 <!-- RECOMMENDATION for significance tests with REASONS -->
-                <b id=sigtest_heading align='left'>
-                {{ sigtest_heading }}</b><br><br> The folllowing tests are appropriate and preferred:<br><br> {% if recommended_tests|length %}
+                <h3 id=sigtest_heading align='left'>
+                {{ sigtest_heading }}</h3>
+
+                <p>The folllowing tests are appropriate and preferred:<br><br> {% if recommended_tests|length %}</pS>
                 <table border=1>
                     <col style="width:140px">
 
@@ -377,7 +366,9 @@ console.log("executed");
                 <div id="non_preferred_div_da" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
                     <br>
 
-                    <b>Appropriate but Non-Preferred Tests</b><br><br> {% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:<br><br>
+                    <h3>Appropriate but Non-Preferred Tests</h3>
+
+                    <p>{% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:</p>
                     <table border=1>
                         <col style="width:140px">
 
@@ -399,9 +390,9 @@ console.log("executed");
                     {% else %} There are no tests in this category.<br><br> {% endif %}
                 </div>
                 <div id="non_recommended_div_da" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
-                    <br>
 
-                    <b>Inappropriate Tests</b><br><br> {% if not_recommended_tests|length %} The following tests are inappropriate and not recommended:
+
+                    <h3>Inappropriate Tests</h3> {% if not_recommended_tests|length %} The following tests are inappropriate and not recommended:
                     <table border=1>
                         <col style="width:140px">
 
@@ -422,6 +413,7 @@ console.log("executed");
                     <!-- End Non-Recommended Tests Table -->
                     {% else %} There are no inappropriate tests.<br><br> {% endif %}
                 </div>
+
                 <div class="interface">
                 <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_da" onclick="toggle_non_recommended('non_preferred_div_da',
                            'checkbox_show_non_preferred_da')"> List less-preferred significance tests.
@@ -440,16 +432,67 @@ console.log("executed");
 
             </div>
             <!-- end round green (data analysis) -->
-            <h1></h1>
+
         </div>
         <!-- End data analysis -->
 
         <div id='Significance Test' class="tabcontent" style="display:none">
 
+
             <div class="roundpurplebottom" style="position:relative;">
+
+
+              <h3>Significance Testing</h3>
+
+              <p>Using two mutually exclusive hypotheses:
+              the null hypothesis \( H_0 \) and the alternative \( H_1 \). For
+              comparing two NLP systems, usually a (paired)
+              two-sample testing is used, which can be reduced
+              to a one-sample testing by using pairwise difference. NLPStatTest currently only considers
+              one sample testing cases for numerical data, where
+              i.i.d. within sample is assumed, with H0 being the
+              chosen test statistic T (mean or median) is 0.
+              To run a statistical significance test, users first
+              determine the test statistic T (mean or median) and
+              a significance test based on data analysis results
+              (e.g., the sample skewness estimate and normality
+              test results). Then users choose the significance
+              level α, which is often set to 0.05 or 0.01 in the
+              NLP field. NLPStatTest will then calculate pvalue and reject H0 if and only if p-value < α.
+              2.2.3 Effect Size Estimation
+              In most experimental NLP papers where statistical significance testing is employed, the p-value is
+              the sole reported quantity. However, the p-value
+              is often misused and misinterpreted. For instance,
+              statistical significance is easily conflated with practical significance; as a result, NLP researchers often
+              run statistical significance tests to show that the performances of two NLP systems are different (i.e.,
+              statistical significance), without measuring the degree or the importance of such a difference (i.e.,
+              practical significance).
+              Cohen (1990) noted “the null hypothesis, if taken
+              literally, is always false in the real world.” For instance, the evaluation metric values (e.g., F-scores)
+              of two NLP systems on a test set are almost never
+              exactly the same; thus, H0, which says that two
+              systems perform equally, is (almost) always false.
+              When H0 is false, the p-value will eventually approach zero in large samples (Lin et al., 2013).
+              In other words, no matter how tiny the system
+              performance difference is, there is always a large
+              enough dataset on which the difference is statistically significant. Therefore, statistical significance
+              is markedly different from practical significance.
+              One way to measure practical significance is
+              by estimating effect size, which is defined as the
+              degree to which the ‘phenomenon’ is present in
+              the population, or the degree to which the null
+              hypothesis is false (Cohen, 1994). While the need
+              to estimate and report effect size has long been
+              recognized in other fields (Tomczak and Tomczak,
+              2014), the same is not true in the NLP field. We
+              include several methods for estimating effect size
+              in NLPStatTest (see §3.3).</p>
+
+
 
                 <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
+
                     <p>Choose the alternative hypothesis </p>
                     <!-- u1 < u2 -->
                     <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> \( \mu_1 - \mu_2 < \delta \) <div class="tooltip interface">?
@@ -588,7 +631,7 @@ console.log("executed");
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); localStorage.setItem('da-warn', '1'); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->

@@ -40,7 +40,7 @@ DEFAULT_EVAL_SIZE = 1
 
 # template filename
 # Note: "tab_inteface2.html" has histograms before recommendations
-template_filename = "tab_interface.html"
+template_filename = "interface.html"
 
 # strings to use in UI
 summary_str = "Summary of Statistics"
@@ -173,7 +173,7 @@ def create_summary_stats_list(tc, debug=False):
 
 @app.route('/start')
 def start():
-    return render_template('tab_interface.html', rand_str=get_rand_state_str())
+    return render_template('interface.html', rand_str=get_rand_state_str())
 
 @app.route('/upload', methods=["POST"])
 def upload(debug=True):
@@ -896,7 +896,7 @@ def effectsize(debug=True):
         # You got to the main page by navigating to the URL, not by clicking submit
         # full_filename1 = os.path.join(app.config['FOLDER'], 'hist_score1.svg')
         # full_filename2 = os.path.join(app.config['FOLDER'], 'hist_score2.svg')
-        return render_template('tab_interface.html',
+        return render_template('interface.html',
                                rand_str=get_rand_state_str()
                                )
 
