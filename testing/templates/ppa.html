@@ -87,19 +87,25 @@ function results_check(){
 
             <div class="roundpurplebottom" style="position:relative;">
 
+<h3>Prospective Power Analysis Parameters</h3>
+
         <p>A prospective power test performed before analyzing data to determine if the sample size is large enough to ensure that the significance test will have enough power.
             The power of a hypothesis test is the probability that the test correctly rejects the null hypothesis. Power is affected
                 by the sample size, the difference between sample means, the variability of the data, and the significance level of the test.
               It is assumed that the data are in a normal distribution and are independent and identically distributed.</p>
+
                 <form action="/ppa_results" class="form-horizontal" enctype="multipart/form-data" method="post">
                     <!-- 3 alternatives, less, greater, two sided -->
-                    <p>Choose the alternative hypothesis: </p>
 
-            <p><input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
+                    <p>Choose the alternative hypothesis:
+
+<br>
+          <input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
                    {% if prospective_alternative=='one-sided' %}checked {% endif %}>
                     <abbr title="The alternative hypothesis is that the difference between systems is either
-                        greater than, or less than &delta;, but not both."> One-sided:</abbr> \( \mu_1 - \mu_2 > \delta \) or \( \mu_1 - \mu_2 < \delta \)</p>
-            <p><input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
+                        greater than, or less than &delta;, but not both."> One-sided:</abbr> \( \mu_1 - \mu_2 > \delta \) or \( \mu_1 - \mu_2 < \delta \)
+<br>
+                        <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
                    {% if prospective_alternative=='two-sided' %}checked{% endif %}>
                    <abbr title="The alternative hypothesis is that the difference between
                            the first and second system is not equal to &delta;.">Two-sided:</abbr> \( \mu_1 - \mu_2
