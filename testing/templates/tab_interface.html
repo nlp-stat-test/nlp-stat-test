@@ -198,11 +198,12 @@ console.log("executed");
      Config File (optional):
 
                     <input type="file" id="config_file"
-                           onchange="checkConfigFile()"
+                           onchange="checkFileSize()"
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
-                        <a href="#" class="button1 interface"><label for="config_file">Configure parameters</label></a>
-                    <br><br>
+                        <a href="#" class="button1 interface"><label for="config_file">Upload parameter configuration.</label></a>
+                        <label id="configLabel">{{config_file_label}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                        <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
 
@@ -1035,14 +1036,24 @@ console.log("executed");
             }
         }
         function checkFileSize() {
+            // todo: finish error checking for config file
             var fileInput = document.getElementById("data_file");
+            var configInput = document.getElementById("config_file")
             var files = fileInput.files;
+            var configFiles = configInput.files;
             if (fileInput.value == "") {
                 document.getElementById("fileLabel").innerHTML = '<i>Upload a file.</i>'
             } else {
                 var strSplit = fileInput.value.split('\\');
                 document.getElementById("fileLabel").innerHTML =
                     "<i>File selected: " + strSplit[strSplit.length-1] + ".</i>";
+            }
+            if (configInput.value == "") {
+                //document.getElementById("configLabel").innerHTML = '<i>Upload a file.</i>'
+            } else {
+                var configSplit = configInput.value.split('\\');
+                document.getElementById("configLabel").innerHTML =
+                    "<i>File selected: " + configSplit[configSplit.length-1] + ".</i>";
             }
             console.log('*** checking file size***')
             // If there is at least one file selected
