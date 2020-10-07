@@ -235,9 +235,9 @@ def upload(debug=True):
                           'r') as stream:  # read_score_file(FOLDER + "/" + data_filename)
                     data_loaded = yaml.safe_load(stream)
                     print('Data loaded from config.yml: {}'.format(data_loaded))
-                    # TODO: check type of data_loaded (should be 'dict'. string will have no .get method)
-                    # if there's no .get method need separate function
-                    rendered = render_template(template_filename,
+                    # check type of data_loaded (should be 'dict'. string will have no .get method)
+                    if isinstance(data_loaded, dict):
+                        rendered = render_template(template_filename,
                                            CI=data_loaded.get('CI'),
                                            alternative=data_loaded.get('alternative'),
                                            effect_estimator_dict=json.loads(data_loaded.get('effect_estimator_dict')),
@@ -274,8 +274,14 @@ def upload(debug=True):
                                            summary_stats_list=json.loads(data_loaded.get('summary_stats_list')),
                                            summary_str=data_loaded.get('summary_str'),
                                            rand_str=get_rand_state_str())
+                    else: # the .yml wasn't parsed as a dict
+                        config_str_err = 'Unable to parse config file.'
+                        rendered = render_template(template_filename,
+                                                   rand_str=get_rand_state_str(),
+                                                   config_error_str=config_str_err,
+                                                   file_uploaded=f.filename
+                                                   )
             else:  # no config file
-
                 rendered = render_template(template_filename,
                                            rand_str=get_rand_state_str(),
                                            error_str=str_err,
