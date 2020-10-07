@@ -57,21 +57,36 @@
 
 <h3>About</h3>
 
-This website is a demonstration of <a style="text-decoration: none;" href="{{ url_for('paper') }}">"NLPStatTest: A Toolkit for Comparing NLP System Performance"</a>, by
+<p>This website is a demonstration of <a style="text-decoration: none;" href="{{ url_for('paper') }}">"NLPStatTest: A Toolkit for Comparing NLP System Performance"</a>, by
 <a class="possible" href = "mailto: haz060@uw.edu">Haotian Zhu</a>,
 <a class="possible" href = "mailto: dpm3@uw.edu">Denise Mak</a>,
 <a class="possible" href = "mailto: jesse@gioannini.net">Jesse Gioannini</a>, and
-<a class="possible" href = "mailto: fxia@uw.edu">Fei Xia</a>. A video tutorial is availble
-<a class="possible" href="https://vimeo.com/443074846">here</a>. Please consult
+<a class="possible" href = "mailto: fxia@uw.edu">Fei Xia</a>. They can be contacted for help or feedback.</p>
 
-the <a class="possible" href="{{ url_for('manual') }}">manual</a> for instructions and tips.
+<p>While statistical significance testing has been commonly used to compare NLP system performance,
+a small p-value alone is not sufficient because statistical significance is different from practical significance. To measure practical significance, we
+recommend estimating and reporting of effect size.
+It is also necessary to conduct power analysis to ensure that the test corpus is large enough to achieve
+a desirable power level. We propose a three-stage
+procedure for comparing NLP system performance,
+and provide a toolkit, NLPStatTest, to automate
+the testing stage of the procedure. For future work,
+we will extend this work to hypothesis testing with
+multiple datasets or multiple metrics.</p>
 
-You can find the source code on our <a class="possible" href="https://github.com/nlp-stat-test/nlp-stat-test">GitHub repository</a> under the terms of the <a class="possible"  href="https://mit-license.org/">MIT License</a>. If you
+<ul>
+<li>A <a class="possible" href="https://vimeo.com/443074846">video tutorial</a> is available.</li>
 
-have not yet collect data, start with
-<a class="possible"  href="{{ url_for('ppa') }}">prospective power analysis</a>, otherwise, you can
-<a class="possible" href="{{ url_for('start') }}">upload your data or restore a previous session</a>.
+<li>Please consult
 
+the <a class="possible" href="{{ url_for('manual') }}">manual</a> for instructions and tips.</li>
+
+<li>The source code is available on our <a class="possible" href="https://github.com/nlp-stat-test/nlp-stat-test">GitHub repository</a> under the terms of the <a class="possible"  href="https://mit-license.org/">MIT License</a>.
+
+<li>If data has not been collected, start with
+<a class="possible"  href="{{ url_for('ppa') }}">prospective power analysis</a>.</li>
+<li>Upload collected data <a class="possible" href="{{ url_for('start') }}"> here </a> to get started.</li>
+</ul>
 
 <h3>Citation (BibTeX)</h3>
 
