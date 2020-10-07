@@ -188,8 +188,10 @@ console.log("executed");
                         <!-- onchange="pressed()" -->
                     <input type="file" id="data_file"
                            onchange="checkFileSize()"
-                           name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
-                    <!-- todo: make a {file_error} variable if no file found -->
+                           name="data_file" style="display:none;"
+                           required
+                    />                      <!-- todo: in onSubmit check that file is provided -->
+
                     <!-- <button class="button1 interface"> -->
                     <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
                     <!-- </button> -->
@@ -202,7 +204,7 @@ console.log("executed");
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
                         <a href="#" class="button1 interface"><label for="config_file">Upload parameter configuration.</label></a>
-                        <label id="configLabel">{{config_file_label}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                        <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label>
                         <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="button1 interface" required>Submit File</button>
