@@ -107,7 +107,7 @@ function show_montecarlo_div() {
 
         </div>
 
-        <div class="roundpurplebottom interface"
+        <div class="roundpurplebottom interface ds"
                style="background-color: #eee; padding: 5; top: 0;">
 
 
@@ -118,7 +118,7 @@ function show_montecarlo_div() {
 
 
 </div>
-<div class="roundpurplebottom interface"
+<div class="roundpurplebottom interface ds"
 style="background-color: #eee; padding: 5;   top: 0;
        position: -webkit-sticky;
        position: sticky;    z-index: 2;">
@@ -163,8 +163,10 @@ style="background-color: #eee; padding: 5;   top: 0;
                         <!-- onchange="pressed()" -->
                     <input type="file" id="data_file"
                            onchange="checkFileSize()"
-                           name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
-                    <!-- todo: make a {file_error} variable if no file found -->
+                           name="data_file" style="display:none;"
+                           required
+                    />                      <!-- todo: in onSubmit check that file is provided -->
+
                     <!-- <button class="button1 interface"> -->
                     <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
                     <!-- </button> -->
@@ -177,13 +179,12 @@ style="background-color: #eee; padding: 5;   top: 0;
   <p>   Configuration file (optional):
 <br><br>
                     <input type="file" id="config_file"
-                           onchange="checkConfigFile()"
+                           onchange="checkFileSize()"
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
                         <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
-                    </p>
-
-
+                        <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label>
+                        <br><br>
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
                             name="submit" type=submit class="interface" required>Submit File</button>
 
@@ -1003,14 +1004,24 @@ and test normality.</p>
             }
         }
         function checkFileSize() {
+            // todo: finish error checking for config file
             var fileInput = document.getElementById("data_file");
+            var configInput = document.getElementById("config_file")
             var files = fileInput.files;
+            var configFiles = configInput.files;
             if (fileInput.value == "") {
                 document.getElementById("fileLabel").innerHTML = '<i>Upload a file.</i>'
             } else {
                 var strSplit = fileInput.value.split('\\');
                 document.getElementById("fileLabel").innerHTML =
                     "<i>File selected: " + strSplit[strSplit.length-1] + ".</i>";
+            }
+            if (configInput.value == "") {
+                //document.getElementById("configLabel").innerHTML = '<i>Upload a file.</i>'
+            } else {
+                var configSplit = configInput.value.split('\\');
+                document.getElementById("configLabel").innerHTML =
+                    "<i>File selected: " + configSplit[configSplit.length-1] + ".</i>";
             }
             console.log('*** checking file size***')
             // If there is at least one file selected
