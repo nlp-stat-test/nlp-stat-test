@@ -13,7 +13,9 @@ tr:nth-child(even) {
   background-color: #eee;
 }
 
-
+    a { 
+    text-decoration: none; 
+    }
 
 /* General Formatting */
 
@@ -47,6 +49,22 @@ tr:nth-child(even) {
     padding: 16px;
 }
    
+     
+
+    
+    .current {color: Black}
+    
+    .completed {color: Green;}
+    
+    .possible {color: Purple;}
+    
+    .greyed {color: Grey;}
+    
+
+   
+    /* Color Scheme (School Color) */
+    
+
 .button1 {
   font-family: 'Old Standard TT', serif;
   text-decoration: none;
@@ -54,15 +72,16 @@ tr:nth-child(even) {
   background-color: #eee;
   border-radius: 8px;
   padding: 4px;
-  color: #4b2e83; /* Color Scheme (School Color) */
+  color: #4b2e83;
 
 }
-
+    /*
 .button1:hover {
     color: Black;
     background-color: Gainsboro;
     text-decoration: none;
 }
+*/
 
 .hiddendiv{
     display:none;

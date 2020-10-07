@@ -12,7 +12,6 @@ import numpy as np
 # Business Logic
 from logic.fileReader import read_score_file
 from logic.testCase import testCase
-from logic.helper import helper
 from logic.effectSize import calc_eff_size
 from logic.dataAnalysis import partition_score, \
     skew_test, normality_test, recommend_test
@@ -22,8 +21,7 @@ from logic.power_analysis_norm import prosp_power_analysis_norm
 # filenames
 # from logic.filenames import get_path
 
-# Report Function
-from logic.report import gen_report
+
 
 from logic.errorHandling import InputError
 
@@ -154,21 +152,21 @@ def create_summary_stats_list(tc, debug=False):
                                                                              tc.eda.summaryStat_score1.max_val))
     summary_dict = []
     # 'score1'
-    summary_dict.append(('score1', [('mean', format_digits(tc.eda.summaryStat_score1.mu)),
-                                    ('median', format_digits(tc.eda.summaryStat_score1.med)),
-                                    ('std.dev.', format_digits(tc.eda.summaryStat_score1.sd)),
-                                    ('min', format_digits(tc.eda.summaryStat_score1.min_val)),
-                                    ('max', format_digits(tc.eda.summaryStat_score1.max_val))]))
-    summary_dict.append(('score2', [('mean', format_digits(tc.eda.summaryStat_score2.mu)),
-                                     ('median', format_digits(tc.eda.summaryStat_score2.med)),
-                                    ('std.dev.', format_digits(tc.eda.summaryStat_score2.sd)),
-                                    ('min', format_digits(tc.eda.summaryStat_score2.min_val)),
-                                    ('max', format_digits(tc.eda.summaryStat_score2.max_val))]))
-    summary_dict.append(('difference', [('mean', format_digits(tc.eda.summaryStat_score_diff_par.mu)),
-                                        ('median', format_digits(tc.eda.summaryStat_score_diff_par.med)),
-                                        ('std.dev.', format_digits(tc.eda.summaryStat_score_diff_par.sd)),
-                                        ('min', format_digits(tc.eda.summaryStat_score_diff_par.min_val)),
-                                        ('max', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
+    summary_dict.append(('Column 1', [('Mean', format_digits(tc.eda.summaryStat_score1.mu)),
+                                    ('Median', format_digits(tc.eda.summaryStat_score1.med)),
+                                    ('Std. Dev.', format_digits(tc.eda.summaryStat_score1.sd)),
+                                    ('Minimum', format_digits(tc.eda.summaryStat_score1.min_val)),
+                                    ('Maximum', format_digits(tc.eda.summaryStat_score1.max_val))]))
+    summary_dict.append(('Column 2', [('Mean', format_digits(tc.eda.summaryStat_score2.mu)),
+                                     ('Median', format_digits(tc.eda.summaryStat_score2.med)),
+                                    ('Std. Dev.', format_digits(tc.eda.summaryStat_score2.sd)),
+                                    ('Minimum', format_digits(tc.eda.summaryStat_score2.min_val)),
+                                    ('Maximum', format_digits(tc.eda.summaryStat_score2.max_val))]))
+    summary_dict.append(('Difference', [('Mean', format_digits(tc.eda.summaryStat_score_diff_par.mu)),
+                                        ('Median', format_digits(tc.eda.summaryStat_score_diff_par.med)),
+                                        ('Std. Dev.', format_digits(tc.eda.summaryStat_score_diff_par.sd)),
+                                        ('Minimum', format_digits(tc.eda.summaryStat_score_diff_par.min_val)),
+                                        ('Maximum', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
 @app.route('/start')

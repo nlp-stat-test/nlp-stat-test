@@ -71,19 +71,19 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 	# test name to display
 	test_name_to_display = ''
 	if sig_test_name == "t":
-		test_name_to_display = 'Student t test'
+		test_name_to_display = 'Student\'s 𝘵 Test'
 	if sig_test_name == 'wilcoxon':
-		test_name_to_display = "Wilcoxon signed rank test"
+		test_name_to_display = "Wilcoxon Signed Rank Test"
 	if sig_test_name == "bootstrap":
-		test_name_to_display = "Bootstrap test (mean)"
+		test_name_to_display = "Bootstrap Test (Mean)"
 	if sig_test_name == "permutation":
-		test_name_to_display = "Permutation test (mean)"
+		test_name_to_display = "Permutation Test (Mean)"
 	if sig_test_name == "sign":
-		test_name_to_display = "Sign test"
+		test_name_to_display = "Sign Test"
 	if sig_test_name == "bootstrap_med":
-		test_name_to_display = "Bootstrap test (median)"
+		test_name_to_display = "Bootstrap Test (Median)"
 	if sig_test_name == "permutation_med":
-		test_name_to_display = "Permutation test (median)"
+		test_name_to_display = "Permutation Test (Median)"
 
 	x = list(power_sampsizes.keys())
 	y = list(power_sampsizes.values())

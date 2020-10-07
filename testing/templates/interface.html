@@ -48,45 +48,28 @@
               }
               document.getElementById(tabName).style.display = "block";
               evt.currentTarget.className += " active";
-              greyOut(cur)
             }
             }
 
-// Gray out a button
-function greyOut(itemName) {
-//  document.getElementById("BtnTab1").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab2").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab3").style.backgroundColor = #eee;
-//  document.getElementById("BtnTab4").style.backgroundColor = #eee;
-    document.getElementById(itemName).style.backgroundColor = 'Gainsboro';
-}
+            function showdiv(divname, buttonname, description) {
+                if (document.getElementById(divname).style.display=="block"){
+                    document.getElementById(divname).style.display="none";
+                    document.getElementById(buttonname).innerHTML = "Show " + description;
+                } else {
+                    document.getElementById(divname).style.display="block";
+                    document.getElementById(buttonname).innerHTML = "Hide " + description;
+                }
+                return false;
+            }
+
+
 </script>
 
 
 <script>
-    // toggle the histogram div
-function showdiv() {
-    if (document.getElementById("hidden_graph").style.display=="block"){
-        document.getElementById("hidden_graph").style.display="none"
-        hist_button.innerHTML = "View Histograms"
-    } else {
-        document.getElementById("hidden_graph").style.display="block"
-        hist_button.innerHTML = "Hide Histograms"
-    }
-}
-function toggle_non_recommended(div_id, checkbox_id) {
-    if (!div_id) {
-        div_id = "non_recommended_div"
-    }
-    if (!checkbox_id) {
-        checkbox_id = "checkbox_show_non_recommended"
-    }
-    if (document.getElementById(checkbox_id).checked == true) {
-        document.getElementById(div_id).style.display = "block"
-    } else {
-        document.getElementById(div_id).style.display = "none"
-    }
-}
+
+
+
 
 function show_sig_boot_div(test_name){
     if (test_name && test_name.includes('boot') || test_name.startsWith('permutation')) {
@@ -108,23 +91,10 @@ function show_montecarlo_div() {
 
 
 
-// https://stackoverflow.com/questions/1631959/how-to-capture-the-browser-window-close-event
-
-var warn = true;
-
-//  $(window).on("beforeunload", function() {
-//     if (warn) {warn = true; return "Do you really want to close and clear all data?"}
-
-  //})
-
-  //$(window).on("unload", function() {
-  // location.href = {{ url_for('delete_data')}};
- // })
 
 
 
- }
-console.log("executed");
+
 
 </script>
 
@@ -137,20 +107,33 @@ console.log("executed");
 
         </div>
 
-
         <div class="roundpurplebottom interface"
-        style="background-color: #eee; padding: 16;   top: 0;
-               position: -webkit-sticky;
-               position: sticky;    z-index: 2; line-height: 2;">
+               style="background-color: #eee; padding: 5; top: 0;">
 
-                <span><button class="button1" onclick="window.location.href='{{ url_for('landing_page')}}';" >Home</button></span> |
-                <span><button class="button1" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</button></span> →
-                <span><button class="button1" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis </button></span> →
-                <span><button class="button1" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</button></span> →
-                <span><button class="button1" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</button></span> →
-                <span><button class="button1" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</button> </span>
-  | <span><button class="button1" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</button></span>
-        </div>
+
+             <a class="button1 possible" href="{{ url_for('home') }}">Home</a>  |
+                    <a class="button1 possible" href="{{ url_for('ppa') }}">Prospective Power Analysis</a> |
+                     <a class="button1 current" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
+  </div>
+
+
+</div>
+<div class="roundpurplebottom interface"
+style="background-color: #eee; padding: 5;   top: 0;
+       position: -webkit-sticky;
+       position: sticky;    z-index: 2;">
+              <div > <a class="button1 completed" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
+               <a class="button1 completed" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
+               <a class="button1 current" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
+                <a class="button1 possible" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a> →
+               <a class="button1 greyed" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</a> →
+  <a class="button1 possible" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
+
+  <style>.arrow{font-size: 1.5em;}</style>
+  </div>
+    </div>
+
+
 
     <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
 
@@ -176,21 +159,23 @@ console.log("executed");
                     <form action="/upload" class="form-horizontal" enctype="multipart/form-data" method="post">
 
     <p> System file:
-<br>
+<br><br>
                         <!-- onchange="pressed()" -->
                     <input type="file" id="data_file"
                            onchange="checkFileSize()"
                            name="data_file" style="display:none;" {% if error_str %}required{% endif %}/>
                     <!-- todo: make a {file_error} variable if no file found -->
                     <!-- <button class="button1 interface"> -->
-                    <a href="#" class="button1 interface"><label for="data_file">Upload</label></a>
+                    <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
                     <!-- </button> -->
                     <label id="fileLabel">{{file_uploaded}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     </p>
 
 
+
+
   <p>   Configuration file (optional):
-<br>
+<br><br>
                     <input type="file" id="config_file"
                            onchange="checkConfigFile()"
                            name="config_file" style="display:none"/>
@@ -200,7 +185,7 @@ console.log("executed");
 
 
                     <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
-                            name="submit" type=submit class="button1 interface" required>Submit File</button>
+                            name="submit" type=submit class="interface" required>Submit File</button>
 
                     </form>
         </div>
@@ -251,6 +236,12 @@ and test normality.</p>
               <br>
                     \( \alpha = \) <input id="normality_alpha" name="normality_alpha" type="number" step="0.001" {% if normality_alpha %} value="{{ normality_alpha }}" {% else %}value="0.05" {% endif %} class="form-control input-md">
 </p>
+
+
+
+
+
+
                     <!-- Data Analysis Submit Button -->
 
                     <input type="hidden" id="da_hidden" value="hidden101">
@@ -259,7 +250,7 @@ and test normality.</p>
                             onclick="warn = false;
                             console.log(warn); max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
                             document.getElementById('loading').style.display='block';" name="submit" type=submit
-                            class="button1 interface">Run</button>
+                            class="interface">Run</button>
 
                     <!-- Button for JS script-->
                     <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
@@ -295,9 +286,11 @@ and test normality.</p>
                 {% endif %}
 
                 <!-- HISTOGRAM Images -->
-                <p> {% if hist_score1_file %}
-                <button id="hist_button" class="button1 interface" onclick="showdiv()">View Histograms</button> {% endif %} </p>
-                <div class="hiddendiv" id="hidden_graph">
+                {% if hist_score1_file %}
+                <p><button id="hist_button" class="interface" onclick="showdiv('hidden_graph', 'hist_button', 'Histograms'); return false;">Show Histograms</button></p>
+                {% endif %}
+
+                <div style="display:none;" id="hidden_graph">
 
                     <!-- new way -->
                     {% if hist_score1_file %}
@@ -324,7 +317,7 @@ and test normality.</p>
 
                     <tr>
                         <td>Skewness</td>
-                        <td>The skewness measure &gamma; is {{ skewness_gamma }}.
+                        <td>The skewness measure \( \gamma \) is {{ skewness_gamma }}.
                             <!-- {% if mean_or_median == 'median' %} {% endif %} -->
                             This means the data distribution is {% if skewness_gamma > 1 %} highly skewed {% elif skewness_gamma > 0.5 %} moderately skewed {% else %} roughly symmetric{% endif %}.
                         </td>
@@ -342,7 +335,7 @@ and test normality.</p>
                 <h3 id=sigtest_heading align='left'>
                 {{ sigtest_heading }}</h3>
 
-                <p>The folllowing tests are appropriate and preferred:<br><br> {% if recommended_tests|length %}</pS>
+                <p>The following tests are appropriate and preferred:</p> {% if recommended_tests|length %}
                 <table border=1>
                     <col style="width:140px">
 
@@ -354,7 +347,7 @@ and test normality.</p>
                     {% for tuple in recommended_tests %}
                     <tr>
                         <td>
-                            {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                            {% if tuple[0]=='t' %}Student's \(t\){% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
                         </td>
                         <td>{{ tuple[1] }}</td>
                     </tr>
@@ -363,12 +356,19 @@ and test normality.</p>
                 <!-- End Recommended Tests Table -->
                 {% endif %}
 
+
+<p> <button id="npst_button" class="interface" onclick="showdiv('non_preferred_div_da', 'npst_button', 'Less-Preferred Significance Tests'); return false;">Show Less-Preferred Significance Tests</button></p>
+
+
+
+
+
                 <div id="non_preferred_div_da" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
-                    <br>
+
 
                     <h3>Appropriate but Non-Preferred Tests</h3>
 
-                    <p>{% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:</p>
+                  {% if not_preferred_tests|length %} <p>The following tests are appropriate but not preferred:</p>
                     <table border=1>
                         <col style="width:140px">
 
@@ -380,19 +380,26 @@ and test normality.</p>
                         {% for tuple in not_preferred_tests %}
                         <tr>
                             <td>
-                                {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                                {% if tuple[0]=='t' %} Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
                             </td>
                             <td>{{ tuple[1] }}</td>
                         </tr>
                         {% endfor %}
                     </table>
                     <!-- End Non-Preferred Tests Table -->
-                    {% else %} There are no tests in this category.<br><br> {% endif %}
+                    {% else %} <p>There are no tests in this category.</p> {% endif %}
                 </div>
+
+
+
+<p> <button id="ist_button" class="interface" onclick="showdiv('non_recommended_div_da', 'ist_button', 'Inappropriate Significance Tests'); return false;">Show Inappropriate Significance Tests</button></p>
+
+
+
                 <div id="non_recommended_div_da" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
 
 
-                    <h3>Inappropriate Tests</h3> {% if not_recommended_tests|length %} The following tests are inappropriate and not recommended:
+                    <h3>Inappropriate Tests</h3> <p>{% if not_recommended_tests|length %} The following tests are inappropriate and not recommended: </p>
                     <table border=1>
                         <col style="width:140px">
 
@@ -404,31 +411,16 @@ and test normality.</p>
                         {% for tuple in not_recommended_tests %}
                         <tr>
                             <td>
-                                {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                                {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
                             </td>
                             <td>{{ tuple[1] }}</td>
                         </tr>
                         {% endfor %}
                     </table>
                     <!-- End Non-Recommended Tests Table -->
-                    {% else %} There are no inappropriate tests.<br><br> {% endif %}
+                    {% else %} <p>There are no inappropriate tests.</p> {% endif %}
                 </div>
 
-                <div class="interface">
-                <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_da" onclick="toggle_non_recommended('non_preferred_div_da',
-                           'checkbox_show_non_preferred_da')"> List less-preferred significance tests.
-                <input type="checkbox"  name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_da" onclick="toggle_non_recommended('non_recommended_div_da',
-                           'checkbox_show_non_recommended_da')"> List inappropriate significance tests.
-                           </div>
-                <!-- (Bulleted list example) -->
-                <!--
-                       The following tests are recommended:
-                       <ul>
-                         {% for name in recommended_tests %}
-                         <li> {{ name }} (Reason: {{ test_reason }})</li>
-                         {% endfor %}
-                       </ul>
-                       -->
 
             </div>
             <!-- end round green (data analysis) -->
@@ -444,83 +436,37 @@ and test normality.</p>
 
               <h3>Significance Testing</h3>
 
-              <p>Using two mutually exclusive hypotheses:
-              the null hypothesis \( H_0 \) and the alternative \( H_1 \). For
-              comparing two NLP systems, usually a (paired)
-              two-sample testing is used, which can be reduced
-              to a one-sample testing by using pairwise difference. NLPStatTest currently only considers
-              one sample testing cases for numerical data, where
-              i.i.d. within sample is assumed, with H0 being the
-              chosen test statistic T (mean or median) is 0.
-              To run a statistical significance test, users first
-              determine the test statistic T (mean or median) and
-              a significance test based on data analysis results
-              (e.g., the sample skewness estimate and normality
-              test results). Then users choose the significance
-              level α, which is often set to 0.05 or 0.01 in the
-              NLP field. NLPStatTest will then calculate pvalue and reject H0 if and only if p-value < α.
-              2.2.3 Effect Size Estimation
-              In most experimental NLP papers where statistical significance testing is employed, the p-value is
-              the sole reported quantity. However, the p-value
-              is often misused and misinterpreted. For instance,
-              statistical significance is easily conflated with practical significance; as a result, NLP researchers often
-              run statistical significance tests to show that the performances of two NLP systems are different (i.e.,
-              statistical significance), without measuring the degree or the importance of such a difference (i.e.,
-              practical significance).
-              Cohen (1990) noted “the null hypothesis, if taken
-              literally, is always false in the real world.” For instance, the evaluation metric values (e.g., F-scores)
-              of two NLP systems on a test set are almost never
-              exactly the same; thus, H0, which says that two
-              systems perform equally, is (almost) always false.
-              When H0 is false, the p-value will eventually approach zero in large samples (Lin et al., 2013).
-              In other words, no matter how tiny the system
-              performance difference is, there is always a large
-              enough dataset on which the difference is statistically significant. Therefore, statistical significance
-              is markedly different from practical significance.
-              One way to measure practical significance is
-              by estimating effect size, which is defined as the
-              degree to which the ‘phenomenon’ is present in
-              the population, or the degree to which the null
-              hypothesis is false (Cohen, 1994). While the need
-              to estimate and report effect size has long been
-              recognized in other fields (Tomczak and Tomczak,
-              2014), the same is not true in the NLP field. We
-              include several methods for estimating effect size
-              in NLPStatTest (see §3.3).</p>
+
 
 
 
                 <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
-                    <!-- 3 alternatives, less, greater, two sided -->
 
-                    <p>Choose the alternative hypothesis </p>
-                    <!-- u1 < u2 -->
-                    <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> \( \mu_1 - \mu_2 < \delta \) <div class="tooltip interface">?
-                        <span class="tooltiptext">The alternative hypothesis is that the difference between systems is less than &delta;.</span>
-            </div> <br>
-            <!-- u1 > u2 -->
-            <input type="radio" name="alternative" id="alternative_greater" value="greater" {% if alternative=='greater' %}checked {% endif %}> \( \mu_1 - \mu_2 > \delta \)
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The alternative hypothesis is that the difference between systems is greater than &delta;.</span>
-            </div> <br>
-            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> \( \mu_1 - \mu_2 \neq \delta \)
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The alternative hypothesis is that the difference between
-                        the first and second system is not equal to &delta;.</span>
-            </div>
-            <br><br>
-            <!-- Mu -->
 
-            Threshold &delta;:
-            <div class="tooltip interface">?
-                <span class="tooltiptext">The threshold &delta; for difference between the systems.</span>
-            </div>
-            <div class="hide-arrows">
-                <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}" value="{{ mu }}" {% else %} value=0.0 {% endif %} class="form-control" step="any" style="-webkit-appearance: none; margin:0;"> <br><br>
-                <!-- class="form-control input-md" -->
-            </div>
+                    <p>Choose the alternative hypothesis:
+    <br>
+                    <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> <abbr title="The alternative hypothesis is that the difference between systems is less than &delta;.">One-sided:</abbr> \( \mu_1 - \mu_2 < \delta \)
+
+            <br>
+
+            <input type="radio" name="alternative" id="alternative_greater" value="greater" {% if alternative=='greater' %}checked {% endif %}> <abbr title="The alternative hypothesis is that the difference between systems is greater than &delta;.">One-sided:</abbr>  \( \mu_1 - \mu_2 > \delta \)
+
+             <br>
+
+            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> <abbr title="The alternative hypothesis is that the difference between the first and second system is not equal to &delta;.">Two-sided:</abbr> \( \mu_1 - \mu_2 \neq \delta \)
+
+                      </p>
+
+
+          <p><abbr title="The threshold &delta; for difference between the systems.">Threshold</abbr>:
+      <br>
+
+              \( \delta = \) <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}" value="{{ mu }}" {% else %} value=0.0 {% endif %} class="form-control" step="any">
+              </p>
+
             <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
-            <b>Recommended Tests</b><br><br> {% if recommended_tests|length %}
+            <h3>Recommended Tests</h3> {% if recommended_tests|length %}
+
             <table border=1>
                 <col style="width:140px">
 
@@ -540,12 +486,15 @@ and test normality.</p>
                             <i>Note: The calculation may take 30 seconds or more for larger sets of data.</i> {% endif %}</td>
                 </tr>
                 {% endfor %}
-            </table> <br>
+            </table>
             <!-- End Recommended Tests Table -->
             {% endif %}
 
+  <p><button id="npdst_button" class="interface" onclick="showdiv('non_preferred_div_st', 'npdst_button', 'Non-Preferred Tests'); return false;">Show Non-Preferred Tests</button></p>
+
+
             <div id="non_preferred_div_st" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
-                <b>Appropriate but Non-Preferred Tests</b><br><br> {% if not_preferred_tests|length %} The folllowing tests are appropriate but not preferred:<br><br>
+                <h3>Appropriate but Non-Preferred Tests</h3> {% if not_preferred_tests|length %} <p>The following tests are appropriate but not preferred:</p>
                 <table border=1>
                     <col style="width:140px">
 
@@ -569,9 +518,13 @@ and test normality.</p>
                 <!-- End Non-Preferred Tests Table -->
                 {% else %} There are no tests in this category.<br><br> {% endif %}
             </div>
+
+  <p><button id="inapst_button" class="interface" onclick="showdiv('non_recommended_div_st', 'inapst_button', 'Inappropriate Tests'); return false;">Show Inappropriate Tests</button></p>
+
+
             <div id="non_recommended_div_st" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
-                <br>
-                <b>Inappropriate Tests</b><br><br> {% if not_recommended_tests|length %}
+
+                <h3>Inappropriate Tests</h3> {% if not_recommended_tests|length %}
                 <table border=1>
                     <col style="width:140px">
 
@@ -592,31 +545,22 @@ and test normality.</p>
                 <!-- End Non-Recommended Tests Table -->
                 {% else %} No tests fall into this category. <br><br> {% endif %}
             </div>
-<div class="interface">
-            <input type="checkbox" name="checkbox_show_non_preferred" {% if show_non_preferred %} checked {% endif %} id="checkbox_show_non_preferred_st" onclick="toggle_non_recommended('non_preferred_div_st',
-                           'checkbox_show_non_preferred_st')"> List less-preferred significance tests.
-            <input type="checkbox" name="checkbox_show_non_recommended" {% if show_non_recommended %} checked {% endif %} id="checkbox_show_non_recommended_st" onclick="toggle_non_recommended('non_recommended_div_st',
-                           'checkbox_show_non_recommended_st')"> List inappropriate significance tests.
-</div>
-            <br>
+
+
 
             <!-- SIGNIFICANCE alpha -->
 
-            Required significance level &alpha;:
-            <div class="tooltip interface">?
-                <span class="tooltiptext">Reject the null hypothesis if the p-value is less than this value.</span>
-            </div>
+        <p>Required <abbr title="Reject the null hypothesis if the p-value is less than this value.">significance level</abbr>:
 
-            <input id="significance_level" name="significance_level" type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
+<br>
+          \( \alpha =\)  <input id="significance_level" name="significance_level" type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"> </p>
 
-            <br><br>
             <!-- Bootstrap (for bootstrap and permutation tests) -->
             <div id="sig_boot_div" style="display: none">
                 Number of iterations for bootstrap or permutation significance tests:
                 <div class="tooltip interface">?<span class="tooltiptext">The number of iterations.</span></div>:
                 <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200">
                 <!-- todo: disable if not bootstrap -->
-                <br><br>
             </div>
             <!-- mu (for t-test and bootstrap) -->
             <!-- disable if not t or bootstrap (or disable altogether) -->
@@ -631,7 +575,7 @@ and test normality.</p>
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface button1' name="submit" >Run</button>
+            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -639,7 +583,7 @@ and test normality.</p>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenSignificanceTest">
             {% if sig_test_stat_val or CI%}
-            <b>Results</b><br><br>
+            <h3>Results</h3>
 
             <table border="1">
 
@@ -679,8 +623,7 @@ and test normality.</p>
             </table>
             {% endif %}
         </div>
-        <!-- End Significance Test results div -->
-        <h1></h1>
+
     </div>
     <!-- end Significance Results Tab -->
 
@@ -688,12 +631,13 @@ and test normality.</p>
 
         <div class="roundpurplebottom" style="position:relative;">
             <form id="frmEffectSize" action="/effectsize" class="form-horizontal" onsubmit="SubmitHandler('frmEffectSize')" enctype="multipart/form-data" method="post">
-                <b>Effect Size Estimator Options</b><br><br> Required significance level &alpha;:
-                <div class="tooltip interface">?
-                    <span class="tooltiptext">&alpha; for computing the confidence interval.</span>
-                </div>
-                <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1">
-                <!-- Effect Size list of tests -->
+
+                <h3>Effect Size Estimator Options</h3>
+
+                <p>Required significance level for confidence interval:
+        <br>
+                \( \alpha = \) <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"></p>
+
                 {% if effect_size_estimators|length %}
 
                 <table border=1 id="tblEffectEstimator">
@@ -715,24 +659,26 @@ and test normality.</p>
 
                 {% endif %}
 
-                <br><br>
 
                 <!-- effect size Submit Button -->
-                <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
+              <p>  <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface button1' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';">Run</button>
+                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';">Run</button></p>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
             </form>
+
         </div>
         <!-- end Effect Size purple input -->
 
+
         <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
-            <p></p>
+
             <!-- New table to make into estimator, value instead of est, desc: -->
             {% if estimator_value_list|length %}
-            <b>Results</b><br><br>
+            <h3>Results</h3>
+
             <table border=1 id="tblEffectEstimator">
 
                 <tr>
@@ -753,7 +699,6 @@ and test normality.</p>
             </table>
             {% endif %}
         </div>
-        <h1></h1>
     </div>
 
     <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">
@@ -762,46 +707,19 @@ and test normality.</p>
 
             <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group">
-                    <b>Retrospective power analysis:</b> this test involves plotting a power curve that shows how the statistical power increases as sample size increases.
-                    <!-- This test performs an analysis to measure
-                the power at evenly spaced increasing sample sizes. -->
-                    <ul>
-                        <li>For example, if you have 100 evaluation units, and want to take 5 power measurements, this test calculates the power for partitions of your data into 20, 40, 60, 80 and 100 evaluation units. At each of these sample sizes the test uses either the Monte Carlo or bootstrap method to run the specified number of iterations.</li>
-                        <li>The power analysis is done using either a bootstrap simulation or a Monte Carlo simulation. The Monte Carlo simulation is only available if your data has a normal distribution.</li>
-                    </ul>
+                    <h3>Retrospective Power Analysis</h3>
+                    <p>A power curve shows how the statistical power increases as sample size increases. For example, using 100 evaluation units with 5 power measurements, this test calculates the power for partitions of the data into 20, 40, 60, 80 and 100 evaluation units. At each of these sample sizes, the power analysis is done using either a bootstrap simulation or a Monte Carlo simulation. The Monte Carlo simulation is only available for normal data.</p>
 
-                    <p>
-                        <!--The evaluation unit size is {{ eval_unit_size }}, and the number of evaluation units is {{ num_eval_units }}.-->
-                        The largest number of power measurements you can make is the number of evaluation units in your data.</p>
-                    <!--
-                    Minimum sample size:
+                    <p><abbr title="  Specify the number of subsamples between the minimum and maximum number of evaluation units, at which to calculate power.">Number</abbr> of power measurements:
+                      <br>
+                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals" class="form-control input-md" {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %} ></p> <!-- min=1 max="50" -->
 
-                    <input id="min_sample_size" name="min_sample_size" type="number"
-                       placeholder="min" class="form-control input-md" value="1">
-                                    <div class="tooltip interface">?<span class="tooltiptext">"lower bound on number of samples (minimum number of evaluation units)"</span> </div>
-                <br/><br>
 
-                    <b>max ==imum sample size:</b>
+                    <p> Number of iterations at each sample size:
+        <br>
 
-                    <input id="max_sample_size" name="max_sample_size" type="number"
-                       placeholder="max" class="form-control input-md" value="{{ num_eval_units }}">
-                                    <div class="tooltip interface">?<span class="tooltiptext">
-                                        "upper bound on number of samples (max number of evaluation units)"</span> </div>
-                <br/><br> -->
-
-                    Number of power measurements:
-                    <!-- was number of intervals, # of subsamples, 20-ish -->
-                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals" class="form-control input-md" {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %} min=1 max="50">
-                    <div class="tooltip interface">?<span class="tooltiptext">
-                                      Specify the number of subsamples between the minimum and maximum number of evaluation units,
-                                        at which to calculate power.</span> </div>
-
-                    <br> <br> Iterations at each sample size:
-                    <!-- TODO: add required range like '1 to 200'-->
-
-                    <input id="iterations" name="power_iterations" type="number" placeholder="default" {% if power_iterations %}value="{{ power_iterations }}" {% else %}value="200" {% endif %} min="10" max="200" class="form-control input-md">
-                    <div class="tooltip interface">?<span class="tooltiptext">The number of bootstrap iterations at each sample size.</span></div>
-                    <br><br>
+                    <input id="iterations" name="power_iterations" type="number" placeholder="default" {% if power_iterations %}value="{{ power_iterations }}" {% else %}value="200" {% endif %}  class="form-control input-md"> </p>
+                    <!-- min="10" max="200"-->
 
                     <!-- TODO: Display advice that takes into account the
                      actual size of evaluation unit and the limits on min and max -->
@@ -818,7 +736,7 @@ and test normality.</p>
                     {% endif %}
                     <input type="hidden" name="target_pow_test_bootstrap" id="target_pow_test-bootstrap" value="bootstrap">
 
-                    <hr>
+
                     <!--
                                             <td>
                         {% if key=='t' %}Student t test
@@ -832,33 +750,40 @@ and test normality.</p>
                         -->
                     <div class="hiddendiv" id="power_boot_fields" {% if is_normal %}style="display:none" {% else %}style="display:block" {% endif %}>
 
-                        <b>Bootstrap Parameters</b><br><br> Significance test:<br> {% for sigtest in recommended_tests %}
+                        <h3>Bootstrap Parameters</h3>
+
+                        <p>Significance test:<br>
+
+                          {% for sigtest in recommended_tests %}
                         <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}" {% if sigtest[0]==sig_test_name %}checked="checked" {% endif %} required> {% if sigtest[0] == 't' %}Student t-test<br> {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br> {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br> {% elif sigtest[0]=='sign' %}Sign test<br> {% elif sigtest[0]=='permutation' %}Permutation<br> {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br> {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br> {% else %}{{ sigtest[0] }} {% endif %} {% endfor %}
-                        <br> Significance level &alpha;: <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01">
-                        <div class="tooltip interface">?
-                            <span class="tooltiptext">&alpha; value for significance test.</span></div>
-                        <br><br> Bootstrap Iterations:
-                        <input type="number" name="power_boot_B" {% if sig_boot_iteration %} value="{{ sig_boot_iteration }}" {% else %} value="200" {% endif %}>
-                        <div class="tooltip interface">?
-                            <span class="tooltiptext">Iterations for bootstrap significance test.</span></div>
+
+                        <p> Significance level:
+                          <br>
+                          \( \alpha = \) <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01"></p>
+
+
+
+                        <p>Iterations for bootstrap significance test:
+                          <br>
+                        <input type="number" name="power_boot_B" {% if sig_boot_iteration %} value="{{ sig_boot_iteration }}" {% else %} value="200" {% endif %}></p>
+
 
                     </div>
-                    <br>
+
                     <div class="hiddendiv" id="power_montecarlo_fields" style="display:none">
-                        <b>Monte Carlo Parameters:</b><br><br> &alpha;: <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01">
-                        <div class="tooltip interface">?
-                            <span class="tooltiptext">&alpha value for significance test.</span></div>
-                        <br><br>
+                        <p>Monte Carlo <abbr title="&alpha value for significance test.">Parameters:</abbr> <br>
+
+                     \( \alpha = \)   <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01"> </p>
+
 
                     </div>
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface button1' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
-            <br>
 
         </div>
 
@@ -868,7 +793,7 @@ and test normality.</p>
 
             <!-- Images -->
             {% if power_file %}
-            <b>Results</b><br><br>
+            <h3>Results</h3>
             <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
         </div>
     </div>
@@ -881,15 +806,15 @@ and test normality.</p>
 
 <h3>Downloads</h3>
 
-         <button class='interface button1 interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+         <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
-         <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
+         <button class="interface" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
 
-           <button class="interface button1" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
+           <button class="interface" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 
 <h3>Data Deletion</h3>
 
-<button class="interface button1"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+<button class="interface"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
 
 
 
