@@ -817,9 +817,11 @@ and test normality.</p>
 <script>
 function clear_cookies() {
 // https://www.geeksforgeeks.org/how-to-clear-all-cookies-using-javascript/
-document.cookie.split(';');
-    for (var i = 0; i < document.cookie.split(';').length; i++)
-    document.cookie = document.cookie.split(';')[i] + "=;expires=" + new Date(0).toUTCString();
+  for (var i = 0; i < document.cookie.split(';').length; i++){
+    if (document.cookie.split(';')[i].split('=')[0] != "dir_str") {
+     document.cookie = document.cookie.split(';')[i] + "=;expires=" + new Date(0).toUTCString();
+   } else {console.log("dir_str");}
+  }
 }
 </script>
 

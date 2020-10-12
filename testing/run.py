@@ -4,6 +4,7 @@ import io
 import yaml
 from flask import *
 from flask import render_template
+from flask import make_response
 
 from werkzeug.utils import secure_filename
 import os
@@ -1190,7 +1191,8 @@ def delete_data():
     zip_file = FOLDER + "/" + request.cookies.get("dir_str")
     os.system("rm -r " +  zip_file)
     os.system("rm -r " +  zip_file + ".zip")
-    return "Deleted! Thank you."
+    # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
+    return make_response(render_template("welcome.html")).set_cookie('dir_str', '', expires=0)
 
 
 if __name__ == "__main__":
