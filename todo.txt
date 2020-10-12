@@ -1,0 +1,74 @@
+Today:
+
+
+sample size should be integer for power analysis
+
+Meeting:
+pi for power?, power level abbr in depth
+citation format
+
+add effect size estimator checkbox back in
+text-based:
+flip third and fourth effect size estimators, make results have same order
+
+data analysis:
+
+Image
+recommended eu size (range)
+relationship between eu size and std dev.
+
+Effect size estimator:
+
+mean vs median (maybe add as tooltip, maybe add in description/ display normaility test resuts and tests chosen before)
+
+later:
+select sample file from list
+SPELL CHECK
+
+
+Jesse:
+
+
+Add direct download of zip file from server instead of github
+
+
+programming:
+
+fix hidden html in sigtest search for "?"
+check required submit button
+change delete file message, to the right of the delete button
+add upload green response div
+make hover nto work for unlcikable tabs/warn using colors on nlpstats
+!add inconsistency warning
+javascript infintie precision number fuinction onsubmit
+add paragrpah descripion to each tab
+
+
+Denise:
+
+Sample Data (optional) integrated into tab or on home (as link)
+error handling
+checking why config file message is not working
+submit button reproductions
+server stuff
+NO SUBMIT BUTTON SHOULD BREAK THE INTERFACE -- test all without an upload
+no internal server errors, only elegant errror handling
+
+Done:
+
+make the downloads work again
+clear cookies on delete
+delete on unload?
+add back loading div
+Add sentence about how to contact someone
+Add paragraph: abstract/other paragrpah from paper
+Break about into bullet list instead of paragraph
+remove wording about previous session
+improve local storage show tab ppa
+number tracking and delteing rules?
+Upload config
+open to first div
+simplft js
+cleanup html,
+two layer tab interface, like java docs
+Edit messages in main and run source code
