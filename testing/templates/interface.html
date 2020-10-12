@@ -814,7 +814,16 @@ and test normality.</p>
 
 <h3>Data Deletion</h3>
 
-<button class="interface"  onclick=" window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+<script>
+function clear_cookies() {
+// https://www.geeksforgeeks.org/how-to-clear-all-cookies-using-javascript/
+document.cookie.split(';'); 
+    for (var i = 0; i < document.cookie.split(';').length; i++)
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+}
+</script>
+
+<button class="interface"  onclick="clear_cookies(); window.location.href='{{ url_for('.delete_data') }}'">Delete User Data</button>
 
 
 
