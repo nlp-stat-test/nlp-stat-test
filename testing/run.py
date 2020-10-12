@@ -1188,11 +1188,17 @@ def download_zip():
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/delete')
 def delete_data():
-    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
-    os.system("rm -r " +  zip_file)
-    os.system("rm -r " +  zip_file + ".zip")
+    if request.cookies.get("dir_str"):
+      zip_file = FOLDER + "/" + request.cookies.get("dir_str")
+      os.system("rm -r " +  zip_file)
+      os.system("rm -r " +  zip_file + ".zip")
+      print("deleted " + zip_file)
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
-    return make_response(render_template("welcome.html")).set_cookie('dir_str', '', expires=0)
+    rendered = render_template("welcome.html")
+    resp = make_response(rendered)
+    resp.set_cookie("dir_str", '')
+    return resp
+
 
 
 if __name__ == "__main__":
