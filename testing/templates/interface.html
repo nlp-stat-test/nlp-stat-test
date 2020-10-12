@@ -185,7 +185,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                         <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
                         <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label>
                         <br><br>
-                    <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';"
+                    <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); "
                             name="submit" type=submit class="interface" required>Submit File</button>
 
                     </form>
@@ -248,9 +248,8 @@ and test normality.</p>
                     <input type="hidden" id="da_hidden" value="hidden101">
 
                     <button id="submit"
-                            onclick="warn = false;
-                            console.log(warn); max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
-                            document.getElementById('loading').style.display='block';" name="submit" type=submit
+                            onclick="document.getElementById('loading').style.display='block'; max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
+                          " name="submit" type=submit
                             class="interface">Run</button>
 
                     <!-- Button for JS script-->
@@ -576,7 +575,7 @@ and test normality.</p>
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="warn = false;  console.log(warn); max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" class='interface' name="submit" >Run</button>
+            <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max);" class='interface' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -664,7 +663,7 @@ and test normality.</p>
                 <!-- effect size Submit Button -->
               <p>  <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="GetSelectedCheckboxes('tblEffectEstimator'); warn = false;  console.log(warn); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';">Run</button></p>
+                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max);">Run</button></p>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -781,7 +780,7 @@ and test normality.</p>
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="warn = false;  console.log(warn); max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); document.getElementById('loading').style.display='block';" onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="document.getElementById('loading').style.display='block'; max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); " onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -809,13 +808,13 @@ and test normality.</p>
 
          <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
-         <button class="interface" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
+         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
 
-           <button class="interface" onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
+           <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 
 <h3>Data Deletion</h3>
 
-<button class="interface"  onclick="warn = false; console.log(warn); window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
+<button class="interface"  onclick=" window.location.href='{{ url_for('.delete_data') }}'">Delete Data From Server</button>
 
 
 
@@ -895,8 +894,8 @@ and test normality.</p>
               console.log('in hideGreenDivs')
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
-                  console.log(lastTabClicked + 'was POSTED')
-                  warn = true;  console.log(warn);
+                  console.log(lastTabClicked + 'was POSTED');
+
                   document.getElementById('loading').style.display='none';
                   for (i = 0; i < greenDivs.length; i++) {
                       switch (lastTabClicked) {
