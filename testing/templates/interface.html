@@ -185,7 +185,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                         <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
                         <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label>
                         <br><br>
-                    <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max); "
+                    <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); "
                             name="submit" type=submit class="interface" required>Submit File</button>
 
                     </form>
@@ -248,7 +248,7 @@ and test normality.</p>
                     <input type="hidden" id="da_hidden" value="hidden101">
 
                     <button id="submit"
-                            onclick="document.getElementById('loading').style.display='block'; max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max);
+                            onclick="document.getElementById('loading').style.display='block'; max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);
                           " name="submit" type=submit
                             class="interface">Run</button>
 
@@ -575,7 +575,7 @@ and test normality.</p>
             <!-- Is type=submit implied by class="btn btn-success" ? -->
             <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
 
-            <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max);" class='interface' name="submit" >Run</button>
+            <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);" class='interface' name="submit" >Run</button>
 
             </form>
             <!-- End Significance Test form -->
@@ -663,7 +663,7 @@ and test normality.</p>
                 <!-- effect size Submit Button -->
               <p>  <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max);">Run</button></p>
+                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">Run</button></p>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -780,7 +780,7 @@ and test normality.</p>
 
                     <!-- Power Submit Button -->
 
-                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="document.getElementById('loading').style.display='block'; max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max); " onsubmit="pa_submit_func()">Run</button>
+                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="document.getElementById('loading').style.display='block'; max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); " onsubmit="pa_submit_func()">Run</button>
 
                 </div>
             </form>
@@ -817,13 +817,13 @@ and test normality.</p>
 <script>
 function clear_cookies() {
 // https://www.geeksforgeeks.org/how-to-clear-all-cookies-using-javascript/
-document.cookie.split(';'); 
+document.cookie.split(';');
     for (var i = 0; i < document.cookie.split(';').length; i++)
-    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+    document.cookie = document.cookie.split(';')[i] + "=;expires=" + new Date(0).toUTCString();
 }
 </script>
 
-<button class="interface"  onclick="clear_cookies(); window.location.href='{{ url_for('.delete_data') }}'">Delete User Data</button>
+<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}'">Delete User Data</button>
 
 
 
