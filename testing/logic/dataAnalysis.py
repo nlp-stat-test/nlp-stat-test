@@ -63,26 +63,25 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
 		os.makedirs(output_dir)
 
 	# plotting
-    diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
-    plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
-    plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
-    plt.legend(loc='upper right')
-    plt.title('Relationship between EU Size and Standard Deviation')
-    plt.xlabel('EU Size')
-    plt.ylabel('Standard Deviation')
-    plt.savefig(output_dir+'/eu_size_std_dev.svg')
-
-    # choosing EU
-    diff_chosen = []
-    eu_chosen = []
-    sd_chosen = []
-    for i in range(0,len(diff)):
-        if abs(diff[i])<epsilon:
+	diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
+	plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
+	plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
+	plt.legend(loc='upper right')
+	plt.title('Relationship between EU Size and Standard Deviation')
+	plt.xlabel('EU Size')
+	plt.ylabel('Standard Deviation')
+	plt.savefig(output_dir+'/eu_size_std_dev.svg')
+	# choosing EU
+	diff_chosen = []
+	eu_chosen = []
+	sd_chosen = []
+	for i in range(0,len(diff)):
+          if abs(diff[i])<epsilon:
             diff_chosen.append(diff[i])
             eu_chosen.append(eu_sizes[i+1])
             sd_chosen.append(round(sd[i+1],5))
 
-    return([eu_chosen[:10],sd_chosen[:10]]) # output first 10 choices
+	return([eu_chosen[:10],sd_chosen[:10]]) # output first 10 choices
 
 
 
