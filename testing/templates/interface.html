@@ -571,19 +571,12 @@ and test normality.</p>
 
             <!-- Bootstrap (for bootstrap and permutation tests) -->
             <div id="sig_boot_div" style="display: none">
-                Number of iterations for bootstrap or permutation significance tests:
-                <div class="tooltip interface">?<span class="tooltiptext">The number of iterations.</span></div>:
-                <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200">
+                <p>Number of iterations for bootstrap or permutation significance tests:
+
+                <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200"></p>
                 <!-- todo: disable if not bootstrap -->
             </div>
-            <!-- mu (for t-test and bootstrap) -->
-            <!-- disable if not t or bootstrap (or disable altogether) -->
-            <!--
-                Expected mean difference for null hypothesis &mu;:
-                <div class="tooltip interface">?<span class="tooltiptext">The expected value of the mean for the null hypothesis.</span></div>:
-                <input id="mu" name="mu" type="number" value="0">   -->
 
-            <!-- Significance: Submit Button -->
 
             <input type="hidden" id="sa_hidden" value="hidden101">
             <!-- Is type=submit implied by class="btn btn-success" ? -->
@@ -738,17 +731,17 @@ and test normality.</p>
                     <!-- TODO: Display advice that takes into account the
                      actual size of evaluation unit and the limits on min and max -->
 
-                    {% if is_normal %} Method of power analysis:
-                    <input type="radio" name="target_pow_test" id="target_pow_test-1" value='montecarlo' onclick="show_montecarlo_div()" checked="checked" required> Monte Carlo
-                    <div class="tooltip interface">?
-                        <span class="tooltiptext">Conduct retrospective power analysis using Monte Carlo simulation.</span></div>
+                    {% if is_normal %}   <p>Method of power analysis:
+                  <br>
+                      <input type="radio" name="target_pow_test" id="target_pow_test-1" value='montecarlo' onclick="show_montecarlo_div()" checked="checked" required>
+                    <abbr title="Conduct retrospective power analysis using Monte Carlo simulation.">Monte Carlo</abbr>
 
-                    <input type="radio" name="target_pow_test" id="target_pow_test-2" value='bootstrap' onclick="show_bootstrap_div()" {% if power_test=='bootstrap' %}checked{% endif %}> Bootstrap
-                    <div class="tooltip interface">?
-                        <!-- todo: get significance tests -->
-                        <span class="tooltiptext">Conduct retrospective power analysis using bootstrap simulation.</span></div>
+<br>
+                    <input type="radio" name="target_pow_test" id="target_pow_test-2" value='bootstrap' onclick="show_bootstrap_div()" {% if power_test=='bootstrap' %}checked{% endif %}>
+                    <abbr title="Conduct retrospective power analysis using bootstrap simulation.">Bootstrap</abbr>
                     {% endif %}
                     <input type="hidden" name="target_pow_test_bootstrap" id="target_pow_test-bootstrap" value="bootstrap">
+                  </p>
 
 
                     <!--
