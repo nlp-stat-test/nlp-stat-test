@@ -719,7 +719,7 @@ and test normality.</p>
 
                     <p><abbr title="  Specify the number of subsamples between the minimum and maximum number of evaluation units, at which to calculate power.">Number</abbr> of power measurements:
                       <br>
-                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals" class="form-control input-md" {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %} ></p> <!-- min=1 max="50" -->
+                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals" class="form-control input-md" step="1" {% if power_num_intervals %} value="{{ power_num_intervals }}" {% else %} value="20" {% endif %} ></p> <!-- min=1 max="50" -->
 
 
                     <p> Number of iterations at each sample size:
