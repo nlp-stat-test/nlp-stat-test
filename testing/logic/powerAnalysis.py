@@ -20,7 +20,8 @@ plt.rcParams['svg.fonttype'] = 'none'
 def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_name, B, alpha, mu, output_dir, alternative="two-sided", boot_B = None):
 
 	def get_sim_sample_sizes(z, num_of_subsample):
-		partitions = np.array_split(range(len(z)), num_of_subsample)
+		# split array of [1, 2, 3, ..., len(z)] into num_of_subsamples
+		partitions = np.array_split(range(1, len(z)+1), num_of_subsample)
 		sample_sizes = []
 		for i in partitions:
 			sample_sizes.append(i[-1])
@@ -46,7 +47,12 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 					for j in range(0,len(z_b)):
 						z_b_dict[j] = z_b[j]
 
-					(test_stats, pval, CI, rejection) = logic.sigTesting.run_sig_test("t", z_b_dict, alpha, boot_B, mu, alternative) # TO-FIX add CI
+					(test_stats, pval, CI, rejection) = logic.sigTesting.run_sig_test("t",
+																					  z_b_dict,
+																					  alpha,
+																					  boot_B,
+																					  mu,
+																					  alternative) # TO-FIX add CI
 					if rejection:
 						count+=1
 				power_sampsizes[i] = float(count)/B
