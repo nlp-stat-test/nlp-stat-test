@@ -955,7 +955,13 @@ def power(debug=True):
             boot_B = 500
         print('In PowerAnalysis: sig_test_name={} alpha={} mu={} bootB={} pow_iter={}'.format(
             sig_test_name, alpha, mu, boot_B, power_iterations))
-        print("score dif: {}".format(score_dif))
+        num_scores = len(score_dif)
+
+        if (num_scores/power_num_intervals < 2):
+            power_num_intervals = num_scores // 2
+            print("len(score)=={} \npower_num_intervals changed to {}".format(num_scores, power_num_intervals))
+            # todo: create warning message to display in interface
+
         dir_str = request.cookies.get("dir_str")
         pow_sampsizes = post_power_analysis(sig_test_name, power_test, score_dif, power_num_intervals,
                                             dist_name='normal',  # todo: handle not normal
