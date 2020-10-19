@@ -98,7 +98,7 @@ function show_montecarlo_div() {
 
 </script>
 
-<body style="font-family: sans;" onload="upload_check(); console.log('Max ' + localStorage.getItem('max_tab'));">
+<body style="font-family: sans;" onload="upload_check(); if (localStorage.getItem('maxtab') === null) {max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);}">
 
 
     <div margin: 100 auto;>
@@ -183,23 +183,25 @@ style="background-color: #eee; padding: 5;   top: 0;
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
                         <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
-                        <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label>
-                        <br><br>
+                        <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label></p>
+
+
                     <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); localStorage.setItem('', '1');"
                             name="submit" type=submit class="interface" required>Submit File</button>
 
                     </form>
         </div>
-<script>
-function upload_check(){
-        if (Number(localStorage.getItem("max_tab")) >= 1) {
-            document.getElementById('uploadresult').style.display = "block";
-        } else {
-              document.getElementById('uploadresult').style.display = "none";
-            }
-            return false;
-        }
-</script>
+
+        <script>
+        function upload_check(){
+                if (Number(localStorage.getItem("max_tab")) >= 1) {
+                    document.getElementById('uploadresult').style.display = "block";
+                } else {
+                      document.getElementById('uploadresult').style.display = "none";
+                    }
+                    return false;
+                }
+        </script>
 
   <div class="roundgreen"  id="uploadresult">
     The file has been uploaded. Move to the "Data Analysis" tab.<b>{{ error_str }}</b>
@@ -492,7 +494,7 @@ and test normality.</p>
                 {% for tuple in recommended_tests %}
                 <tr>
                     <td>
-                        <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                        <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student's \( t \) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                     </td>
                     <td>{{ tuple[1] }}{% if tuple[0]=='wilcoxon' %} <br>
                             <input type="checkbox" name="checkbox_wilcoxon_ci1"
@@ -520,7 +522,7 @@ and test normality.</p>
                     {% for tuple in not_preferred_tests %}
                     <tr>
                         <td>
-                            <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                            <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                         </td>
                         <td>{{ tuple[1] }}{% if tuple[0]=='wilcoxon' %} <br>
                             <input type="checkbox" name="checkbox_wilcoxon_ci2"
@@ -550,7 +552,7 @@ and test normality.</p>
                     {% for tuple in not_recommended_tests %}
                     <tr>
                         <td>
-                            {% if tuple[0]=='t' %}Student t test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                            {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
                         </td>
                         <td>{{ tuple[1] }} </td>
                     </tr>
@@ -564,7 +566,7 @@ and test normality.</p>
 
             <!-- SIGNIFICANCE alpha -->
 
-        <p>Required <abbr title="Reject the null hypothesis if the p-value is less than this value.">significance level</abbr>:
+        <p>Required <abbr title="Reject the null hypothesis if the 𝘱-value is less than this value.">significance level</abbr>:
 
 <br>
           \( \alpha =\)  <input id="significance_level" name="significance_level" type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"> </p>
@@ -596,9 +598,9 @@ and test normality.</p>
 
                 {% if sig_test_name %}
                 <tr>
-                    <th>significance test</th>
+                    <th>Significance test</th>
                     <td>
-                        {% if sig_test_name=='t' %}Student t test {% elif sig_test_name=='bootstrap' %}Bootstrap {% elif sig_test_name=='permutation' %}Permutation {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test {% elif sig_test_name=='sign' %}Sign test {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median) {% elif sig_test_name=='permutation_med' %}Permutation (median) {% else %}{{ sig_test_name}} {% endif %}
+                        {% if sig_test_name=='t' %}Student's \(t\) test {% elif sig_test_name=='bootstrap' %}Bootstrap {% elif sig_test_name=='permutation' %}Permutation {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test {% elif sig_test_name=='sign' %}Sign test {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median) {% elif sig_test_name=='permutation_med' %}Permutation (median) {% else %}{{ sig_test_name}} {% endif %}
                     </td>
                 </tr>
                 {% endif %}
@@ -613,18 +615,18 @@ and test normality.</p>
                 <!-- Show CI only if it was calculated -->
                 {% if CI %}
                 <tr>
-                    <th> confidence interval
+                    <th> Confidence interval
                     </th>
                     <td>{{ CI }} <i>(based on {{ mean_or_median }})</i></td>
                 </tr>
                 {% endif %}
                 <tr>
-                    <th>p-value</th>
+                    <th><i>p</i>-value</th>
                     <td> {{ pval }}
                     </td>
                 </tr>
                 <tr>
-                    <th>reject H0</th>
+                    <th>Reject \(H_0\)</th>
                     <td>{% if rejectH0 %}Yes{% else %}No{% endif %}</td>
                 </tr>
             </table>
@@ -657,7 +659,7 @@ and test normality.</p>
                     {% for key, value in effect_size_estimators.items() %}
                     <tr>
                         <td>
-                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='hl' %}Hodges-Lehmann Estimator {% elif key=='wilcoxonr' %}Wilcoxon r {% elif key=='hedgesg' %}Hedges' g {% elif key=='cohend' %}Cohen's d {% else %}{{ key }}{% endif %}
+                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='hl' %}Hodges-Lehmann {% elif key=='wilcoxonr' %}Wilcoxon \( r \) {% elif key=='hedgesg' %}Hedges' \( g \) {% elif key=='cohend' %}Cohen's \( d \) {% else %}{{ key }}{% endif %}
                         </td>
                         <td>{{ value }}</td>
                     </tr>
@@ -668,9 +670,9 @@ and test normality.</p>
 
 
                 <!-- effect size Submit Button -->
-              <p>  <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
+              <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
-                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">Run</button></p>
+                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">Run</button>
                 <!-- Button for JS script-->
                 <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
 
@@ -697,7 +699,7 @@ and test normality.</p>
                 {% for key_value_tuple in estimator_value_list %}
                 <tr>
                     <td>
-                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann Estimator {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon r {% elif key_value_tuple[0]=='hedgesg' %}Hedges' g {% elif key_value_tuple[0]=='cohend' %}Cohen's d {% else %}{{ key_value_tuple[0] }}{% endif %}
+                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon \( r \) {% elif key_value_tuple[0]=='hedgesg' %}Hedges' \( g \) {% elif key_value_tuple[0]=='cohend' %}Cohen's \( d \) {% else %}{{ key_value_tuple[0] }}{% endif %}
                     </td>
                     <td>{{ key_value_tuple[1][0] }}</td>
                     <td>{{ key_value_tuple[1][1] }}</td>
@@ -767,7 +769,7 @@ and test normality.</p>
                         <p>Significance test:<br>
 
                           {% for sigtest in recommended_tests %}
-                        <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}" {% if sigtest[0]==sig_test_name %}checked="checked" {% endif %} required> {% if sigtest[0] == 't' %}Student t-test<br> {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br> {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br> {% elif sigtest[0]=='sign' %}Sign test<br> {% elif sigtest[0]=='permutation' %}Permutation<br> {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br> {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br> {% else %}{{ sigtest[0] }} {% endif %} {% endfor %}
+                        <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}" {% if sigtest[0]==sig_test_name %}checked="checked" {% endif %} required> {% if sigtest[0] == 't' %}Student's \(t\)-test<br> {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br> {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br> {% elif sigtest[0]=='sign' %}Sign test<br> {% elif sigtest[0]=='permutation' %}Permutation<br> {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br> {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br> {% else %}{{ sigtest[0] }} {% endif %} {% endfor %}
 
                         <p> Significance level:
                           <br>
