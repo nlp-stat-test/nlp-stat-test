@@ -204,6 +204,8 @@ style="background-color: #eee; padding: 5;   top: 0;
         </script>
 
   <div class="roundgreen"  id="uploadresult">
+
+    <h3>File Validation Results</h3>
       <p>The file has been uploaded. Move to the "Data Analysis" tab.<b>{{ error_str }}</b></p>
 </div>
 
@@ -453,7 +455,16 @@ and test normality.</p>
               <h3>Significance Testing</h3>
 
 
-
+<p>NLPStatTest considers
+one sample testing cases for numerical data, where
+i.i.d. within sample is assumed, with \(H_0\) being the
+chosen test statistic \(T\) (mean or median) is 0. To run a statistical significance test, first
+determine the test statistic \(T\) (mean or median) and
+a significance test based on data analysis results
+(e.g., the sample skewness estimate and normality
+test results). Then choose the significance
+level \( \alpha \), which is often set to 0.05 or 0.01 in the
+NLP field</p>
 
 
                 <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
@@ -643,6 +654,13 @@ and test normality.</p>
 
                 <h3>Effect Size Estimator Options</h3>
 
+<p>Statistical significance
+is markedly different from practical significance.
+One way to measure practical significance is
+by estimating effect size, which is defined as the
+degree to which the 'phenomenon' is present in
+the population, or the degree to which the null
+hypothesis is false (Cohen, 1994).</p>
                 <p>Required significance level for confidence interval:
         <br>
                 \( \alpha = \) <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"></p>
@@ -820,6 +838,7 @@ and test normality.</p>
 
 <h3>Downloads</h3>
 
+<p>These buttons can be clicked to download data from your session or print your report. The report can also be printed to PDF.</p>
          <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
          <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
@@ -827,6 +846,8 @@ and test normality.</p>
            <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 
 <h3>Data Deletion</h3>
+
+<p>This button deletes your data from our server and resets the session.</p>
 
 <script>
 function clear_cookies() {
