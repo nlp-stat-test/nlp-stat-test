@@ -29,6 +29,7 @@ body {
 .header { 
     text-align: center;
     font-variant: small-caps;
+        font-family: Sans-Serif;
 }
 
 .top_bar { 
