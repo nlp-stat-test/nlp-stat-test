@@ -18,7 +18,31 @@ tr:nth-child(even) {
     }
 
 body {
-    font-family: Sans-Serif;
+    font-family: 'arial', sans-serif;
+}
+
+p {
+    font-family: 'arial', sans-serif;
+}
+
+h1 {
+    font-family: 'arial', sans-serif;
+}
+
+h2 {
+    font-family: 'arial', sans-serif;
+}
+
+h3 {
+    font-family: 'arial', sans-serif;
+}
+
+li {
+    font-family: 'arial', sans-serif;
+}
+
+table {
+    font-family: 'arial', Sans-Serif;
 }
 /* General Formatting */
 
@@ -29,7 +53,7 @@ body {
 .header { 
     text-align: center;
     font-variant: small-caps;
-        font-family: Sans-Serif;
+    font-family: 'arial', sans-serif;
 }
 
 .top_bar { 
@@ -72,7 +96,7 @@ body {
     
 
 .button1 {
-  font-family: Sans-Serif;
+  font-family: 'arial', sans-serif;
   text-decoration: none;
   border: 1px solid black;
   background-color: #eee;
