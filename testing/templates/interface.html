@@ -598,7 +598,7 @@ and test normality.</p>
 
                 {% if sig_test_name %}
                 <tr>
-                    <th>significance test</th>
+                    <th>Significance test</th>
                     <td>
                         {% if sig_test_name=='t' %}Student's \(t\) test {% elif sig_test_name=='bootstrap' %}Bootstrap {% elif sig_test_name=='permutation' %}Permutation {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test {% elif sig_test_name=='sign' %}Sign test {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median) {% elif sig_test_name=='permutation_med' %}Permutation (median) {% else %}{{ sig_test_name}} {% endif %}
                     </td>
@@ -615,7 +615,7 @@ and test normality.</p>
                 <!-- Show CI only if it was calculated -->
                 {% if CI %}
                 <tr>
-                    <th> confidence interval
+                    <th> Confidence interval
                     </th>
                     <td>{{ CI }} <i>(based on {{ mean_or_median }})</i></td>
                 </tr>
@@ -626,7 +626,7 @@ and test normality.</p>
                     </td>
                 </tr>
                 <tr>
-                    <th>reject H0</th>
+                    <th>Reject \(H_0\)</th>
                     <td>{% if rejectH0 %}Yes{% else %}No{% endif %}</td>
                 </tr>
             </table>

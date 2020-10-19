@@ -276,12 +276,12 @@ def recommend_test(test_param, is_norm):
 			list_of_tests['t'] = (1, 'The Student \( t \) test is most appropriate for normally distributed data.')
 
 			# not preferred
-			list_of_tests['wilcoxon'] = (0, 'The Wilcoxon signed rank test is appropriate for conitnuous symmetric distributions, but t test is more powerful.')
+			list_of_tests['wilcoxon'] = (0, 'The Wilcoxon signed rank test is appropriate for conitnuous symmetric distributions, but the \(t\) test is more powerful.')
 			list_of_tests['sign'] = (0, 'The sign test is appropriate for this case, but it tests for median equality and has low statistical power.')
-			list_of_tests['bootstrap'] = (0, 'The bootstrap test based on mean is appropriate for normal distribution, but it is computationally expensive and t test has higher statistical power.')
-			list_of_tests['permutation'] = (0, 'The permutation test based on mean is appropriate for normal distribution, but it is computationally expensive and t test has higher statistical power.')
-			list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case, but it is computationally expensive and t test has higher statistical power.')
-			list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case, but it is computationally expensive and t test has higher statistical power.')
+			list_of_tests['bootstrap'] = (0, 'The bootstrap test based on mean is appropriate for normal distribution, but it is computationally expensive and the \(t\) test has higher statistical power.')
+			list_of_tests['permutation'] = (0, 'The permutation test based on mean is appropriate for normal distribution, but it is computationally expensive and the \(t\) test has higher statistical power.')
+			list_of_tests['bootstrap_med'] = (0, 'The bootstrap test based on median is appropriate for this case, but it is computationally expensive and \(t\) test has higher statistical power.')
+			list_of_tests['permutation_med'] = (0, 'The permutation test based on median is appropriate for this case, but it is computationally expensive and the \(t\) test has higher statistical power.')
 
 			# not appropriate
 			# None
@@ -299,7 +299,7 @@ def recommend_test(test_param, is_norm):
 
 
 			# not appropriate
-			list_of_tests['t']= (-1, 'The Student \( t \)  test is not appropriate for this case since the data distribution is not normal.')
+			list_of_tests['t']= (-1, 'Student\'s \( t \)  test is not appropriate for this case since the data distribution is not normal.')
 
 			
 	return(list_of_tests)
