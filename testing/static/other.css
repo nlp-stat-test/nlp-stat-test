@@ -17,6 +17,9 @@ tr:nth-child(even) {
     text-decoration: none; 
     }
 
+body {
+    font-family: Sans-Serif;
+}
 /* General Formatting */
 
 .a1 {
