@@ -170,7 +170,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                     <!-- <button class="button1 interface"> -->
                     <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
                     <!-- </button> -->
-                    <label id="fileLabel">{{file_label}}
+                    <label id="fileLabel"><i>{{file_label}}</i>
                         {% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     </p>
 
@@ -184,7 +184,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                            name="config_file" style="display:none"/>
                     <!-- link shows as button -->
                         <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
-                        <label id="configLabel">{{config_file_label}}{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label></p>
+                        <label id="configLabel"><i>{{config_file_label}}</i>{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label></p>
 
 
                     <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); localStorage.setItem('', '1');"
@@ -869,7 +869,7 @@ function clear_cookies() {
 
      </div>
 
-
+<div id="Exceptions">{{ exception_message }}</div>
 
 
 
