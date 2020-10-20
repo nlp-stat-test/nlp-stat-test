@@ -135,7 +135,7 @@ style="background-color: #eee; padding: 5;   top: 0;
 
 
 
-    <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
+    <div id="warning" style="color:red;display:none">The results may be incomplete.   </div>
 
 
      <div id="loading" style="display: none;"> ⌛ Loading ⌛ </div>
@@ -259,7 +259,11 @@ and test normality.</p>
 
 
 
-
+<p>
+Error tolerance:
+<br>
+\( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
+</p>
 
 
                     <!-- Data Analysis Submit Button -->
@@ -441,6 +445,23 @@ and test normality.</p>
                 </div>
 
 
+
+
+
+  <h3>Evaluation Unit Size Recommendation</h3>
+
+  <p>As EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
+
+<table>
+  <tr><th>EU Size</th><th>Standard Deviation</th></tr>
+  {{ EU_table | safe}}
+</table>
+
+<p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
+
+<div id="eu_image" style="display: none;">
+<img id=power_file src="../{{ url_for('send_img_file_dir', image_name='eu_size_std_dev.svg') }}?{{ rand }}">
+</div>
             </div>
             <!-- end round green (data analysis) -->
 
@@ -666,6 +687,8 @@ hypothesis is false (Cohen, 1994).</p>
         <br>
                 \( \alpha = \) <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"></p>
 
+
+   <p>
                 {% if effect_size_estimators|length %}
 
                 <table border=1 id="tblEffectEstimator">
@@ -678,7 +701,7 @@ hypothesis is false (Cohen, 1994).</p>
                     {% for key, value in effect_size_estimators.items() %}
                     <tr>
                         <td>
-                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='hl' %}Hodges-Lehmann {% elif key=='wilcoxonr' %}Wilcoxon \( r \) {% elif key=='hedgesg' %}Hedges' \( g \) {% elif key=='cohend' %}Cohen's \( d \) {% else %}{{ key }}{% endif %}
+                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='wilcoxonr' %} Wilcoxon \( r \) {% elif key=='hl' %} Hodges-Lehmann {% elif key=='hedgesg' %}Hedges' \( g \) {% elif key=='cohend' %}Cohen's \( d \) {% else %}{{ key }}{% endif %}
                         </td>
                         <td>{{ value }}</td>
                     </tr>
@@ -686,10 +709,10 @@ hypothesis is false (Cohen, 1994).</p>
                 </table>
 
                 {% endif %}
-
+</p>
 
                 <!-- effect size Submit Button -->
-              <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
+            <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
                 <!-- Is type=submit implied by class="btn btn-success" -->
                 <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">Run</button>
                 <!-- Button for JS script-->
@@ -842,7 +865,7 @@ hypothesis is false (Cohen, 1994).</p>
 <p>These buttons can be clicked to download data from your session or print your report. The report can also be printed to PDF.</p>
          <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
-         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config') }}'">Download Configuration</button>
+         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
 
            <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 

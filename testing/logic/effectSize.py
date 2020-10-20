@@ -33,13 +33,11 @@ def calc_eff_size(eff_size_ind, score, alpha, B):
 		d, CI = cohend(score, alpha)
 		return(hedgesg(d, score, alpha, B))
 
-	if eff_size_ind == "wilcoxonr":
-		return(wilcoxon_r(score, alpha))
-
 	if eff_size_ind == "hl":
 		return(hodgeslehmann(score, alpha))
 
-
+	if eff_size_ind == "wilcoxonr":
+		return(wilcoxon_r(score, alpha))
 
 def cohend(score, alpha):
     if isinstance(score, dict):
