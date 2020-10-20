@@ -170,6 +170,12 @@ def create_summary_stats_list(tc, debug=False):
                                         ('Maximum', format_digits(tc.eda.summaryStat_score_diff_par.max_val))]))
     return summary_dict
 
+def json_loads_safe(arg):
+    if arg is not None:
+        return json.loads(arg)
+    else:
+        return None
+
 @app.route('/start')
 def start():
     return render_template('interface.html', rand_str=get_rand_state_str())
@@ -240,11 +246,13 @@ def upload(debug=True):
                     if isinstance(data_loaded, dict):
                         rendered = render_template(template_filename,
                                            last_tab_name_clicked=last_tab_name_clicked,
+                                           file_label=f.filename,
+                                           config_file_label=config.filename,
                                            CI=data_loaded.get('CI'),
                                            alternative=data_loaded.get('alternative'),
-                                           effect_estimator_dict=json.loads(data_loaded.get('effect_estimator_dict')),
+                                           effect_estimator_dict=json_loads_safe(data_loaded.get('effect_estimator_dict')),
                                            effectsize_sig_alpha=data_loaded.get('effectsize_sig_alpha'),
-                                           estimator_value_list=json.loads(data_loaded.get('estimator_value_list')),
+                                           estimator_value_list=json_loads_safe(data_loaded.get('estimator_value_list')),
                                            eval_unit_size=data_loaded.get('eval_unit_size'),
                                            eval_unit_stat=data_loaded.get('eval_unit_stat'),
                                            fileName=data_loaded.get('fileName'),
@@ -256,24 +264,24 @@ def upload(debug=True):
                                            mean_or_median=data_loaded.get('mean_or_median'),
                                            mu=data_loaded.get('mu'),
                                            normality_alpha=data_loaded.get('normality_alpha'),
-                                           not_preferred_tests=json.loads(data_loaded.get('not_preferred_tests')),
-                                           not_recommended_tests=json.loads(data_loaded.get('not_recommended_tests')),
+                                           not_preferred_tests=json_loads_safe(data_loaded.get('not_preferred_tests')),
+                                           not_recommended_tests=json_loads_safe(data_loaded.get('not_recommended_tests')),
                                            num_eval_units=data_loaded.get('num_eval_units'),
                                            power_num_intervals=data_loaded.get('power_num_intervals'),
                                            power_test=data_loaded.get('power_test'),
                                            pval=data_loaded.get('pval'),
-                                           recommended_tests=json.loads(data_loaded.get('recommended_tests')),
+                                           recommended_tests=json_loads_safe(data_loaded.get('recommended_tests')),
                                            rejectH0=data_loaded.get('rejectH0'),
                                            show_non_preferred=data_loaded.get('show_non_preferred'),
                                            show_non_recommended=data_loaded.get(('show_non_recommended')),
                                            shuffle_seed=data_loaded.get('shuffle_seed'),
-                                           sig_boot_iterations=json.loads(data_loaded.get('sig_boot_iterations')),
-                                           sig_test_alpha=json.loads(data_loaded.get('sig_test_alpha')),
+                                           sig_boot_iterations=json_loads_safe(data_loaded.get('sig_boot_iterations')),
+                                           sig_test_alpha=json_loads_safe(data_loaded.get('sig_test_alpha')),
                                            sig_test_heading=data_loaded.get('sig_test_heading'),
                                            sig_test_name=data_loaded.get('sig_test_name'),
                                            sig_test_stat_val=data_loaded.get('sig_test_stat_val'),
-                                           skewness_gamma=json.loads(data_loaded.get('skewness_gamma')),
-                                           summary_stats_list=json.loads(data_loaded.get('summary_stats_list')),
+                                           skewness_gamma=json_loads_safe(data_loaded.get('skewness_gamma')),
+                                           summary_stats_list=json_loads_safe(data_loaded.get('summary_stats_list')),
                                            summary_str=data_loaded.get('summary_str'),
                                            rand_str=get_rand_state_str())
                     else: # the .yml wasn't parsed as a dict
@@ -282,14 +290,14 @@ def upload(debug=True):
                                                    last_tab_name_clicked=last_tab_name_clicked,
                                                    rand_str=get_rand_state_str(),
                                                    config_error_str=config_str_err,
-                                                   file_uploaded=f.filename
+                                                   file_label=f.filename
                                                    )
             else:  # no config file
                 rendered = render_template(template_filename,
                                            last_tab_name_clicked=last_tab_name_clicked,
                                            rand_str=get_rand_state_str(),
                                            error_str=str_err,
-                                           file_uploaded=f.filename
+                                           file_label=f.filename
                                    )
         resp = make_response(rendered)
         # Set cookies
@@ -443,7 +451,7 @@ def data_analysis(debug=True):
                                            hist_score2_file='hist_score2_EUs.svg',
                                            hist_diff_file='hist_score_diff.svg',
                                            hist_diff_par_file='hist_score_diff_EUs.svg',
-                                           file_uploaded="File selected: {}".format(data_filename),
+                                           file_label="File selected: {}".format(data_filename),
                                            last_tab_name_clicked=last_tab_name_clicked,
                                            eval_unit_size=eval_unit_size,
                                            eval_unit_stat=eval_unit_stat,
@@ -525,7 +533,7 @@ def data_analysis(debug=True):
                                tooltip_bootstrap_test=helper("bootstrap_test"),
                                tooltip_permutation_test=helper("permutation_test"),
                                tooltip_post_power_analysis=helper("post_power_analysis"),
-                               file_uploaded="Upload a file.",
+                               file_label="Upload a file.",
                                recommended_tests=[],
                                summary_stats_list={},
                                rand_str=get_rand_state_str()
@@ -719,7 +727,7 @@ def sigtest(debug=True):
                                    effect_size_estimators=estimators,
                                    eff_estimator=request.cookies.get('eff_estimator'),
                                    eff_size_val=request.cookies.get('eff_size_val'),
-                                   # file_uploaded = "File uploaded!!: {}".format(fileName),
+                                   # file_label = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies
                                    eval_unit_size=request.cookies.get('eval_unit_size'),
@@ -856,7 +864,7 @@ def effectsize(debug=True):
                                    effect_size_estimators=estimators,  # just names
                                    estimator_value_list=estimator_value_list,  # name, value pairs
                                    effectsize_sig_alpha=effectsize_sig_alpha,
-                                   # file_uploaded = "File uploaded!!: {}".format(fileName),
+                                   # file_label = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies
                                    eval_unit_size=request.cookies.get('eval_unit_size'),
@@ -998,7 +1006,7 @@ def power(debug=True):
                                    eff_size_val=request.cookies.get('eff_size_val'),
                                    # effect_size_estimates = estimates,
                                    effect_estimator_dict = json.loads(request.cookies.get('effect_estimator_dict')),
-                                   # file_uploaded = "File uploaded!!: {}".format(fileName),
+                                   # file_label = "File uploaded!!: {}".format(fileName),
                                    last_tab_name_clicked=last_tab_name_clicked,
                                    # get from cookies
                                    eval_unit_size=request.cookies.get('eval_unit_size'),
@@ -1111,9 +1119,9 @@ def download_file():
 
 @app.route('/download_config/<config_file_name>')
 def download_config(config_file_name):   # was download_config() no param
-    rand_str = str(np.random.randint(10000))
-    config_file_path = 'user/'+config_file_name + rand_str + '.yml'
-    # Note: this will also get cookies saved by other sites
+    dir_str = request.cookies.get('dir_str')
+    config_file_path = 'user/'+ dir_str + '/' + config_file_name + '.yml'
+    # Note: this may also get cookies saved by other sites
     items = request.cookies.items()
     cookie_dict = {}
     for k,v in items:
