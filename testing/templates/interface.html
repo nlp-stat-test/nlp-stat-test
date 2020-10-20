@@ -135,7 +135,7 @@ style="background-color: #eee; padding: 5;   top: 0;
 
 
 
-    <div id="warning" style="color:red;display:none">The results may be inconsistent or incomplete.   </div>
+    <div id="warning" style="color:red;display:none">The results may be incomplete.   </div>
 
 
      <div id="loading" style="display: none;"> ⌛ Loading ⌛ </div>
@@ -170,8 +170,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                     <!-- <button class="button1 interface"> -->
                     <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
                     <!-- </button> -->
-                    <label id="fileLabel">{{file_label}}
-                        {% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                    <label id="fileLabel">{{file_}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     </p>
 
 
@@ -259,7 +258,11 @@ and test normality.</p>
 
 
 
-
+<p>
+Error tolerance:
+<br>
+\( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
+</p>
 
 
                     <!-- Data Analysis Submit Button -->
@@ -441,6 +444,23 @@ and test normality.</p>
                 </div>
 
 
+
+
+
+  <h3>Evaluation Unit Size Recommendation</h3>
+
+  <p>As EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
+
+<table>
+  <tr><th>EU Size</th><th>Standard Deviation</th></tr>
+  {{ EU_table | safe}}
+</table>
+
+<p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
+
+<div id="eu_image" style="display: none;">
+<img id=power_file src="../{{ url_for('send_img_file_dir', image_name='eu_size_std_dev.svg') }}?{{ rand }}">
+</div>
             </div>
             <!-- end round green (data analysis) -->
 
@@ -844,7 +864,7 @@ hypothesis is false (Cohen, 1994).</p>
 <p>These buttons can be clicked to download data from your session or print your report. The report can also be printed to PDF.</p>
          <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
-         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config') }}'">Download Configuration</button>
+         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
 
            <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 
