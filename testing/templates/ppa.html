@@ -103,16 +103,16 @@ function results_check(){
           <input type="radio" name="prospective_alternative" id="alternative_greater" required="" value="one-sided"
                    {% if prospective_alternative=='one-sided' %}checked {% endif %}>
                     <abbr title="The alternative hypothesis is that the difference between systems is either
-                        greater than, or less than &delta;, but not both."> One-sided:</abbr> \( \mu_1 - \mu_2 > \delta \) or \( \mu_1 - \mu_2 < \delta \)
+                        greater than, or less than &delta;, but not both."> One-sided:</abbr> \( \mu_1 > \mu_2 \) or \( \mu_1 < \mu_2 \)
 <br>
                         <input type="radio" name="prospective_alternative" id="alternative_two_sided" value="two-sided"
                    {% if prospective_alternative=='two-sided' %}checked{% endif %}>
                    <abbr title="The alternative hypothesis is that the difference between
-                           the first and second system is not equal to &delta;.">Two-sided:</abbr> \( \mu_1 - \mu_2
-                \neq \delta \)
+                           the first and second system is not equal to &delta;.">Two-sided:</abbr> \( \mu_1
+                \neq \mu_2 \)
 
             <!-- Mu -->
-            <p>The difference threshold between means:
+            <p>The true mean difference:
                 <br>
               \( \delta =\)  <input
                         id="prospective_mu" name="prospective_mu" type="number"
