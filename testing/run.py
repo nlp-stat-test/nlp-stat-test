@@ -47,8 +47,8 @@ teststat_heading = "Test Statistic Recommendation"
 sig_test_heading = 'Recommended Significance Tests'
 estimators = {"cohend": "This function calculates the Cohen's \(d\) effect size estimator.",
               "hedgesg": "This function takes the Cohen's \(d\) estimate as an input and calculates the Hedges's \(g\).",
-              "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",
-              "hl": "This function estimates the Hodges-Lehmann estimator for the input score."}
+              "hl": "This function estimates the Hodges-Lehmann estimator for the input score.",
+              "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",}
 
 
 def get_rand_state_str():
@@ -818,15 +818,15 @@ def effectsize(debug=True):
         #                                             {% elif key=='hedgesg' %}Hedges' g
         #                                             {% elif key=='cohend' %}Cohen's d"""
         cur_selected_ests = []
-        cur_selected_est_hl = request.form.get('target_eff_test_hl')
-        if cur_selected_est_hl: cur_selected_ests.append(cur_selected_est_hl)
         cur_selected_est_wilcoxonr = request.form.get('target_eff_test_wilcoxonr')
         if cur_selected_est_wilcoxonr: cur_selected_ests.append(cur_selected_est_wilcoxonr)
+        cur_selected_est_hl = request.form.get('target_eff_test_hl')
+        if cur_selected_est_hl: cur_selected_ests.append(cur_selected_est_hl)
         cur_selected_est_hedgesg = request.form.get('target_eff_test_hedgesg')
         if cur_selected_est_hedgesg: cur_selected_ests.append(cur_selected_est_hedgesg)
         cur_selected_est_cohend = request.form.get('target_eff_test_cohend')
         if cur_selected_est_cohend: cur_selected_ests.append(cur_selected_est_cohend)
-        print('currentEstimators={}:'.format(cur_selected_ests))
+        print('currentEstimators={}:'.format(cur_selected_ests.reverse()))
 
         # old:
         # (estimates, estimators) = calc_eff_size(cur_selected_test,
