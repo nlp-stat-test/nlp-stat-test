@@ -261,7 +261,7 @@ and test normality.</p>
 <p>
 Error tolerance:
 <br>
-\( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
+\( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" min="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
 </p>
 
 
@@ -284,6 +284,23 @@ Error tolerance:
             <!-- begin green results area -->
             <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
 
+
+
+                <h3>Evaluation Unit Size Recommendation</h3>
+
+                <p>In general, as EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
+
+              <table>
+                <tr><th>EU Size</th><th>Standard Deviation</th></tr>
+                {{ EU_table | safe}}
+              </table>
+
+              <p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
+
+              <div id="eu_image" style="display: none;">
+              <img id=power_file src="../{{ url_for('send_img_file_dir', image_name='eu_size_std_dev.svg') }}?{{ rand }}">
+              </div>
+              
                 <!-- SUMMARY STATISTICS -->
                 <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}
                 <table>
@@ -447,20 +464,6 @@ Error tolerance:
 
 
 
-  <h3>Evaluation Unit Size Recommendation</h3>
-
-  <p>As EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
-
-<table>
-  <tr><th>EU Size</th><th>Standard Deviation</th></tr>
-  {{ EU_table | safe}}
-</table>
-
-<p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
-
-<div id="eu_image" style="display: none;">
-<img id=power_file src="../{{ url_for('send_img_file_dir', image_name='eu_size_std_dev.svg') }}?{{ rand }}">
-</div>
             </div>
             <!-- end round green (data analysis) -->
 
