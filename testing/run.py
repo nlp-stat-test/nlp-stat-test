@@ -1,5 +1,6 @@
 # v3
 import io
+import traceback
 
 import yaml
 from flask import *
@@ -1180,7 +1181,7 @@ def send_img_file_dir(image_name, debug=True):
     @return:
     '''
     dir_str = request.cookies.get('dir_str')
-    dir_name = app.config['FOLDER']  + '/' + dir_str # user
+    dir_name = app.config['FOLDER']  + '/' + str(dir_str) # user
     if debug: print('display image: {}/{}'.format(dir_name, image_name))
     return send_from_directory(dir_name, image_name)
 
@@ -1226,8 +1227,12 @@ def download_zip():
         os.system("zip -r " +  zip_file  + ".zip " + zip_file)
         return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
     except:
+        exc_info = sys.exc_info()
+        traceback.print_exception(*exc_info)
+        with open("ErrorLog.txt", "a") as f_err:
+            traceback.print_exception(*exc_info, file=f_err)
         exception_message = "Exception:" + str(sys.exc_info()[0]) + "occurred."
-        print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+        # print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
         return make_response(render_template(template_filename,
                                              exception_message = exception_message,
                                              rand_str=get_rand_state_str()))
