@@ -64,6 +64,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
 
 	# plotting
 	diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
+	plt.figure() 
 	plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
 	plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
 	plt.legend(loc='upper right')

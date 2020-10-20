@@ -16,7 +16,7 @@ from logic.fileReader import read_score_file
 from logic.testCase import testCase
 from logic.effectSize import calc_eff_size
 from logic.dataAnalysis import partition_score, \
-    skew_test, normality_test, recommend_test
+    skew_test, normality_test, recommend_test, choose_eu
 from logic.sigTesting import run_sig_test
 from logic.power_analysis_norm import prosp_power_analysis_norm
 
@@ -48,8 +48,8 @@ teststat_heading = "Test Statistic Recommendation"
 sig_test_heading = 'Recommended Significance Tests'
 estimators = {"cohend": "This function calculates the Cohen's \(d\) effect size estimator.",
               "hedgesg": "This function takes the Cohen's \(d\) estimate as an input and calculates the Hedges's \(g\).",
-              "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",
-              "hl": "This function estimates the Hodges-Lehmann estimator for the input score."}
+              "hl": "This function estimates the Hodges-Lehmann estimator for the input score.",
+              "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",}
 
 
 def get_rand_state_str():
@@ -362,7 +362,12 @@ def data_analysis(debug=True):
             # seed = DEFAULT_SEED
         else:
             shuffle = True
-
+            
+        # Epsilon 
+        epsilon = float(request.form.get('epsilon'))
+        print('EPSILON (from form)={}'.format(epsilon))
+        
+        
         # ------- File ----------------
         have_file = False
         # f = request.files['data_file']  # old use of file input
@@ -439,6 +444,10 @@ def data_analysis(debug=True):
             ( recommended_tests, not_preferred_tests, not_recommended_tests) = \
                 create_test_reasons(recommended_tests)
 
+            # EU output
+            EU_table = choose_eu(score_dif, epsilon, shuffle, seed, mean_or_median, dir_folder)
+            print(EU_table)
+            
             if debug:
                 print("Recommended: {}".format(recommended_tests))
                 print("Appropriate (not preferred): {}".format(not_preferred_tests))
@@ -483,7 +492,9 @@ def data_analysis(debug=True):
                                            power_path=request.cookies.get('power_path'),
                                            power_test=request.cookies.get('power_test'),
                                            power_num_intervals=request.cookies.get('power_num_intervals'),
-                                           rand_str=get_rand_state_str()
+                                           rand_str=get_rand_state_str(),
+                                           EU_table= "\n".join(["<tr><td>" + str(x) + "</td><td>" + str(y) + "</td></tr>" for x,y in zip(*EU_table)])
+ 
                                            )
                 resp = make_response(rendered)
 
@@ -702,7 +713,7 @@ def sigtest(debug=True):
         # use Partition Score to get new dif
         partitions = partition_score_no_hist(scores1, scores2, score_dif,
                                 json.loads(request.cookies.get('eval_unit_size')),
-                                shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
+                                shuffled=False, randomSeed=0,method=request.cookies.get('mean_or_median'))
         score_dif = partitions[2]
 
         # Adjust conf_int for Wilcoxon case
@@ -835,15 +846,15 @@ def effectsize(debug=True):
         #                                             {% elif key=='hedgesg' %}Hedges' g
         #                                             {% elif key=='cohend' %}Cohen's d"""
         cur_selected_ests = []
-        cur_selected_est_hl = request.form.get('target_eff_test_hl')
-        if cur_selected_est_hl: cur_selected_ests.append(cur_selected_est_hl)
         cur_selected_est_wilcoxonr = request.form.get('target_eff_test_wilcoxonr')
         if cur_selected_est_wilcoxonr: cur_selected_ests.append(cur_selected_est_wilcoxonr)
+        cur_selected_est_hl = request.form.get('target_eff_test_hl')
+        if cur_selected_est_hl: cur_selected_ests.append(cur_selected_est_hl)
         cur_selected_est_hedgesg = request.form.get('target_eff_test_hedgesg')
         if cur_selected_est_hedgesg: cur_selected_ests.append(cur_selected_est_hedgesg)
         cur_selected_est_cohend = request.form.get('target_eff_test_cohend')
         if cur_selected_est_cohend: cur_selected_ests.append(cur_selected_est_cohend)
-        print('currentEstimators={}:'.format(cur_selected_ests))
+        print('currentEstimators={}:'.format(cur_selected_ests.reverse()))
 
         # old:
         # (estimates, estimators) = calc_eff_size(cur_selected_test,
