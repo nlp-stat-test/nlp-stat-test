@@ -170,7 +170,8 @@ style="background-color: #eee; padding: 5;   top: 0;
                     <!-- <button class="button1 interface"> -->
                     <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
                     <!-- </button> -->
-                    <label id="fileLabel">{{file_}}{% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                    <label id="fileLabel">{{file_label}}
+                        {% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
                     </p>
 
 
@@ -843,7 +844,7 @@ hypothesis is false (Cohen, 1994).</p>
 <p>These buttons can be clicked to download data from your session or print your report. The report can also be printed to PDF.</p>
          <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
 
-         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
+         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config') }}'">Download Configuration</button>
 
            <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
 
