@@ -8,6 +8,7 @@ from flask import make_response
 
 from werkzeug.utils import secure_filename
 import os
+import sys
 import numpy as np
 
 # Business Logic
@@ -144,6 +145,14 @@ def format_digits(num, sig_digits=5):
     str = '{:.5f}'.format(num)
     return str
 
+def format_file_label(filename, action):
+    '''
+    get string formatted with italics for display in HTML label
+    @param filename: name of file
+    @param action: 'uploaded' or 'selected'
+    @return: string formatted with italics for display in HTML label
+    '''
+    return 'File {}: {}.'.format(action, filename)
 
 def create_summary_stats_list(tc, debug=False):
     if debug: print('Score 1: mean={}, med={}, sd={}, min={}, max={}'.format(tc.eda.summaryStat_score1.mu,
@@ -246,8 +255,8 @@ def upload(debug=True):
                     if isinstance(data_loaded, dict):
                         rendered = render_template(template_filename,
                                            last_tab_name_clicked=last_tab_name_clicked,
-                                           file_label=f.filename,
-                                           config_file_label=config.filename,
+                                           file_label=format_file_label(f.filename, 'uploaded'),
+                                           config_file_label=format_file_label(config.filename, 'uploaded'),
                                            CI=data_loaded.get('CI'),
                                            alternative=data_loaded.get('alternative'),
                                            effect_estimator_dict=json_loads_safe(data_loaded.get('effect_estimator_dict')),
@@ -297,7 +306,7 @@ def upload(debug=True):
                                            last_tab_name_clicked=last_tab_name_clicked,
                                            rand_str=get_rand_state_str(),
                                            error_str=str_err,
-                                           file_label=f.filename
+                                           file_label=format_file_label(f.filename, 'uploaded')
                                    )
         resp = make_response(rendered)
         # Set cookies
@@ -1205,13 +1214,23 @@ def get_help(help_file_name, debug=True):
             file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
     
-    
+def print_exception(cls, ex, traceback):
+    print('{}\nException trace last instruction: {}'.format(ex, traceback.tb_lasti))
+    return
+
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download_zip')
 def download_zip():
-    zip_file = FOLDER + "/" + request.cookies.get("dir_str")
-    os.system("zip -r " +  zip_file  + ".zip " + zip_file)
-    return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
+    try:
+        zip_file = FOLDER + "/" + request.cookies.get("dir_str")
+        os.system("zip -r " +  zip_file  + ".zip " + zip_file)
+        return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
+    except:
+        exception_message = "Exception:" + str(sys.exc_info()[0]) + "occurred."
+        print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+        return make_response(render_template(template_filename,
+                                             exception_message = exception_message,
+                                             rand_str=get_rand_state_str()))
 
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/delete')
