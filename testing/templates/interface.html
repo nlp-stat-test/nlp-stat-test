@@ -770,7 +770,7 @@ hypothesis is false (Cohen, 1994).</p>
                            class="form-control input-md" step="1"
                             {% if power_num_intervals %}
                                value="{{ power_num_intervals }}"
-                            {% else %} value="10" {% endif %} ></p> <!-- min=1 max="50" -->
+                            {% else %} value="5" {% endif %} min="5" max="{{ num_eval_units / 15 }}"></p> <!-- min=5 max="n/15" -->
                  <!-- todo: use length of scores to determine value's min and max -->
 
 

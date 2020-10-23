@@ -29,6 +29,7 @@ from logic.power_analysis_norm import prosp_power_analysis_norm
 from logic.errorHandling import InputError
 
 FOLDER = os.path.join('user')
+ERRORS = os.path.join('error_logs')
 from logic.powerAnalysis import post_power_analysis
 import logic.powerAnalysis
 
@@ -52,15 +53,28 @@ estimators = {"cohend": "This function calculates the Cohen's \(d\) effect size 
               "hl": "This function estimates the Hodges-Lehmann estimator for the input score.",
               "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",}
 
-def handle_exception():
+def handle_exception(dir_str=''):
     exc_info = sys.exc_info()
-    traceback.print_exception(*exc_info)
-    with open("ErrorLog.txt", "a") as f_err:
+    if not dir_str:
+        folder_name = get_rand_state_str()
+    else:
+        folder_name = dir_str
+    if not os.path.exists(ERRORS + "/" + folder_name):
+        os.makedirs(ERRORS + "/" + folder_name)
+    with open("error_temp", 'w') as tmp_err:
+        traceback.print_exception(*exc_info, file=tmp_err)
+        # TODO, DELETE error_temp if not debugging
+    with open(ERRORS + "/ErrorLog.txt", "a") as f_err:
+        f_err.write('----------------------\n')
+        str_err = str(exc_info[1])
+        f_err.write('Exception info:\n{}\n'.format(str_err))
+        print('------\n{}------'.format(str_err))
         traceback.print_exception(*exc_info, file=f_err)
     exception_message = "Exception:" + str(sys.exc_info()[0]) + "occurred."
     # print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
     return make_response(render_template(template_filename,
-                                         exception_message=exception_message,
+                                         exception_message=str_err,#exception_message,
+                                         num_eval_units=15,  # todo: update
                                          rand_str=get_rand_state_str()))
 
 def get_rand_state_str():
@@ -198,7 +212,13 @@ def json_loads_safe(arg):
 
 @app.route('/start')
 def start():
-    return render_template('interface.html', rand_str=get_rand_state_str())
+    try:
+        return render_template('interface.html',
+                               num_eval_units=15, # todo: update
+                               rand_str=get_rand_state_str())
+    except:
+        ret = handle_exception()
+    return ret
 
 @app.route('/upload', methods=["POST"])
 def upload(debug=True):
@@ -325,6 +345,8 @@ def upload(debug=True):
             if have_data:
                 if f.filename:
                     resp.set_cookie('fileName', f.filename)
+                    resp.set_cookie('file_label', "File selected: {}".format(f.filename))
+                    resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
                     resp.set_cookie('dir_str', dir_str)
             return resp
     except:
@@ -356,7 +378,6 @@ def data_analysis(debug=True):
             last_tab_clicked = request.form.get('last_tab') #todo: remove this line?
             # todo: make this a cookie
             last_tab_name_clicked = 'Data Analysis'  # request.form.get('last_tab_name')
-            print("***** LAST TAB: {}".format(last_tab_clicked)) #todo: remove this line?
             print("***** LAST TAB: {}".format(last_tab_name_clicked))
 
             eval_unit_size = request.form.get('eval_unit_size')
@@ -417,6 +438,7 @@ def data_analysis(debug=True):
                         score_dif = calc_score_diff(scores1, scores2)
                         # todo: display how many samples there are
                         num_eval_units = int(np.floor(len(list(score_dif)) / float(eval_unit_size)))
+
                         if debug: print('SAMPLE SIZE (#eval units)={}'.format(num_eval_units))
                         have_data = True
                 except InputError as e:
@@ -479,13 +501,14 @@ def data_analysis(debug=True):
                     if debug: print('random number to append to image url={}'.format(rand))
 
                     rendered = render_template(template_filename,
+                                               file_label = request.cookies.get('file_label'),
+                                               config_file_label = request.cookies.get('config_file_label'),
                                                normality_alpha=normality_alpha,
                                                skewness_gamma=skewness_gamma,
                                                hist_score1_file='hist_score1_EUs.svg',
                                                hist_score2_file='hist_score2_EUs.svg',
                                                hist_diff_file='hist_score_diff.svg',
                                                hist_diff_par_file='hist_score_diff_EUs.svg',
-                                               file_label="File selected: {}".format(data_filename),
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                eval_unit_size=eval_unit_size,
                                                eval_unit_stat=eval_unit_stat,
@@ -515,6 +538,7 @@ def data_analysis(debug=True):
                     resp = make_response(rendered)
 
                     # -------------- Set all cookies -------------
+                    resp.set_cookie('num_eval_units', num_eval_units)
                     resp.set_cookie('last_tab', last_tab_name_clicked)
                     # if f.filename:
                     #     resp.set_cookie('fileName', f.filename)
@@ -554,22 +578,22 @@ def data_analysis(debug=True):
             # You got to the main page by navigating to the URL, not by clicking submit
             # TODO: get rid of 'helper'
             return render_template(template_filename,
-                                   tooltip_read_score_file=helper("read_score_file"),
-                                   tooltip_plot_hist=helper("plot_hist"),
-                                   tooltip_plot_hist_diff=helper("plot_hist_diff"),
-                                   tooltip_partition_score=helper("partition_score"),
-                                   tooltip_normality_test=helper("normality_test"),
-                                   tooltip_skew_test=helper("skew_test"),
-                                   tooltip_recommend_test=helper("recommend_test"),
-                                   tooltip_calc_eff_size=helper("calc_eff_size"),
-                                   tooltip_cohend=helper("cohend"),
-                                   tooltip_hedgesg=helper("hedgesg"),
-                                   tooltip_wilcoxon_r=helper("wilcoxon_r"),
-                                   tooltip_hodgeslehmann=helper("hodgeslehmann"),
-                                   tooltip_run_sig_test=helper("run_sig_test"),
-                                   tooltip_bootstrap_test=helper("bootstrap_test"),
-                                   tooltip_permutation_test=helper("permutation_test"),
-                                   tooltip_post_power_analysis=helper("post_power_analysis"),
+                                   # tooltip_read_score_file=helper("read_score_file"),
+                                   # tooltip_plot_hist=helper("plot_hist"),
+                                   # tooltip_plot_hist_diff=helper("plot_hist_diff"),
+                                   # tooltip_partition_score=helper("partition_score"),
+                                   # tooltip_normality_test=helper("normality_test"),
+                                   # tooltip_skew_test=helper("skew_test"),
+                                   # tooltip_recommend_test=helper("recommend_test"),
+                                   # tooltip_calc_eff_size=helper("calc_eff_size"),
+                                   # tooltip_cohend=helper("cohend"),
+                                   # tooltip_hedgesg=helper("hedgesg"),
+                                   # tooltip_wilcoxon_r=helper("wilcoxon_r"),
+                                   # tooltip_hodgeslehmann=helper("hodgeslehmann"),
+                                   # tooltip_run_sig_test=helper("run_sig_test"),
+                                   # tooltip_bootstrap_test=helper("bootstrap_test"),
+                                   # tooltip_permutation_test=helper("permutation_test"),
+                                   # tooltip_post_power_analysis=helper("post_power_analysis"),
                                    file_label="Upload a file.",
                                    recommended_tests=[],
                                    summary_stats_list={},
@@ -766,13 +790,14 @@ def sigtest(debug=True):
             summary_stats_list = json.loads(request.cookies.get('summary_stats_list'))
 
             rendered = render_template(template_filename,
+                                       file_label=request.cookies.get('file_label'),
+                                       config_file_label=request.cookies.get('config_file_label'),
                                        skewness_gamma=json.loads(request.cookies.get('skewness_gamma')),
                                        normality_alpha=json.loads(request.cookies.get('normality_alpha')),
                                        # specific to effect size test
                                        effect_size_estimators=estimators,
                                        eff_estimator=request.cookies.get('eff_estimator'),
                                        eff_size_val=request.cookies.get('eff_size_val'),
-                                       # file_label = "File uploaded!!: {}".format(fileName),
                                        last_tab_name_clicked=last_tab_name_clicked,
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
@@ -857,6 +882,7 @@ def effectsize(debug=True):
             fileName = request.cookies.get('fileName')
             dir_str = request.cookies.get('dir_str')
             scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/"+ fileName)
+            num_eval_units = request.cookies.get('num_eval_units')
             # alpha for significance, boostrap iterations
             sig_test_alpha = json.loads(request.cookies.get('sig_test_alpha'))
             effectsize_sig_alpha = request.form.get('effectsize_significance_level')
@@ -908,12 +934,13 @@ def effectsize(debug=True):
             print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
             skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
             rendered = render_template(template_filename,
+                                       file_label=request.cookies.get('file_label'),
+                                       config_file_label=request.cookies.get('config_file_label'),
                                        skewness_gamma=skewness_gamma,
                                        # specific to effect size test
                                        effect_size_estimators=estimators,  # just names
                                        estimator_value_list=estimator_value_list,  # name, value pairs
                                        effectsize_sig_alpha=effectsize_sig_alpha,
-                                       # file_label = "File uploaded!!: {}".format(fileName),
                                        last_tab_name_clicked=last_tab_name_clicked,
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
@@ -973,6 +1000,7 @@ def effectsize(debug=True):
 def power(debug=True):
     try:
         if request.method == "POST":
+            num_eval_units = request.cookies.get('num_eval_units')
             last_tab_name_clicked = 'Retrospective Power Analysis'
             fileName = request.cookies.get('fileName')
             dir_str = request.cookies.get('dir_str')
@@ -1042,6 +1070,8 @@ def power(debug=True):
 
             skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
             rendered = render_template(template_filename,
+                                       file_label=request.cookies.get('file_label'),
+                                       config_file_label=request.cookies.get('config_file_label'),
                                        skewness_gamma=skewness_gamma,
                                        # power
                                        # old_sig_test_name=old_sig_test_name,
@@ -1059,7 +1089,6 @@ def power(debug=True):
                                        eff_size_val=request.cookies.get('eff_size_val'),
                                        # effect_size_estimates = estimates,
                                        effect_estimator_dict = json.loads(request.cookies.get('effect_estimator_dict')),
-                                       # file_label = "File uploaded!!: {}".format(fileName),
                                        last_tab_name_clicked=last_tab_name_clicked,
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
