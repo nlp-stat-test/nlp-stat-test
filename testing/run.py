@@ -66,7 +66,7 @@ def handle_exception(dir_str=''):
         # TODO, DELETE error_temp if not debugging
     with open(ERRORS + "/ErrorLog.txt", "a") as f_err:
         f_err.write('----------------------\n')
-        str_err = str(exc_info[1])
+        str_err = str(exc_info[0]) + '\n' + str(exc_info[1])
         f_err.write('Exception info:\n{}\n'.format(str_err))
         print('------\n{}------'.format(str_err))
         traceback.print_exception(*exc_info, file=f_err)
@@ -307,7 +307,7 @@ def upload(debug=True):
                                                normality_alpha=data_loaded.get('normality_alpha'),
                                                not_preferred_tests=json_loads_safe(data_loaded.get('not_preferred_tests')),
                                                not_recommended_tests=json_loads_safe(data_loaded.get('not_recommended_tests')),
-                                               num_eval_units=data_loaded.get('num_eval_units'),
+                                               num_eval_units=json.loads(data_loaded.get('num_eval_units')),
                                                power_num_intervals=data_loaded.get('power_num_intervals'),
                                                power_test=data_loaded.get('power_test'),
                                                pval=data_loaded.get('pval'),
@@ -337,6 +337,7 @@ def upload(debug=True):
                     rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                rand_str=get_rand_state_str(),
+                                               num_eval_units=15, #TODO: get from client
                                                error_str=str_err,
                                                file_label=format_file_label(f.filename, 'uploaded')
                                        )
@@ -344,6 +345,7 @@ def upload(debug=True):
             # Set cookies
             if have_data:
                 if f.filename:
+                    resp.set_cookie('num_eval_units', json.dumps(15)), #TODO: get from client side
                     resp.set_cookie('fileName', f.filename)
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
                     resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
@@ -513,6 +515,7 @@ def data_analysis(debug=True):
                                                eval_unit_size=eval_unit_size,
                                                eval_unit_stat=eval_unit_stat,
                                                num_eval_units=num_eval_units,
+                                               max_pow_int=num_eval_units/15,
                                                shuffle_seed=seed,
                                                sig_test_heading=sig_test_heading,
                                                summary_str=summary_str,
@@ -538,7 +541,7 @@ def data_analysis(debug=True):
                     resp = make_response(rendered)
 
                     # -------------- Set all cookies -------------
-                    resp.set_cookie('num_eval_units', num_eval_units)
+                    resp.set_cookie('num_eval_units', json.dumps(num_eval_units)),
                     resp.set_cookie('last_tab', last_tab_name_clicked)
                     # if f.filename:
                     #     resp.set_cookie('fileName', f.filename)
@@ -802,7 +805,7 @@ def sigtest(debug=True):
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
                                        eval_unit_stat=request.cookies.get('eval_unit_stat'),
-                                       num_eval_units=request.cookies.get('num_eval_units'),
+                                       num_eval_units=json.loads(request.cookies.get('num_eval_units')),
                                        shuffle_seed=request.cookies.get('shuffle_seed'),
                                        sigtest_heading=request.cookies.get('sig_test_heading'),
                                        # todo: add teststat_heading
@@ -945,7 +948,7 @@ def effectsize(debug=True):
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
                                        eval_unit_stat=request.cookies.get('eval_unit_stat'),
-                                       num_eval_units=request.cookies.get('num_eval_units'),
+                                       num_eval_units=json.loads(request.cookies.get('num_eval_units')),
                                        shuffle_seed=request.cookies.get('shuffle_seed'),
                                        sigtest_heading=request.cookies.get('sig_test_heading'),
                                        # todo: add teststat_heading
@@ -1093,7 +1096,7 @@ def power(debug=True):
                                        # get from cookies
                                        eval_unit_size=request.cookies.get('eval_unit_size'),
                                        eval_unit_stat=request.cookies.get('eval_unit_stat'),
-                                       num_eval_units=request.cookies.get('num_eval_units'),
+                                       num_eval_units=json.loads(request.cookies.get('num_eval_units')),
                                        shuffle_seed=request.cookies.get('shuffle_seed'),
                                        sigtest_heading=request.cookies.get('sig_test_heading'),
                                        # todo: add teststat_heading
