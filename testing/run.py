@@ -64,7 +64,7 @@ def handle_exception(dir_str=''):
     with open("error_temp", 'w') as tmp_err:
         traceback.print_exception(*exc_info, file=tmp_err)
         # TODO, DELETE error_temp if not debugging
-    with open(ERRORS + "/ErrorLog.txt", "a") as f_err:
+    with open(ERRORS + "/" + folder_name + "/ErrorLog.txt", "a") as f_err:
         f_err.write('----------------------\n')
         str_err = str(exc_info[0]) + '\n' + str(exc_info[1])
         f_err.write('Exception info:\n{}\n'.format(str_err))
@@ -285,6 +285,7 @@ def upload(debug=True):
                         print('Data loaded from config.yml: {}'.format(data_loaded))
                         # check type of data_loaded (should be 'dict'. string will have no .get method)
                         if isinstance(data_loaded, dict):
+                            parsed_config = True
                             rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                file_label=format_file_label(f.filename, 'uploaded'),
@@ -348,7 +349,8 @@ def upload(debug=True):
                     resp.set_cookie('num_eval_units', json.dumps(15)), #TODO: get from client side
                     resp.set_cookie('fileName', f.filename)
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
-                    resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
+                    if config.filename and parsed_config:
+                        resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
                     resp.set_cookie('dir_str', dir_str)
             return resp
     except:
