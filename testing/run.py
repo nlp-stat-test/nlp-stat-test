@@ -74,7 +74,6 @@ def handle_exception(dir_str=''):
     # print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
     return make_response(render_template(template_filename,
                                          exception_message=str_err,#exception_message,
-                                         num_eval_units=15,  # todo: update
                                          rand_str=get_rand_state_str()))
 
 def get_rand_state_str():
@@ -214,7 +213,6 @@ def json_loads_safe(arg):
 def start():
     try:
         return render_template('interface.html',
-                               num_eval_units=15, # todo: update
                                rand_str=get_rand_state_str())
     except:
         ret = handle_exception()
@@ -338,7 +336,6 @@ def upload(debug=True):
                     rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                rand_str=get_rand_state_str(),
-                                               num_eval_units=15, #TODO: get from client
                                                error_str=str_err,
                                                file_label=format_file_label(f.filename, 'uploaded')
                                        )
@@ -346,7 +343,6 @@ def upload(debug=True):
             # Set cookies
             if have_data:
                 if f.filename:
-                    resp.set_cookie('num_eval_units', json.dumps(15)), #TODO: get from client side
                     resp.set_cookie('fileName', f.filename)
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
                     if config.filename and parsed_config:
@@ -517,7 +513,7 @@ def data_analysis(debug=True):
                                                eval_unit_size=eval_unit_size,
                                                eval_unit_stat=eval_unit_stat,
                                                num_eval_units=num_eval_units,
-                                               max_pow_int=num_eval_units/15,
+                                               max_pow_int=num_eval_units/15, #todo
                                                shuffle_seed=seed,
                                                sig_test_heading=sig_test_heading,
                                                summary_str=summary_str,
