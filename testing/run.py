@@ -22,7 +22,7 @@ from logic.sigTesting import run_sig_test
 from logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
-# from logic.filenames import get_path
+from logic.filenames import get_path
 
 
 
@@ -300,6 +300,7 @@ def upload(debug=True):
                                                hist_diff_par_file=data_loaded.get('hist_diff_par_file'),
                                                hist_score1_file=data_loaded.get(('hist_score1_file')),
                                                hist_score2_file=data_loaded.get(('hist_score2_file')),
+                                               eu_size_std_dev_file=data_loaded.get('eu_size_std_dev_file'),
                                                is_normal=data_loaded.get('is_normal'),
                                                mean_or_median=data_loaded.get('mean_or_median'),
                                                mu=data_loaded.get('mu'),
@@ -505,10 +506,11 @@ def data_analysis(debug=True):
                                                config_file_label = request.cookies.get('config_file_label'),
                                                normality_alpha=normality_alpha,
                                                skewness_gamma=skewness_gamma,
-                                               hist_score1_file='hist_score1_EUs.svg',
-                                               hist_score2_file='hist_score2_EUs.svg',
-                                               hist_diff_file='hist_score_diff.svg',
-                                               hist_diff_par_file='hist_score_diff_EUs.svg',
+                                               eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
+                                               hist_score1_file= get_path('hist_score1_file'),#'hist_score1_EUs.svg',
+                                               hist_score2_file=get_path('hist_score2_file'),
+                                               hist_diff_file=get_path('hist_diff_file'),
+                                               hist_diff_par_file=get_path('hist_diff_par_file'),
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                eval_unit_size=eval_unit_size,
                                                eval_unit_stat=eval_unit_stat,
@@ -564,10 +566,11 @@ def data_analysis(debug=True):
                     resp.set_cookie('not_recommended_tests', json.dumps(not_recommended_tests))
                     resp.set_cookie('not_preferred_tests', json.dumps(not_preferred_tests))
 
-                    resp.set_cookie('hist_score1_file', 'hist_score1_EUs.svg')
-                    resp.set_cookie('hist_score2_file', 'hist_score2_EUs.svg')
-                    resp.set_cookie('hist_diff_file', 'hist_score_diff.svg')
-                    resp.set_cookie('hist_diff_par_file', 'hist_score_diff_EUs.svg')
+                    resp.set_cookie('hist_score1_file', get_path('hist_score1_file'))
+                    resp.set_cookie('hist_score2_file', get_path('hist_score2_file'))
+                    resp.set_cookie('hist_diff_file', get_path('hist_diff_file'))
+                    resp.set_cookie('hist_diff_par_file', get_path('hist_diff_par_file'))
+                    resp.set_cookie('eu_size_std_dev_file', get_path('eu_size_std_dev_file'))
                     return resp  # return rendered
             else:
                 # no file
@@ -579,22 +582,6 @@ def data_analysis(debug=True):
             # You got to the main page by navigating to the URL, not by clicking submit
             # TODO: get rid of 'helper'
             return render_template(template_filename,
-                                   # tooltip_read_score_file=helper("read_score_file"),
-                                   # tooltip_plot_hist=helper("plot_hist"),
-                                   # tooltip_plot_hist_diff=helper("plot_hist_diff"),
-                                   # tooltip_partition_score=helper("partition_score"),
-                                   # tooltip_normality_test=helper("normality_test"),
-                                   # tooltip_skew_test=helper("skew_test"),
-                                   # tooltip_recommend_test=helper("recommend_test"),
-                                   # tooltip_calc_eff_size=helper("calc_eff_size"),
-                                   # tooltip_cohend=helper("cohend"),
-                                   # tooltip_hedgesg=helper("hedgesg"),
-                                   # tooltip_wilcoxon_r=helper("wilcoxon_r"),
-                                   # tooltip_hodgeslehmann=helper("hodgeslehmann"),
-                                   # tooltip_run_sig_test=helper("run_sig_test"),
-                                   # tooltip_bootstrap_test=helper("bootstrap_test"),
-                                   # tooltip_permutation_test=helper("permutation_test"),
-                                   # tooltip_post_power_analysis=helper("post_power_analysis"),
                                    file_label="Upload a file.",
                                    recommended_tests=[],
                                    summary_stats_list={},
@@ -820,6 +807,7 @@ def sigtest(debug=True):
                                        hist_score2_file=request.cookies.get('hist_score2_file'),
                                        hist_diff_file=request.cookies.get('hist_diff_file'),
                                        hist_diff_par_file=request.cookies.get('hist_diff_par_file'),
+                                       eu_size_std_dev_file=request.cookies.get('eu_size_std_dev_file'),
                                        # specific to sig_test
                                        mu=mu,
                                        sig_boot_iterations=sig_boot_iterations,
@@ -963,6 +951,7 @@ def effectsize(debug=True):
                                        hist_score2_file=request.cookies.get('hist_score2_file'),
                                        hist_diff_file=request.cookies.get('hist_diff_file'),
                                        hist_diff_par_file=request.cookies.get('hist_diff_par_file'),
+                                       eu_size_std_dev_file=request.cookies.get('eu_size_std_dev_file'),
                                        # specific to sig_test
                                        sig_test_stat_val=request.cookies.get('sig_test_stat_val'),
                                        CI=request.cookies.get('CI'),
@@ -1111,6 +1100,7 @@ def power(debug=True):
                                        hist_score2_file=request.cookies.get('hist_score2_file'),
                                        hist_diff_file=request.cookies.get('hist_diff_file'),
                                        hist_diff_par_file=request.cookies.get('hist_diff_par_file'),
+                                       eu_size_std_dev_file=request.cookies.get('eu_size_std_dev_file'),
                                        # specific to sig_test
                                        sig_test_stat_val=request.cookies.get('sig_test_stat_val'),  # json.loads?
                                        pval=request.cookies.get('pval'),
@@ -1169,6 +1159,7 @@ def upload_config():
                     hist_diff_par_file = data_loaded.get('hist_diff_par_file'),
                     hist_score1_file = data_loaded.get(('hist_score1_file')),
                     hist_score2_file = data_loaded.get(('hist_score2_file')),
+                    eu_size_std_dev_file = data_loaded.get('eu_size_std_dev_file'),
                     is_normal = data_loaded.get('is_normal'),
                     mean_or_median = data_loaded.get('mean_or_median'),
                     mu = data_loaded.get('mu'),
