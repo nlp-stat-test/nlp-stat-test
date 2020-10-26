@@ -156,7 +156,8 @@ style="background-color: #eee; padding: 5;   top: 0;
           <p>Upload a text file containing metrics comparing two systems.
           The file should have two colummns, one for each system. A configuration file can also be  (this is optional).</p>
 
-                    <form action="/upload" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    <form action="/upload" class="form-horizontal" enctype="multipart/form-data"
+                          method="post" onsubmit="checkFileSize()">
 
     <p> System file:
 <br><br>
@@ -299,7 +300,9 @@ Error tolerance:
               <p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
 
               <div id="eu_image" style="display: none;">
-              <img id=power_file src="../{{ url_for('send_img_file_dir', image_name='eu_size_std_dev.svg') }}?{{ rand }}">
+                  {% if eu_size_std_dev_file %}
+              <img id=eu_image_file src="../{{ url_for('send_img_file_dir', image_name=eu_size_std_dev_file) }}?{{ rand }}">
+                  {% endif %}
               </div>
               
                 <!-- SUMMARY STATISTICS -->
@@ -1108,7 +1111,8 @@ function clear_cookies() {
             var files = fileInput.files;
             var configFiles = configInput.files;
             if (fileInput.value == "") {
-                document.getElementById("fileLabel").innerHTML = '<i>Upload a file.</i>'
+                document.getElementById("fileLabel").innerHTML = '<i>Upload a data file.</i>'
+                fileInput.setCustomValidity("To submit, upload a data file.")
             } else {
                 var strSplit = fileInput.value.split('\\');
                 document.getElementById("fileLabel").innerHTML =
