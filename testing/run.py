@@ -1193,14 +1193,7 @@ def upload_config():
         ret = handle_exception()
         return ret
 
-# https://www.roytuts.com/how-to-download-file-using-python-flask/
-@app.route('/download')
-def download_file():
-    try:
-        return send_file("user/report.zip", as_attachment=True, cache_timeout=0)
-    except:
-        ret = handle_exception()
-        return ret
+
 
 
 @app.route('/download_config/<config_file_name>')
