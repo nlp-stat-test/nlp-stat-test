@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>NLPStatTest</title>
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
+
+
+
+
+
+    <!-- CONSTANTS todo: remove this if not used -->
+    <script src="{{ url_for('static', filename='constants.js') }}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- KATEX STARTER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+
+       <!-- The loading of KaTeX is deferred to speed up page rendering -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+       <!-- To automatically render math in text elements, include the auto-render extension: -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+           onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+
+<script>
+          // BREADCRUMBS! adapted from W3Schools Tutorial
+        function openTab(evt, tabName, cur) {
+                console.log(localStorage.getItem("max_tab"));
+              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max_tab")) + 1){
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablinks");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+              }
+              document.getElementById(tabName).style.display = "block";
+              evt.currentTarget.className += " active";
+            }
+            }
+
+            function showdiv(divname, buttonname, description) {
+                if (document.getElementById(divname).style.display=="block"){
+                    document.getElementById(divname).style.display="none";
+                    document.getElementById(buttonname).innerHTML = "Show " + description;
+                } else {
+                    document.getElementById(divname).style.display="block";
+                    document.getElementById(buttonname).innerHTML = "Hide " + description;
+                }
+                return false;
+            }
+
+
+</script>
+
+
+<script>
+
+
+
+
+function show_sig_boot_div(test_name){
+    if (test_name && test_name.includes('boot') || test_name.startsWith('permutation')) {
+        document.getElementById("sig_boot_div").style.display = "block";
+    } else {
+        document.getElementById("sig_boot_div").style.display = "none";
+    }
+}
+// toggle the bootstrap div
+function show_bootstrap_div() {
+        document.getElementById("power_boot_fields").style.display="block";
+        document.getElementById("power_montecarlo_fields").style.display="none";
+}
+// toggle the Monte Carlo div
+function show_montecarlo_div() {
+    document.getElementById("power_montecarlo_fields").style.display="block";
+    document.getElementById("power_boot_fields").style.display="none";
+}
+
+
+
+
+
+
+
+
+</script>
+
+<body style="font-family: sans;" onload="upload_check(); if (localStorage.getItem('maxtab') === null) {max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);}">
+
+
+    <div margin: 100 auto;>
+        <div class="header">
+            <h1>NlpStatTest</h1>
+
+        </div>
+
+        <div class="roundpurplebottom interface ds"
+               style="background-color: #eee; padding: 5; top: 0;">
+
+
+             <a class="button1 possible" href="{{ url_for('home') }}">Home</a>  |
+                    <a class="button1 possible" href="{{ url_for('ppa') }}">Prospective Power Analysis</a> |
+                     <a class="button1 current" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
+  </div>
+
+
+</div>
+<div class="roundpurplebottom interface ds"
+style="background-color: #eee; padding: 5;   top: 0;
+       position: -webkit-sticky;
+       position: sticky;    z-index: 2;">
+              <div > <a class="button1 completed" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
+               <a class="button1 completed" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
+               <a class="button1 current" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
+                <a class="button1 possible" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a> →
+               <a class="button1 greyed" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</a> →
+  <a class="button1 possible" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
+
+  <style>.arrow{font-size: 1.5em;}</style>
+  </div>
+    </div>
+
+
+
+    <div id="warning" style="color:red;display:none">The results may be incomplete.   </div>
+
+
+     <div id="loading" style="display: none;"> ⌛ Loading ⌛ </div>
+
+
+
+
+
+
+
+ <div id="Upload Files" class="tabcontent interface">
+
+
+        <div class="roundpurplebottom" style="position:relative;">
+
+          <h3>File Upload</h3>
+
+          <p>Upload a text file containing metrics comparing two systems.
+          The file should have two colummns, one for each system. A configuration file can also be  (this is optional).</p>
+
+                    <form action="/upload" class="form-horizontal" enctype="multipart/form-data"
+                          method="post" onsubmit="checkFileSize()">
+
+    <p> System file:
+<br><br>
+                        <!-- onchange="pressed()" -->
+                    <input type="file" id="data_file"
+                           onchange="checkFileSize()"
+                           name="data_file" style="display:none;"
+                           required=""
+                    />                      <!-- todo: in onSubmit check that file is provided -->
+
+                    <!-- <button class="button1 interface"> -->
+                    <a href="#" class="interface button1"><label  for="data_file">Upload</label></a>
+                    <!-- </button> -->
+                    <label id="fileLabel"><i>{{file_label}}</i>
+                        {% if error_str %}<b>{{ error_str }}</b>{% endif %}</label>
+                    </p>
+
+
+
+
+  <p>   Configuration file (optional):
+<br><br>
+                    <input type="file" id="config_file"
+                           onchange="checkFileSize()"
+                           name="config_file" style="display:none"/>
+                    <!-- link shows as button -->
+                        <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
+                        <label id="configLabel"><i>{{config_file_label}}</i>{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label></p>
+
+
+                    <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); localStorage.setItem('', '1');"
+                            name="submit" type=submit class="interface" required>Submit File</button>
+
+                    </form>
+        </div>
+
+        <script>
+        function upload_check(){
+                if (Number(localStorage.getItem("max_tab")) >= 1) {
+                    document.getElementById('uploadresult').style.display = "block";
+                } else {
+                      document.getElementById('uploadresult').style.display = "none";
+                    }
+                    return false;
+                }
+        </script>
+
+  <div class="roundgreen"  id="uploadresult">
+
+    <h3>File Validation Results</h3>
+      <p>The file has been uploaded. Move to the "Data Analysis" tab.<b>{{ error_str }}</b></p>
+</div>
+
+     </div>
+
+
+        <div id='Data Analysis' class="tabcontent"  style="display:none">
+            <!-- Data Analysis form -->
+            <form action="/data_analysis" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <!-- Begin Data Analysis div -->
+                <div class="roundpurplebottom" style="position:relative;">
+
+                    <h3>Data Analysis</h3>
+
+<p>Many statistical tests make certain assumptions
+about the sample. For example, the \( t \) test assumes normality. In order
+to choose significance tests that are appropriate for
+this particular sample, the system will estimate sample skewness
+and test normality.</p>
+
+
+
+                    <p>Evaluation unit <abbr title="This should be a whole number between one and the number of data points.">size</abbr>:
+                  <br>
+
+                    <input id="eval_unit_size" name="eval_unit_size" type="number"
+                            {% if eval_unit_size %} value="{{ eval_unit_size }}" {% else %} value="1"
+                            {% endif %} class="form-control input-md" required="" >
+</p>
+
+
+                  <p>  Choose a metric to represent each evaluation unit:
+      <br>
+                    <input type="radio" name="target_statistic" id="target_statistic-0" value="mean" checked="checked" {% if eval_unit_stat=="mean" %} checked="checked" {% else %} checked="checked" {% endif %}> Mean
+<br>
+                    <input type="radio" name="target_statistic" id="target_statistic-1" value="median" {% if eval_unit_stat=="median" %} checked="checked" {% endif %}> Median
+                </p>
+
+
+
+                <p>Random <abbr title="A real number seed for random shuffling can be entered here. Otherwise, the data will not be shuffled.">Seed</abbr>:
+<br>
+                    <input id="seed" name="seed" type="number" placeholder="Do not shuffle" {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
+</p>
+
+                    <p>Significance level threshold (for calculating normality):
+              <br>
+                    \( \alpha = \) <input id="normality_alpha" name="normality_alpha" type="number" step="0.001" {% if normality_alpha %} value="{{ normality_alpha }}" {% else %}value="0.05" {% endif %} class="form-control input-md">
+</p>
+
+
+
+<p>
+Error tolerance:
+<br>
+\( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" min="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
+</p>
+
+
+                    <!-- Data Analysis Submit Button -->
+
+                    <input type="hidden" id="da_hidden" value="hidden101">
+
+                    <button id="submit"
+                            onclick="document.getElementById('loading').style.display='block'; max_tab = '2'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);
+                          " name="submit" type=submit
+                            class="interface">Run</button>
+
+                    <!-- Button for JS script-->
+                    <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
+
+                </div>
+                <!-- end purple box -->
+            </form>
+            <!-- End data analysis form -->
+            <!-- begin green results area -->
+            <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
+
+
+
+                <h3>Evaluation Unit Size Recommendation</h3>
+
+                <p>In general, as EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
+
+              <table>
+                <tr><th>EU Size</th><th>Standard Deviation</th></tr>
+                {{ EU_table | safe}}
+              </table>
+
+              <p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
+
+              <div id="eu_image" style="display: none;">
+                  {% if eu_size_std_dev_file %}
+              <img id=eu_image_file src="../{{ url_for('send_img_file_dir', image_name=eu_size_std_dev_file) }}?{{ rand }}">
+                  {% endif %}
+              </div>
+              
+                <!-- SUMMARY STATISTICS -->
+                <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}
+                <table>
+
+                    <tr>
+                        <th>Score</th>
+                            {% for tuple in summary_stats_list[0][1] %} <th>{{ tuple[0] }}</th>
+                            {% endfor %}
+                        <!--<th>Mean</th><th>Median</th><th>Standard Deviation</th><th>Minimum</th><th>Maximum</th> -->
+                    </tr>
+
+                    {% for tuple in summary_stats_list %}
+                    <tr>
+                        <td> {{ tuple[0] }} <!--score1, score2, diff--> </td>
+                            {% for stat_tuple in tuple[1] %}
+                            <td>{{ stat_tuple[1] }}</td>
+
+                            {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+
+                <!-- HISTOGRAM Images -->
+                {% if hist_score1_file %}
+                <p><button id="hist_button" class="interface" onclick="showdiv('hidden_graph', 'hist_button', 'Histograms'); return false;">Show Histograms</button></p>
+                {% endif %}
+
+                <div style="display:none;" id="hidden_graph">
+
+                    <!-- new way -->
+                    {% if hist_score1_file %}
+                    <img id=hist_score1_file src="{{ url_for('send_img_file_dir', image_name=hist_score1_file) }}?{{ rand }}">{% endif %} {% if hist_score2_file %}
+                    <img id=hist_score2_file src="../{{ url_for('send_img_file_dir', image_name=hist_score2_file) }}?{{ rand }}"> {% endif %} {% if hist_diff_par_file %}
+                    <img id=hist_diff_par_file src="../{{ url_for('send_img_file_dir', image_name=hist_diff_par_file) }}?{{ rand }}"> {% endif %}
+
+                </div>
+
+                <!-- RECOMMENDATION for test statistics -->
+
+                <h3 id=teststat_heading align='left'>{{ teststat_heading }}</h3> {% if mean_or_median %}
+                <table border=1>
+
+                    <tr>
+                        <th>Property</th>
+                        <th>Conclusion</th>
+                    </tr>
+
+                    <tr>
+                        <td>Normality</td>
+                        <td>The data distribution {% if is_normal %} passes {% else %} does not pass {% endif %} the normality test.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Skewness</td>
+                        <td>The skewness measure \( \gamma \) is {{ skewness_gamma }}.
+                            <!-- {% if mean_or_median == 'median' %} {% endif %} -->
+                            This means the data distribution is {% if skewness_gamma > 1 %} highly skewed {% elif skewness_gamma > 0.5 %} moderately skewed {% else %} roughly symmetric{% endif %}.
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Test Statistic</td>
+                        <td>Based on the skewness, the recommended test statistic to use is: {{ mean_or_median }}.</td>
+                    </tr>
+
+                </table>
+                {% endif %}
+
+                <!-- RECOMMENDATION for significance tests with REASONS -->
+                <h3 id=sigtest_heading align='left'>
+                {{ sigtest_heading }}</h3>
+
+                <p>The following tests are appropriate and preferred:</p> {% if recommended_tests|length %}
+                <table border=1>
+                    <col style="width:140px">
+
+                    <tr>
+                        <th>Test</th>
+                        <th>Reason</th>
+                    </tr>
+
+                    {% for tuple in recommended_tests %}
+                    <tr>
+                        <td>
+                            {% if tuple[0]=='t' %}Student's \(t\){% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
+                        </td>
+                        <td>{{ tuple[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!-- End Recommended Tests Table -->
+                {% endif %}
+
+
+<p> <button id="npst_button" class="interface" onclick="showdiv('non_preferred_div_da', 'npst_button', 'Less-Preferred Significance Tests'); return false;">Show Less-Preferred Significance Tests</button></p>
+
+
+
+
+
+                <div id="non_preferred_div_da" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
+
+
+                    <h3>Appropriate but Non-Preferred Tests</h3>
+
+                  {% if not_preferred_tests|length %} <p>The following tests are appropriate but not preferred:</p>
+                    <table border=1>
+                        <col style="width:140px">
+
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
+
+                        {% for tuple in not_preferred_tests %}
+                        <tr>
+                            <td>
+                                {% if tuple[0]=='t' %} Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <!-- End Non-Preferred Tests Table -->
+                    {% else %} <p>There are no tests in this category.</p> {% endif %}
+                </div>
+
+
+
+<p> <button id="ist_button" class="interface" onclick="showdiv('non_recommended_div_da', 'ist_button', 'Inappropriate Significance Tests'); return false;">Show Inappropriate Significance Tests</button></p>
+
+
+
+                <div id="non_recommended_div_da" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
+
+
+                    <h3>Inappropriate Tests</h3> <p>{% if not_recommended_tests|length %} The following tests are inappropriate and not recommended: </p>
+                    <table border=1>
+                        <col style="width:140px">
+
+                        <tr>
+                            <th>Test</th>
+                            <th>Reason</th>
+                        </tr>
+
+                        {% for tuple in not_recommended_tests %}
+                        <tr>
+                            <td>
+                                {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon Signed Rank {% elif tuple[0]=='sign' %}Sign {% elif tuple[0]=='bootstrap_med' %}Bootstrap (Median) {% elif tuple[0]=='permutation_med' %}Permutation (Median) {% else %}{{ tuple[0] }} {% endif %}
+                            </td>
+                            <td>{{ tuple[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <!-- End Non-Recommended Tests Table -->
+                    {% else %} <p>There are no inappropriate tests.</p> {% endif %}
+                </div>
+
+
+
+
+
+            </div>
+            <!-- end round green (data analysis) -->
+
+        </div>
+        <!-- End data analysis -->
+
+        <div id='Significance Test' class="tabcontent" style="display:none">
+
+
+            <div class="roundpurplebottom" style="position:relative;">
+
+
+              <h3>Significance Testing</h3>
+
+
+<p>NLPStatTest considers
+one sample testing cases for numerical data, where
+i.i.d. within sample is assumed, with \(H_0\) being the
+chosen test statistic \(T\) (mean or median) is 0. To run a statistical significance test, first
+determine the test statistic \(T\) (mean or median) and
+a significance test based on data analysis results
+(e.g., the sample skewness estimate and normality
+test results). Then choose the significance
+level \( \alpha \), which is often set to 0.05 or 0.01 in the
+NLP field</p>
+
+
+                <form action="/sig_test" class="form-horizontal" enctype="multipart/form-data" method="post">
+
+
+                    <p>Choose the alternative hypothesis:
+    <br>
+                    <input type="radio" name="alternative" id="alternative_less" value="less" required {% if alternative=='less' %}checked{% endif %}> <abbr title="The alternative hypothesis is that the difference between systems is less than &delta;.">One-sided:</abbr> \( \mu_1 - \mu_2 < \delta \)
+
+            <br>
+
+            <input type="radio" name="alternative" id="alternative_greater" value="greater" {% if alternative=='greater' %}checked {% endif %}> <abbr title="The alternative hypothesis is that the difference between systems is greater than &delta;.">One-sided:</abbr>  \( \mu_1 - \mu_2 > \delta \)
+
+             <br>
+
+            <input type="radio" name="alternative" id="alternative_two_sided" value="two-sided" {% if alternative=='two-sided' %}checked{% endif %}> <abbr title="The alternative hypothesis is that the difference between the first and second system is not equal to &delta;.">Two-sided:</abbr> \( \mu_1 - \mu_2 \neq \delta \)
+
+                      </p>
+
+
+          <p><abbr title="The threshold &delta; for difference between the systems.">Threshold</abbr>:
+      <br>
+
+              \( \delta = \) <input id="mu" name="mu" type="number" {% if mu %} placeholder="{{ mu }}" value="{{ mu }}" {% else %} value=0.0 {% endif %} class="form-control" step="any">
+              </p>
+
+            <!-- SIGNIFICANCE TEST RECOMMENDATION for test statistics -->
+            <h3>Recommended Tests</h3> {% if recommended_tests|length %}
+
+            <table border=1>
+                <col style="width:140px">
+
+                <tr>
+                    <th>Test</th>
+                    <th>Reason</th>
+                </tr>
+
+                {% for tuple in recommended_tests %}
+                <tr>
+                    <td>
+                        <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student's \( t \) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                    </td>
+                    <td>{{ tuple[1] }}{% if tuple[0]=='wilcoxon' %} <br>
+                            <input type="checkbox" name="checkbox_wilcoxon_ci1"
+                                    {% if wilcoxon_ci_rec %}checked{% endif %}>Calculate the confidence interval.
+                            <i>Note: The calculation may take 30 seconds or more for larger sets of data.</i> {% endif %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <!-- End Recommended Tests Table -->
+            {% endif %}
+
+  <p><button id="npdst_button" class="interface" onclick="showdiv('non_preferred_div_st', 'npdst_button', 'Non-Preferred Tests'); return false;">Show Non-Preferred Tests</button></p>
+
+
+            <div id="non_preferred_div_st" {% if show_non_preferred %} style="display: block;" {% else %} style="display: none" {% endif %}>
+                <h3>Appropriate but Non-Preferred Tests</h3> {% if not_preferred_tests|length %} <p>The following tests are appropriate but not preferred:</p>
+                <table border=1>
+                    <col style="width:140px">
+
+                    <tr>
+                        <th>Test</th>
+                        <th>Reason</th>
+                    </tr>
+
+                    {% for tuple in not_preferred_tests %}
+                    <tr>
+                        <td>
+                            <input type="radio" name="target_sig_test" id="target_sig_test-{{ sig_test_name }}" required onclick="show_sig_boot_div('{{ tuple[0] }}')" {% if sig_test_name %} {% if tuple[0]==sig_test_name %} checked="checked" {% endif %} {% endif %} value="{{ tuple[0] }}"> {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                        </td>
+                        <td>{{ tuple[1] }}{% if tuple[0]=='wilcoxon' %} <br>
+                            <input type="checkbox" name="checkbox_wilcoxon_ci2"
+                                    {% if wilcoxon_ci_nonpref %}checked{% endif %}>Calculate the confidence interval.
+                            <i>Note: The calculation may take a long time.</i> {% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!-- End Non-Preferred Tests Table -->
+                {% else %} There are no tests in this category.<br><br> {% endif %}
+            </div>
+
+  <p><button id="inapst_button" class="interface" onclick="showdiv('non_recommended_div_st', 'inapst_button', 'Inappropriate Tests'); return false;">Show Inappropriate Tests</button></p>
+
+
+            <div id="non_recommended_div_st" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
+
+                <h3>Inappropriate Tests</h3> {% if not_recommended_tests|length %}
+                <table border=1>
+                    <col style="width:140px">
+
+                    <tr>
+                        <th>Test</th>
+                        <th>Reason</th>
+                    </tr>
+
+                    {% for tuple in not_recommended_tests %}
+                    <tr>
+                        <td>
+                            {% if tuple[0]=='t' %}Student's \(t\) test {% elif tuple[0]=='bootstrap' %}Bootstrap {% elif tuple[0]=='permutation' %}Permutation {% elif tuple[0]=='wilcoxon' %}Wilcoxon signed rank test {% elif tuple[0]=='sign' %}Sign test {% elif tuple[0]=='bootstrap_med' %}Bootstrap (median) {% elif tuple[0]=='permutation_med' %}Permutation (median) {% else %}{{ tuple[0] }} {% endif %}
+                        </td>
+                        <td>{{ tuple[1] }} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <!-- End Non-Recommended Tests Table -->
+                {% else %} No tests fall into this category. <br><br> {% endif %}
+            </div>
+
+
+
+            <!-- SIGNIFICANCE alpha -->
+
+        <p>Required <abbr title="Reject the null hypothesis if the 𝘱-value is less than this value.">significance level</abbr>:
+
+<br>
+          \( \alpha =\)  <input id="significance_level" name="significance_level" type="number" {% if sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"> </p>
+
+            <!-- Bootstrap (for bootstrap and permutation tests) -->
+            <div id="sig_boot_div" style="display: none">
+                <p>Number of iterations for bootstrap or permutation significance tests:
+
+                <input id="sig_boot_iterations" name="sig_boot_iterations" type="number" value="200"></p>
+                <!-- todo: disable if not bootstrap -->
+            </div>
+
+
+            <input type="hidden" id="sa_hidden" value="hidden101">
+            <!-- Is type=submit implied by class="btn btn-success" ? -->
+            <input type="hidden"  id="sig_tab_name" name="sig_tab_name" value="SignificanceTabHidden-2" />
+
+            <button id="submit" onclick="document.getElementById('loading').style.display='block'; max_tab = '3'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);" class='interface' name="submit" >Run</button>
+
+            </form>
+            <!-- End Significance Test form -->
+        </div>
+
+        <div class="roundgreen" class="hiddendiv" id="hiddenSignificanceTest">
+            {% if sig_test_stat_val or CI%}
+            <h3>Results</h3>
+
+            <table border="1">
+
+                {% if sig_test_name %}
+                <tr>
+                    <th>Significance test</th>
+                    <td>
+                        {% if sig_test_name=='t' %}Student's \(t\) test {% elif sig_test_name=='bootstrap' %}Bootstrap {% elif sig_test_name=='permutation' %}Permutation {% elif sig_test_name=='wilcoxon' %}Wilcoxon signed rank test {% elif sig_test_name=='sign' %}Sign test {% elif sig_test_name=='bootstrap_med' %}Bootstrap (median) {% elif sig_test_name=='permutation_med' %}Permutation (median) {% else %}{{ sig_test_name}} {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                <!-- Hide test statistic
+                {% if sig_test_name != 'bootstrap' %}
+                 <tr>
+                    <th>
+                    test statistic
+                    </th>
+                    <td>{{ sig_test_stat_val }}</td>
+                </tr>{% endif %}  -->
+                <!-- Show CI only if it was calculated -->
+                {% if CI %}
+                <tr>
+                    <th> Confidence interval
+                    </th>
+                    <td>{{ CI }} <i>(based on {{ mean_or_median }})</i></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th><i>p</i>-value</th>
+                    <td> {{ pval }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Reject \(H_0\)</th>
+                    <td>{% if rejectH0 %}Yes{% else %}No{% endif %}</td>
+                </tr>
+            </table>
+            {% endif %}
+        </div>
+
+    </div>
+    <!-- end Significance Results Tab -->
+
+    <div id="Effect Size" class="tabcontent" style="display:none">
+
+        <div class="roundpurplebottom" style="position:relative;">
+            <form id="frmEffectSize" action="/effectsize" class="form-horizontal" onsubmit="SubmitHandler('frmEffectSize')" enctype="multipart/form-data" method="post">
+
+                <h3>Effect Size Estimator Options</h3>
+
+<p>Statistical significance
+is markedly different from practical significance.
+One way to measure practical significance is
+by estimating effect size, which is defined as the
+degree to which the 'phenomenon' is present in
+the population, or the degree to which the null
+hypothesis is false (Cohen, 1994).</p>
+                <p>Required significance level for confidence interval:
+        <br>
+                \( \alpha = \) <input id="effectsize_significance_level" name="effectsize_significance_level" type="number" {% if effectsize_sig_alpha %} placeholder="{{ effectsize_sig_alpha }}" value="{{ effectsize_sig_alpha }}" {% elif sig_alpha %} placeholder="{{ sig_alpha }}" value="{{ sig_alpha }}" {% else %} value=0.05 {% endif %} class="form-control input-md" required="" step="0.01" min="0" max="1"></p>
+
+
+   <p>
+                {% if effect_size_estimators|length %}
+
+                <table border=1 id="tblEffectEstimator">
+
+                    <tr>
+                        <th>Effect Size Estimator</th>
+                        <th>Description</th>
+                    </tr>
+
+                    {% for key, value in effect_size_estimators.items() %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="target_eff_test_{{ key }}" id="target_eff_test-{{ key }}" {% for est in estimator_value_list %} {% if est[0]==key%} checked="checked" {% endif %} {% endfor %} value={{ key }}> {% if key=='wilcoxonr' %} Wilcoxon \( r \) {% elif key=='hl' %} Hodges-Lehmann {% elif key=='hedgesg' %}Hedges' \( g \) {% elif key=='cohend' %}Cohen's \( d \) {% else %}{{ key }}{% endif %}
+                        </td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                {% endif %}
+</p>
+
+                <!-- effect size Submit Button -->
+            <input type="hidden" id="hiddenEffectEstimators" value="hiddenEffectEstimators">
+                <!-- Is type=submit implied by class="btn btn-success" -->
+                <button id="ef_submit" class='interface' name="ef_submit" type=submit  onclick="document.getElementById('loading').style.display='block'; GetSelectedCheckboxes('tblEffectEstimator'); max_tab = '4'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">Run</button>
+                <!-- Button for JS script-->
+                <!-- <a href=# id=process_input><button class='btn btn-default' >Submit via JS</button></a> -->
+
+            </form>
+
+        </div>
+        <!-- end Effect Size purple input -->
+
+
+        <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
+
+            <!-- New table to make into estimator, value instead of est, desc: -->
+            {% if estimator_value_list|length %}
+            <h3>Results</h3>
+
+            <table border=1 id="tblEffectEstimator">
+
+                <tr>
+                    <th>Effect Size Estimator</th>
+                    <th>Value</th>
+                    <th>Confidence Interval</th>
+                </tr>
+
+                {% for key_value_tuple in estimator_value_list %}
+                <tr>
+                    <td>
+                        {% if key_value_tuple[0]=='hl' %}Hodges-Lehmann {% elif key_value_tuple[0]=='wilcoxonr' %}Wilcoxon \( r \) {% elif key_value_tuple[0]=='hedgesg' %}Hedges' \( g \) {% elif key_value_tuple[0]=='cohend' %}Cohen's \( d \) {% else %}{{ key_value_tuple[0] }}{% endif %}
+                    </td>
+                    <td>{{ key_value_tuple[1][0] }}</td>
+                    <td>{{ key_value_tuple[1][1] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">
+
+        <div class="roundpurplebottom" style="position:relative;">
+
+            <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <div class="form-group">
+                    <h3>Retrospective Power Analysis</h3>
+                    <p>A power curve shows how the statistical power increases as sample size increases. For example, using 100 evaluation units with 5 power measurements, this test calculates the power for partitions of the data into 20, 40, 60, 80 and 100 evaluation units. At each of these sample sizes, the power analysis is done using either a bootstrap simulation or a Monte Carlo simulation. The Monte Carlo simulation is only available for normal data.</p>
+
+                    <p><abbr title="  Specify the number of subsamples between the minimum and maximum number of evaluation units, at which to calculate power.">Number</abbr> of power measurements:
+                      <br>
+                    <!-- We use length of scores to determine value's min and max
+                     todo: need to provide error messages for all cases when num_eval_units // 15 < 5 -->
+                    <input id="num_intervals" name="num_intervals" type="number" placeholder="Number of intervals"
+                           class="form-control input-md" step="1"
+                            {% if power_num_intervals %}
+                               value="{{ power_num_intervals }}"
+                            {% else %} value="5" {% endif %}
+                           {% if num_eval_units %}
+                              {% if num_eval_units // 15 >= 5 %}
+                                min="5"
+                                max="{{ num_eval_units // 15 }}"
+                              {% elif num_eval_units // 10 >= 5 %}
+                                min="5"
+                                max="{{ num_eval_units // 10 }}"
+                              {% elif num_eval_units // 10 >=3 %}
+                                min="3"
+                                max="{{ num_eval_units // 10 }}"
+                              {% else %}
+                                min="1"
+                                max="{{ num_eval_units // 2 }}"
+                              {% endif %}
+                           {% endif %}></p> <!-- min=5 max="n/15" -->
+
+
+
+                    <p> Number of iterations at each sample size:
+        <br>
+
+                    <input id="iterations" name="power_iterations" type="number" placeholder="default" {% if power_iterations %}value="{{ power_iterations }}" {% else %}value="200" {% endif %}  class="form-control input-md"> </p>
+                    <!-- min="10" max="200"-->
+
+                    <!-- TODO: Display advice that takes into account the
+                     actual size of evaluation unit and the limits on min and max -->
+
+                    {% if is_normal %}   <p>Method of power analysis:
+                  <br>
+                      <input type="radio" name="target_pow_test" id="target_pow_test-1" value='montecarlo' onclick="show_montecarlo_div()" checked="checked" required>
+                    <abbr title="Conduct retrospective power analysis using Monte Carlo simulation.">Monte Carlo</abbr>
+
+<br>
+                    <input type="radio" name="target_pow_test" id="target_pow_test-2" value='bootstrap' onclick="show_bootstrap_div()" {% if power_test=='bootstrap' %}checked{% endif %}>
+                    <abbr title="Conduct retrospective power analysis using bootstrap simulation.">Bootstrap</abbr>
+                    {% endif %}
+                    <input type="hidden" name="target_pow_test_bootstrap" id="target_pow_test-bootstrap" value="bootstrap">
+                  </p>
+
+
+                    <!--
+                                            <td>
+                        {% if key=='t' %}Student t test
+                        {% elif key=='bootstrap' %}Bootstrap
+                            {% elif key=='permutation' %}Permutation
+                            {% elif key=='wilcoxon' %}Wilcoxon signed rank test
+                            {% elif key=='sign' %}Sign test
+                            {% elif key=='bootstrap_med' %}Bootstrap (median)
+                            {% elif key=='permutation_med' %}Permutation (median)
+                    {% endif %} </td>
+                        -->
+                    <div class="hiddendiv" id="power_boot_fields" {% if is_normal %}style="display:none" {% else %}style="display:block" {% endif %}>
+
+                        <h3>Bootstrap Parameters</h3>
+
+                        <p>Significance test:<br>
+
+                          {% for sigtest in recommended_tests %}
+                        <input type="radio" name="power_boot_sig_test" value="{{ sigtest[0] }}" {% if sigtest[0]==sig_test_name %}checked="checked" {% endif %} required> {% if sigtest[0] == 't' %}Student's \(t\)-test<br> {% elif sigtest[0] == 'bootstrap' %}Bootstrap<br> {% elif sigtest[0] == 'wilcoxon' %}Wilcoxon signed rank test<br> {% elif sigtest[0]=='sign' %}Sign test<br> {% elif sigtest[0]=='permutation' %}Permutation<br> {% elif sigtest[0]=='bootstrap_med' %}Bootstrap (median)<br> {% elif sigtest[0]=='permutation_med' %}Permutation (median)<br> {% else %}{{ sigtest[0] }} {% endif %} {% endfor %}
+
+                        <p> Significance level:
+                          <br>
+                          \( \alpha = \) <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01"></p>
+
+
+
+                        <p>Iterations for bootstrap significance test:
+                          <br>
+                        <input type="number" name="power_boot_B" {% if sig_boot_iteration %} value="{{ sig_boot_iteration }}" {% else %} value="200" {% endif %}></p>
+
+
+                    </div>
+
+                    <div class="hiddendiv" id="power_montecarlo_fields" style="display:none">
+                        <p>Monte Carlo <abbr title="&alpha value for significance test.">Parameters:</abbr> <br>
+
+                     \( \alpha = \)   <input type="number" name="power_alpha" {% if sig_test_alpha %} value="{{ sig_test_alpha }}" {% else %} value="0.05" {% endif %} step="0.01"> </p>
+
+
+                    </div>
+
+                    <!-- Power Submit Button -->
+
+                    <button id="pa_submit" class='interface' name="pa_submit" type=submit onclick="document.getElementById('loading').style.display='block'; max_tab = '5'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); " onsubmit="pa_submit_func()">Run</button>
+
+                </div>
+            </form>
+
+        </div>
+
+
+
+        <div class="roundgreen" class="hiddendiv" id="hiddenPowerTest">
+
+            <!-- Images -->
+            {% if power_file %}
+            <h3>Results</h3>
+            <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
+        </div>
+    </div>
+
+ <div id="Download Report" class="tabcontent interface" style="display:none">
+
+
+
+        <div class="roundpurplebottom" style="position:relative;">
+
+<h3>Downloads</h3>
+
+<p>These buttons can be clicked to download data from your session or print your report. The report can also be printed to PDF.</p>
+         <button class='interface' onclick="show_print(); window.print(); hide_print(); return false;">Print Full Report</button>
+
+         <button class="interface" onclick="window.location.href='{{ url_for('.download_config', config_file_name='config'+rand_str) }}'">Download Configuration</button>
+
+           <button class="interface" onclick=" window.location.href='{{ url_for('.download_zip') }}'">Download Supporting Files</button>
+
+<h3>Data Deletion</h3>
+
+<p>This button deletes your data from our server and resets the session.</p>
+
+<script>
+function clear_cookies() {
+// https://www.geeksforgeeks.org/how-to-clear-all-cookies-using-javascript/
+  for (var i = 0; i < document.cookie.split(';').length; i++){
+    if (document.cookie.split(';')[i].split('=')[0] != "dir_str") {
+     document.cookie = document.cookie.split(';')[i] + "=;expires=" + new Date(0).toUTCString();
+   } else {console.log("dir_str");}
+  }
+}
+</script>
+
+<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}'">Delete User Data</button>
+
+
+
+        </div>
+
+     </div>
+
+<div id="Exceptions">{{ exception_message }}</div>
+
+
+
+
+    <!-- Checkboxes (effect sizes) click handler -->
+    <script type="text/javascript">
+        // get the checkbox values from effect Sizes into an array
+        // "tblEffectEstimator" is the effect size table ID
+        function GetSelectedCheckboxes(tableName) {
+                console.log("*** IN: GetSelectedCheckbox()");
+            //Create an Array.
+            var selected = new Array();
+
+            //Reference the Table.
+            var tblCheckboxes = document.getElementById(tableName);
+
+            //Reference all the CheckBoxes in Table.
+            var chks = tblCheckboxes.getElementsByTagName("INPUT");
+
+            // Loop and push the checked CheckBox value in Array.
+            for (var i = 0; i < chks.length; i++) {
+                if (chks[i].checked) {
+                    selected.push(chks[i].value);
+                }
+            }
+            // "hiddenEffectEstimators" update INPUT value
+            var hiddenInputCheckArrayID = "hiddenEffectEstimators"
+            var hiddenInputCheckArray = document.getElementById(hiddenInputCheckArrayID)
+            hiddenInputCheckArray.value = selected
+            //Display the selected CheckBox values.
+            if (selected.length > 0) {
+                console.log("Checkbox selected values: " + selected.join(","));
+                //alert("Selected values: " + selected.join(",") + " HIDDEN INPUT VALUE=" + hiddenInputCheckArray.value);
+            }
+
+            return selected
+            // what can we do with selected? we need to get it into POST on submit of the form,
+            // Can we set a hidden input value in an onSubmit handler and get that inside the python?
+            // if not, then we need to get the checkbox elements one by one.
+        };
+    </script>
+
+    <!-- hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
+    <script>
+        // debugging a forms submit event
+        function SubmitHandler(genericMessage) {
+            formID = "frmEffectSize"
+            var form = document.getElementById(formID);
+            var hiddenValue = document.getElementById('hiddenEffectEstimators').value
+            var msg = "****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue
+            console.log(msg);
+            //alert("****OnSubmit: " + genericMessage + "value of hidden=" + hiddenValue);
+        }
+        function showLastTab(tabToShow) {
+          // document.getElementById("hidden").style.display="block"
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+            console.log('In showLastTab(), tabToShow=' + tabToShow);
+            document.getElementById(tabToShow).style.display="block";
+        }
+        function hideGreenDivs(lastTabClicked){
+              console.log('in hideGreenDivs')
+              greenDivs = document.getElementsByClassName("roundgreen");
+              if (lastTabClicked) {
+                  console.log(lastTabClicked + 'was POSTED');
+
+                  document.getElementById('loading').style.display='none';
+                  for (i = 0; i < greenDivs.length; i++) {
+                       switch (lastTabClicked) {
+                         case "Upload Files":
+                             // todo: if the green div is not matching lastNameClicked
+                             if (greenDivs[i].id != 'uploadresult') {
+                                   console.log(lastTabClicked + ': hiding other tabs');
+                                   greenDivs[i].style.display = "none";
+                             } else {
+                               greenDivs[i].style.display = "block";
+                             }
+                             break;
+                        case 'Prospective Power':
+                            // todo: if the green div is not matching lastNameClicked
+                            if (greenDivs[i].id != 'hiddenProspectivePowerTest') {
+                                  console.log(lastTabClicked + ': hiding other tabs')
+                                  greenDivs[i].style.display = "none"
+                            }
+                            break;
+                        case 'Data Analysis':
+                            // todo: if the green div is not matching lastNameClicked
+                            if (greenDivs[i].id != 'hiddenDataAnalysis') {
+                                  console.log(lastTabClicked + ': hiding other tabs')
+                                  greenDivs[i].style.display = "none"
+                            }
+                            break;
+                        case 'Significance Test':
+                            if (greenDivs[i].id != 'hiddenSignificanceTest'
+                                && greenDivs[i].id !== 'hiddenDataAnalysis'
+                            ) {
+                                  console.log(lastTabClicked + ': hiding other tabs')
+                                  greenDivs[i].style.display = "none"
+                            }
+                            break;
+                        case 'Effect Size':
+                            if (greenDivs[i].id != 'hiddenEffectSize'
+                                && greenDivs[i].id !== 'hiddenDataAnalysis'
+                                && greenDivs[i].id != 'hiddenSignificanceTest'
+                            ) {
+                                  console.log(lastTabClicked + ': hiding other tabs')
+                                  greenDivs[i].style.display = "none"
+                            }
+                            break;
+                        case 'Retrospective Power Analysis':
+                            console.log('Power: do not need to hide anything')
+                            break;
+                        default:
+                            console.log('Got an unexpected lastTabClicked name: '+ lastTabClicked)
+                      }
+                  }
+              } else {
+                  for (i = 0; i < greenDivs.length; i++) {
+                      greenDivs[i].style.display = "none"
+                  }
+              }
+        }
+
+        function show_print() {
+          document.getElementById('Upload Files').style.display='block';
+          if (Number(localStorage.getItem("max_tab")) >= 2){
+          document.getElementById('Data Analysis').style.display='block';
+          if (Number(localStorage.getItem("max_tab")) >= 3){
+          document.getElementById('Significance Test').style.display='block';
+          if (Number(localStorage.getItem("max_tab")) >= 4){
+          document.getElementById('Effect Size').style.display='block';
+          if (Number(localStorage.getItem("max_tab")) >= 5){
+          document.getElementById('Retrospective Power Analysis').style.display='block';
+          }}}}
+
+          document.getElementById('Download Report').style.display='none';
+          console.log(localStorage.getItem("max_tab"));
+          if (Number(localStorage.getItem("max_tab")) < 5){
+             document.getElementById('warning').style.display='block';
+          }
+          return false;
+        }
+
+
+        function hide_print() {
+            document.getElementById('Upload Files').style.display='none';
+            document.getElementById('Data Analysis').style.display='none';
+            document.getElementById('Significance Test').style.display='none';
+            document.getElementById('Effect Size').style.display='none';
+            document.getElementById('Retrospective Power Analysis').style.display='none';
+            document.getElementById('Download Report').style.display='block';
+            document.getElementById('warning').style.display='none';
+            return false;
+
+        }
+    </script>
+    <!-- custom input validation -->
+    <script>
+        function isZero(strValue) {
+            var zeroPattern = new RegExp('^0+(.0+)*$', "")
+            console.log(zeroPattern)
+            if (zeroPattern.test(strValue)) {
+                console.log("Detected Zero: value = " + strValue)
+                return true
+            } else {
+                console.log("No Zero: value = " + strValue)
+                return false
+            }
+        }
+        function checkForZero(inputElementId) {
+            // todo: take inputElementID as parameter
+            var elementToCheck = document.getElementById(inputElementId);
+            // var prospectiveStdDev = document.getElementById("prospective_stddev");
+            if (isZero(elementToCheck.value)) {
+                console.log('**** got invalid value for prospective_mu: ' + elementToCheck.value)
+                elementToCheck.setCustomValidity("Enter a value greater than 0.")
+            } else {
+                console.log('**** valid value for prospective_mu ****')
+                elementToCheck.setCustomValidity("")
+            }
+        }
+        function checkFileSize() {
+            // todo: finish error checking for config file
+            var fileInput = document.getElementById("data_file");
+            var configInput = document.getElementById("config_file")
+            var files = fileInput.files;
+            var configFiles = configInput.files;
+            if (fileInput.value == "") {
+                document.getElementById("fileLabel").innerHTML = '<i>Upload a data file.</i>'
+                fileInput.setCustomValidity("To submit, upload a data file.")
+            } else {
+                var strSplit = fileInput.value.split('\\');
+                document.getElementById("fileLabel").innerHTML =
+                    "<i>File selected: " + strSplit[strSplit.length-1] + ".</i>";
+            }
+            if (configInput.value == "") {
+                //document.getElementById("configLabel").innerHTML = '<i>Upload a file.</i>'
+            } else {
+                var configSplit = configInput.value.split('\\');
+                document.getElementById("configLabel").innerHTML =
+                    "<i>File selected: " + configSplit[configSplit.length-1] + ".</i>";
+            }
+            console.log('*** checking file size***')
+            // If there is at least one file selected
+            if (files.length > 0) {
+                if (files[0].size > MAX_FILE_SIZE_IN_KB * 1024) {
+                    console.log("File too large. Size = " + files[0].size)
+                    if (LARGE_FILE_ACTION == 'invalid') {
+                        fileInput.setCustomValidity('msgTooLarge');
+                        document.getElementById("fileLabel").innerHTML =
+                        document.getElementById("fileLabel").innerHTML + ' ' + FILE_TOO_LARGE_MESSAGE
+                    } else if (LARGE_FILE_ACTION == 'warn') {
+                        document.getElementById("fileLabel").innerHTML =
+                        document.getElementById("fileLabel").innerHTML + ' ' + WARN_MESSAGE
+                    }
+                    return;
+                } else {
+                        getAsText(files[0])
+                }
+            }
+            // No constraint violation
+            fileInput.setCustomValidity("");
+        }
+
+        function getAsText(fileToRead) {
+            var reader = new FileReader();
+            // read file into memory as UTF-8
+            reader.readAsText(fileToRead);
+            reader.onload = loadHandler;
+            reader.onerror = errorHandler;
+        }
+        function loadHandler(event) {
+            var lines = event.target.result;
+            processData(lines);
+        }
+        function errorHandler(evt) {
+            if(evt.target.error.name == "NotReadableError") {
+              alert("Cannot read file !");
+            }
+        }
+
+        function processData(csv) {
+            var allTextLines = csv.split(/\r\n|\n/);
+            var lines = [];
+            for (var i=0; i<allTextLines.length; i++) {
+                var data = allTextLines[i].split(/\s+/).filter(Boolean);
+                    if ((data.length != 2) && (data.length > 0)) {
+                        console.log('WARNING: num vals in line='+data.length)
+                        document.getElementById("fileLabel").innerHTML += '<br><i style=\'color:red\'>Warning: Line ' + (i+1) +
+                         ' should have 2 values but has ' + data.length + ' values.</i>'
+                    }
+                    var tarr = [];
+                    for (var j=0; j<data.length; j++) {
+                        tarr.push(data[j]);
+                        //console.log(data[j])
+                    }
+
+                    lines.push(tarr);
+            }
+            console.log(lines);
+            console.log('number of lines = ' + lines.length)
+            // if lines > MAX_NUM_SAMPLES, eval size min must be such that lines/eu_size < max_num_samples
+            // -> lines/max_num_samples < eu_size
+            min_eu_size = Math.ceil(lines.length/MAX_NUM_SAMPLES).toString()
+            console.log('min_eu_size='+ min_eu_size)
+            document.getElementById('eval_unit_size').setAttribute('min', min_eu_size)
+            document.getElementById('eval_unit_size').setAttribute('value', min_eu_size)
+            // todo: warning message if min_eu_size > 1
+        }
+    </script>
+    <!-- Handlers for hide and show functions: GreenDivs, PA_parameters, SigTest_radios -->
+    <script>
+        {% if last_tab_name_clicked %}
+              window.onload = showLastTab('{{ last_tab_name_clicked }}');
+              // todo: hide the greendivs in other tabs
+        {% else %}
+              console.log('about to call hideGreenDivs')
+              window.onload = hideGreenDivs('{{ last_tab_name_clicked }}')
+        {% endif %}
+
+        window.addEventListener('load', function () {
+            {% if last_tab_name_clicked %}
+                console.log('In load event listener: {{ last_tab_name_clicked }}.')
+
+                // sig_test_name radio button
+                var sig_test_button_id = "target_sig_test-{{ sig_test_name }}"
+                if ('{{ sig_test_name }}')
+                    document.getElementById(sig_test_button_id).clicked = "clicked"
+
+                // hide green divs that aren't the current or previous divs
+                hideGreenDivs('{{ last_tab_name_clicked }}')
+
+                // power test, normal case, don't hide the parameters
+                var lastTab= '{{ last_tab_name_clicked }}'
+                if (lastTab) { //(lastTab === 'Post-test Power Analysis' || lastTab === 'Effect Size')
+                    {% if is_normal %}
+                        // TODO: preserve last clicked
+                        {% if power_test == 'montecarlo' %}
+                            show_montecarlo_div()
+                         {% elif power_test == 'bootstrap' %}
+                            show_bootstrap_div()
+                         {% else %}
+                            // default to montecarlo if not defined
+                            show_montecarlo_div()
+                          {% endif %}
+                    {% else %}  // not normal case
+                            show_bootstrap_div()
+                    {% endif %}
+                }
+            {% endif %}
+
+            // Form validation - check for zero because built-in types only check for >= 0.
+            //document.getElementById('prospective_mu').oninput = checkForZero;
+
+        }, false);
+    </script>
+    <h1></h1>
+    </div>
+    <!-- width specified here -->
+</body>
+
+</html>
