@@ -1,0 +1,6 @@
+conda install flask
+conda install yaml
+conda install scipy
+conda install pandas
+conda install numpy
+conda install pyinstaller
