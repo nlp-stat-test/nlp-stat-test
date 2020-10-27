@@ -1,8 +1,9 @@
 # v3
 import io
 import traceback
-
+import shutil
 import yaml
+import zipfile
 from flask import *
 from flask import render_template
 from flask import make_response
@@ -1289,12 +1290,22 @@ def print_exception(cls, ex, traceback):
     print('{}\nException trace last instruction: {}'.format(ex, traceback.tb_lasti))
     return
 
+
+
+
+
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/download_zip')
 def download_zip():
     try:
         zip_file = FOLDER + "/" + str(request.cookies.get("dir_str"))
-        os.system("zip -r " +  zip_file  + ".zip " + zip_file)
+        with zipfile.ZipFile(zip_file + ".zip",'w') as zip:
+          for root, dirs, files in os.walk(zip_file):
+            for name in files:
+              print(os.path.join(root, name))
+              zip.write(os.path.join(root, name)) 
+        
+         
         return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
     except:
         ret = handle_exception()
@@ -1305,8 +1316,8 @@ def download_zip():
 def delete_data():
     if request.cookies.get("dir_str"):
       zip_file = FOLDER + "/" + request.cookies.get("dir_str")
-      os.system("rm -r " +  zip_file)
-      os.system("rm -r " +  zip_file + ".zip")
+      shutil.rmtree(zip_file)
+      os.remove(zip_file + ".zip")
       print("deleted " + zip_file)
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
     rendered = render_template("welcome.html")
