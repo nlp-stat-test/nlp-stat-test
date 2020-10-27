@@ -269,7 +269,7 @@ def upload(debug=True):
                     # Todo: Can we print sys.stderr message here?
                     print('Exception occurred reading file: filename={}'.format(data_filename))
                     str_err = 'Exception occurred reading file: filename={}'.format(data_filename)
-
+            parsed_config = False
             if have_data:
                 # ------------- Config file (save only if data file was provided -----------
                 config = request.files['config_file']
@@ -339,6 +339,15 @@ def upload(debug=True):
                                                rand_str=get_rand_state_str(),
                                                error_str=str_err,
                                                file_label=format_file_label(f.filename, 'uploaded')
+                                       )
+            else: # don't have data
+                str_err = 'Check that your file is properly formatted before upload'
+                file_err = 'was not properly formatted.'
+                rendered = render_template(template_filename,
+                                               last_tab_name_clicked=last_tab_name_clicked,
+                                               rand_str=get_rand_state_str(),
+                                               error_str=str_err,
+                                               file_label=format_file_label(f.filename, file_err)
                                        )
             resp = make_response(rendered)
             # Set cookies
