@@ -23,7 +23,7 @@ from logic.sigTesting import run_sig_test
 from logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
-from logic.filenames import get_path
+from logic.filenames import get_path, split_filename
 
 
 
@@ -487,7 +487,7 @@ def data_analysis(debug=True):
                 # -----------Save EU file -----------------
                 # Todo: create a make_eu_score_filename() function that takes orig_filename, eusize, seed
                 print_eu(new_score1, new_score2, new_score_dif_par, ind_shuffled, dir_folder,
-                         filename=data_filename+'-eusize'+ str(eval_unit_size) + '-seed'+str(seed))
+                         filename=split_filename(data_filename, eval_unit_size, seed))
 
                 # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
                 mean_or_median = skew_test(new_score_dif_par)[1]

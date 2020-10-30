@@ -17,3 +17,25 @@ def get_path(path):
         'eu_size_std_dev_file': 'eu_size_std_dev.svg'
     }
     return path_dict.get(path, '')
+
+def split_filename(filename, eu_size=1, seed=None):
+   '''
+    Used for naming the file with the repartitioned EU data
+    @param filename: the original filename
+    @param eu_size: size of the EU
+    @param seed: seed, if provided
+    @return: Filename
+   '''
+   x = filename.split(".")
+   if len(x) >= 2:
+        fname_start = '.'.join(x[:len(x)-1])
+        fname_ext = x[-1]
+   elif len(x) == 1:
+        fname_start = x[0]
+        fname_ext = 'txt'
+   if seed:
+     seed_str = '-seed'+str(seed)
+   else:
+     seed_str= ''
+   fname = '{}-eusize{}{}.{}'.format(fname_start,eu_size,seed_str,fname_ext)
+   return fname
