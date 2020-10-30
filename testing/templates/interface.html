@@ -122,11 +122,11 @@ function show_montecarlo_div() {
 style="background-color: #eee; padding: 5;   top: 0;
        position: -webkit-sticky;
        position: sticky;    z-index: 2;">
-              <div > <a class="button1 completed" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
-               <a class="button1 completed" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
-               <a class="button1 current" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
-                <a class="button1 possible" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a> →
-               <a class="button1 greyed" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')" >Retrospective Power Analysis</a> →
+    <div > <a class="button1 completed" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
+           <a class="button1 completed" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
+           <a class="button1 current" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
+           <a class="button1 possible" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a> →
+           <a class="button1 greyed" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a> →
   <a class="button1 possible" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
 
   <style>.arrow{font-size: 1.5em;}</style>
@@ -205,8 +205,12 @@ style="background-color: #eee; padding: 5;   top: 0;
   <div class="roundgreen"  id="uploadresult">
 
     <h3>File Validation Results</h3>
-      <p>The file has been uploaded. Move to the "Data Analysis" tab.<b>{{ error_str }}</b></p>
-</div>
+      <p>{% if fileName %}The file '{{ fileName }}' has been uploaded.
+          Go to the "Data Analysis" tab.</p>
+        <a class="button1 completed" id='BtnTabDataNext' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a>
+         {% else %} <b>{{ error_str }}</b>
+         {% endif %}
+  </div>
 
      </div>
 
@@ -434,8 +438,6 @@ Error tolerance:
 
 <p> <button id="ist_button" class="interface" onclick="showdiv('non_recommended_div_da', 'ist_button', 'Inappropriate Significance Tests'); return false;">Show Inappropriate Significance Tests</button></p>
 
-
-
                 <div id="non_recommended_div_da" {% if show_non_recommended %} style="display: block;" {% else %} style="display: none" {% endif %}>
 
 
@@ -460,14 +462,9 @@ Error tolerance:
                     <!-- End Non-Recommended Tests Table -->
                     {% else %} <p>There are no inappropriate tests.</p> {% endif %}
                 </div>
-
-
-
-
-
-            </div>
+         <a class="button1 current" id='BtnTab2SignificanceNext' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a>
+         </div>
             <!-- end round green (data analysis) -->
-
         </div>
         <!-- End data analysis -->
 
@@ -667,6 +664,8 @@ NLP field</p>
                 </tr>
             </table>
             {% endif %}
+            <!-- Next button -->
+    <a class="button1 possible" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
         </div>
 
     </div>
@@ -752,6 +751,8 @@ hypothesis is false (Cohen, 1994).</p>
                 {% endfor %}
             </table>
             {% endif %}
+
+        <a class="button1 current" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
         </div>
     </div>
 
@@ -871,6 +872,8 @@ hypothesis is false (Cohen, 1994).</p>
             {% if power_file %}
             <h3>Results</h3>
             <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
+        <br>
+        <a class="button1 current" id='BtnTab5.1DownloadNext' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
         </div>
     </div>
 
@@ -1187,6 +1190,7 @@ function clear_cookies() {
                         console.log('WARNING: num vals in line='+data.length)
                         document.getElementById("fileLabel").innerHTML += '<br><i style=\'color:red\'>Warning: Line ' + (i+1) +
                          ' should have 2 values but has ' + data.length + ' values.</i>'
+                        break;
                     }
                     var tarr = [];
                     for (var j=0; j<data.length; j++) {
