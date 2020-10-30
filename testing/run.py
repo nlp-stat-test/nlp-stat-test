@@ -14,7 +14,7 @@ import sys
 import numpy as np
 
 # Business Logic
-from logic.fileReader import read_score_file
+from logic.fileReader import read_score_file, print_eu
 from logic.testCase import testCase
 from logic.effectSize import calc_eff_size
 from logic.dataAnalysis import partition_score, \
@@ -62,7 +62,7 @@ def handle_exception(dir_str=''):
         folder_name = dir_str
     if not os.path.exists(ERRORS + "/" + folder_name):
         os.makedirs(ERRORS + "/" + folder_name)
-    with open("error_temp", 'w') as tmp_err:
+    with open(ERRORS + "/" + 'last_error.txt', 'w') as tmp_err:
         traceback.print_exception(*exc_info, file=tmp_err)
         # TODO, DELETE error_temp if not debugging
     with open(ERRORS + "/" + folder_name + "/ErrorLog.txt", "a") as f_err:
@@ -463,29 +463,38 @@ def data_analysis(debug=True):
             if have_data:
                 # partition score difference and save svg
                 dir_folder = FOLDER + "/" + dir_str
-                score_diff_par = partition_score(scores1, scores2, score_dif, float(eval_unit_size),
+                score_dif_par = partition_score(scores1, scores2, score_dif, float(eval_unit_size),
                                                  shuffle,  # shuffle if we have seed
                                                  seed,
                                                  eval_unit_stat,  # mean or median
                                                  dir_folder)
-
+                new_score1 = score_dif_par[0]
+                new_score2 = score_dif_par[1]
+                new_score_dif_par = score_dif_par[2]
+                ind_shuffled = score_dif_par[3]
                 # --------------Summary Stats -------------
                 ### initialize a new testCase object to use for summary statistics
-                tc = testCase(score_diff_par[0],
-                              score_diff_par[1],
-                              score_dif,
-                              score_diff_par[2],  # score_diff_par,
+                tc = testCase(new_score1, #score_diff_par[0],
+                              new_score2, #score_diff_par[1],
+                              score_dif,  # original difference between scores, before applying EUs
+                              new_score_dif_par,  # score_diff_par[2],
                               num_eval_units)
+
                 tc.get_summary_stats()
 
                 summary_stats_list = create_summary_stats_list(tc)
 
+                # -----------Save EU file -----------------
+                # Todo: create a make_eu_score_filename() function that takes orig_filename, eusize, seed
+                print_eu(new_score1, new_score2, new_score_dif_par, ind_shuffled, dir_folder,
+                         filename=data_filename+'-eusize'+ str(eval_unit_size) + '-seed'+str(seed))
+
                 # --------------Recommended Test Statistic (mean or median, by skewness test) ------------------
-                mean_or_median = skew_test(score_diff_par[2])[1]
-                skewness_gamma = skew_test(score_diff_par[2])[0]
+                mean_or_median = skew_test(new_score_dif_par)[1]
+                skewness_gamma = skew_test(new_score_dif_par)[0]
 
                 # ---------------normality test
-                is_normal = normality_test(score_diff_par[2], alpha=normality_alpha)
+                is_normal = normality_test(new_score_dif_par, alpha=normality_alpha)
                 # --------------Recommended Significance Tests -------------------------
                 recommended_tests = recommend_test(mean_or_median, is_normal)
 

@@ -33,8 +33,20 @@ def read_score_file(score_file):
 	return([score1,score2])
 
 
-def print_eu(score1, score2, score_diff, orig_ind, sample_file_dir):
-	with open(sample_file_dir+'/score','w') as f:
+def print_eu(score1, score2, score_diff, orig_ind, sample_file_dir, filename='score'):
+	'''
+
+	@param score1:
+	@param score2:
+	@param score_diff:
+	@param orig_ind:
+	@param sample_file_dir:
+	@param filename: The default filename is 'score', but if a parameter is provided it can be in form
+	myfile-eusize11.txt  if there was no random seed provided,
+	myfile-eusize11-seed0.42.txt if a seed was provided
+	@return:
+	'''
+	with open(sample_file_dir + '/' + filename,'w') as f:
 		f.write('score1'+' '+'score2'+' '+'score_diff'+' '+'original_ind'+'\n')
 		for i in score1.keys():
 			f.write(str(score1[i])+' '+str(score2[i])+' '+str(score_diff[i])+' '+str(orig_ind[i])+'\n')
