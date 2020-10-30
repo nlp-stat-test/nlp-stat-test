@@ -327,8 +327,9 @@ def upload(debug=True):
                                                summary_str=data_loaded.get('summary_str'),
                                                rand_str=get_rand_state_str())
                         else: # the .yml wasn't parsed as a dict
-                            config_str_err = 'Unable to parse config file.'
+                            config_str_err = 'Unable to parse config file. Config file ignored.'
                             rendered = render_template(template_filename,
+                                                       fileName=data_filename,
                                                        last_tab_name_clicked=last_tab_name_clicked,
                                                        rand_str=get_rand_state_str(),
                                                        config_error_str=config_str_err,
@@ -339,6 +340,7 @@ def upload(debug=True):
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                rand_str=get_rand_state_str(),
                                                error_str=str_err,
+                                               fileName = data_filename,
                                                file_label=format_file_label(f.filename, 'uploaded')
                                        )
             else: # don't have data
