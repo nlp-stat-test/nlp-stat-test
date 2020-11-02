@@ -9,7 +9,7 @@ from statsmodels.stats.descriptivestats import sign_test
 import matplotlib
 
 #import sigTesting
-import logic.sigTesting
+import src.logic.sigTesting
 
 
 matplotlib.use('Svg')

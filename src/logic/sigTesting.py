@@ -1,7 +1,7 @@
 # imports
 import numpy as np
 from scipy import stats
-import logic.effectSize
+import src.logic.effectSize
 
 
 
@@ -29,7 +29,7 @@ def run_sig_test(recommended_test, score, alpha, B, mu, alternative="two-sided",
 		#x = x - mu
 		test_stats_value, pval = wilcoxon_test(x, alpha, mu, alternative)
 		if conf_int:
-			CI = logic.effectSize.CI_wilcoxon(score, alpha, alternative)  #adjust for mu?
+			CI = src.logic.effectSize.CI_wilcoxon(score, alpha, alternative)  #adjust for mu?
 		rejection = pval<alpha
 
 	if recommended_test == 'sign':
