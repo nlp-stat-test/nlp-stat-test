@@ -14,27 +14,34 @@ import sys
 import numpy as np
 
 # Business Logic
-from logic.fileReader import read_score_file, print_eu
-from logic.testCase import testCase
-from logic.effectSize import calc_eff_size
-from logic.dataAnalysis import partition_score, \
+from src.logic.fileReader import read_score_file, print_eu
+from src.logic.testCase import testCase
+from src.logic.effectSize import calc_eff_size
+from src.logic.dataAnalysis import partition_score, \
     skew_test, normality_test, recommend_test, choose_eu
-from logic.sigTesting import run_sig_test
-from logic.power_analysis_norm import prosp_power_analysis_norm
+from src.logic.sigTesting import run_sig_test
+from src.logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
-from logic.filenames import get_path, split_filename
+from src.logic.filenames import get_path, split_filename
 
 
 
-from logic.errorHandling import InputError
+from src.logic.errorHandling import InputError
+
+print("Loading (please wait 20 to 60 seconds)")
+print("A browser window should open, if not, navigate to http://localhost:5000/")
+
+import webbrowser 
+webbrowser.open('http://localhost:5000/') 
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('error_logs')
-from logic.powerAnalysis import post_power_analysis
-import logic.powerAnalysis
+from src.logic.powerAnalysis import post_power_analysis
+import src.logic.powerAnalysis
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.join("src", "static"), template_folder=os.path.join("src", "templates"))
+
 app.config['FOLDER'] = FOLDER
 
 # defaults
@@ -1276,7 +1283,7 @@ def send_img_file_dir(image_name, debug=True):
 @app.route('/manual')
 def manual():
     try:
-        file = send_file(os.path.join("static", "manual.pdf"), as_attachment=False, cache_timeout=0)
+        file = send_file(os.path.join("src", "static", "manual.pdf"), as_attachment=False, cache_timeout=0)
         return file
     except:
         ret = handle_exception()
@@ -1286,7 +1293,7 @@ def manual():
 @app.route('/paper')
 def paper():
     try:
-        file = send_file(os.path.join("static", "paper.pdf"), as_attachment=False, cache_timeout=0)
+        file = send_file(os.path.join("src", "static", "paper.pdf"), as_attachment=False, cache_timeout=0)
     except FileNotFoundError:
         file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
