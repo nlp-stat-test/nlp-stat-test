@@ -665,6 +665,7 @@ NLP field</p>
             </table>
             {% endif %}
             <!-- Next button -->
+            <br>
     <a class="button1 possible" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
         </div>
 
@@ -728,6 +729,7 @@ hypothesis is false (Cohen, 1994).</p>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
 
+<div>
             <!-- New table to make into estimator, value instead of est, desc: -->
             {% if estimator_value_list|length %}
             <h3>Results</h3>
@@ -752,8 +754,13 @@ hypothesis is false (Cohen, 1994).</p>
             </table>
             {% endif %}
 
+</div>
+<br>
+<div>
         <a class="button1 current" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
-        </div>
+</div>
+
+</div>
     </div>
 
     <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">

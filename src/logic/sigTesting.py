@@ -221,7 +221,7 @@ def wilcoxon_test(x, alpha, delta, alternative):
 
 	x_rank = stats.rankdata(abs(x),method='average')
 
-	ties = logic.effectSize.handling_ties(x, x_rank) #logic.
+	ties = src.logic.effectSize.handling_ties(x, x_rank) #logic.
 
 	w_p = 0
 	w_m = 0
