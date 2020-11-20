@@ -1,3 +1,4 @@
+LOCALHOST = False    # Important: set this to False if running on https://nlpstats.ling.washington.edu/
 # v3
 import io
 import traceback
@@ -29,11 +30,11 @@ from src.logic.filenames import get_path, split_filename
 
 from src.logic.errorHandling import InputError
 
-print("Loading (please wait 20 to 60 seconds)")
-print("A browser window should open, if not, navigate to http://localhost:5000/")
-
-import webbrowser 
-webbrowser.open('http://localhost:5000/') 
+if LOCALHOST:
+    print("Loading (please wait 20 to 60 seconds)")
+    print("A browser window should open, if not, navigate to http://localhost:5000/")
+    import webbrowser
+    webbrowser.open('http://localhost:5000/')
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('error_logs')
@@ -61,7 +62,8 @@ estimators = {"cohend": "This function calculates the Cohen's \(d\) effect size 
               "hl": "This function estimates the Hodges-Lehmann estimator for the input score.",
               "wilcoxonr": "This function calculates the standardized \(z\)-score (\(r\)) for the Wilcoxon signed-rank test.",}
 
-def handle_exception(dir_str=''):
+def handle_exception(dir_str='', debug=False):
+    if debug: print('***** handle_exception(dir_str={})'.format(dir_str))
     exc_info = sys.exc_info()
     if not dir_str:
         folder_name = get_rand_state_str()
@@ -227,7 +229,7 @@ def start():
     return ret
 
 @app.route('/upload', methods=["POST"])
-def upload(debug=True):
+def upload(debug=False):
     print('In /upload')
     try:
         if request.method == "POST":
@@ -390,7 +392,7 @@ def ppa():
 
     
 @app.route('/data_analysis', methods=["GET", "POST"])
-def data_analysis(debug=True):
+def data_analysis(debug=False):
     str_err = ''
     try:
         if request.method == 'POST':
@@ -472,6 +474,7 @@ def data_analysis(debug=True):
             if have_data:
                 # partition score difference and save svg
                 dir_folder = FOLDER + "/" + dir_str
+                if debug: print('FOLDER/dir_str={}'.format(dir_folder))
                 score_dif_par = partition_score(scores1, scores2, score_dif, float(eval_unit_size),
                                                  shuffle,  # shuffle if we have seed
                                                  seed,
@@ -623,7 +626,7 @@ def data_analysis(debug=True):
 #   PROSPECTIVE POWER
 # ************************************************************
 @app.route('/ppa_results', methods=["GET", "POST"])
-def ppa_results(debug=True):
+def ppa_results(debug=False):
     try:
         if request.method == "POST":
             # ------- Get cookies
@@ -744,7 +747,7 @@ def ppa_results(debug=True):
 #   SIGNIFICANCE TEST
 # ********************************************************************************************
 @app.route('/sig_test', methods=["GET", "POST"])
-def sigtest(debug=True):
+def sigtest(debug=False):
     try:
         if request.method == "POST":
             # ------- Get cookies
@@ -892,7 +895,7 @@ def sigtest(debug=True):
 
 
 @app.route('/effectsize', methods=["GET", "POST"])
-def effectsize(debug=True):
+def effectsize(debug=False):
     try:
         if request.method == 'POST':
             last_tab_name_clicked = 'Effect Size'
@@ -1015,7 +1018,7 @@ def effectsize(debug=True):
 
 
 @app.route('/power', methods=["GET", "POST"])
-def power(debug=True):
+def power(debug=False):
     try:
         if request.method == "POST":
             num_eval_units = request.cookies.get('num_eval_units')
@@ -1262,7 +1265,7 @@ def send_img_file(image_path, debug=False):
 
 
 @app.route('/img_url_dir/<image_name>')
-def send_img_file_dir(image_name, debug=True):
+def send_img_file_dir(image_name, debug=False):
     '''
     if the file path is known to be a relative path then alternatively:
         return send_from_directory(dir_name, image_name)
@@ -1300,7 +1303,7 @@ def paper():
 
 
 @app.route('/help/<help_file_name>/')
-def get_help(help_file_name, debug=True):
+def get_help(help_file_name, debug=False):
     if debug: print('get_help: {}'.format(help_file_name))
     try:
         file = send_file('./static/{}'.format(help_file_name), as_attachment=False, cache_timeout=0)
@@ -1356,4 +1359,4 @@ def delete_data():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run()    # TODO: Allow argument
