@@ -1,0 +1,12 @@
+----------------------
+Exception info:
+<class 'NameError'>
+name 'effectSize' is not defined
+Traceback (most recent call last):
+  File "/home/jesse/Documents/GitHub/nlp-stat-test/run-gui.py", line 793, in sigtest
+    test_stat_val, pval, CI, rejection = run_sig_test(sig_test_name,  # 't'
+  File "/home/jesse/Documents/GitHub/nlp-stat-test/src/logic/sigTesting.py", line 30, in run_sig_test
+    test_stats_value, pval = wilcoxon_test(x, alpha, mu, alternative)
+  File "/home/jesse/Documents/GitHub/nlp-stat-test/src/logic/sigTesting.py", line 224, in wilcoxon_test
+    ties = effectSize.handling_ties(x, x_rank) #logic.
+NameError: name 'effectSize' is not defined
