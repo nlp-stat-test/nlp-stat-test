@@ -1,9 +1,9 @@
-LOCALHOST = False    # Important: set this to False if running on https://nlpstats.ling.washington.edu/
+LOCALHOST = True    # Important: set this to False if running on https://nlpstats.ling.washington.edu/
 # v3
 import io
 import traceback
 import shutil
-import yaml
+# import yaml
 import zipfile
 from flask import *
 from flask import render_template
@@ -30,11 +30,7 @@ from src.logic.filenames import get_path, split_filename
 
 from src.logic.errorHandling import InputError
 
-if LOCALHOST:
-    print("Loading (please wait 20 to 60 seconds)")
-    print("A browser window should open, if not, navigate to http://localhost:5000/")
-    import webbrowser
-    webbrowser.open('http://localhost:5000/')
+
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('error_logs')
