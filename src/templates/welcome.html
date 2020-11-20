@@ -77,23 +77,35 @@ multiple datasets or multiple metrics.</p>
 <ul>
 <li>To get familiar with the toolkit, start with a 3-minute <a class="possible" href="https://vimeo.com/443074846">demo</a>.</li>
 
-<li>More info about the toolkit can be found in this <a class="possible" href="{{ url_for('paper') }}">paper</a> and the <a class="possible" href="{{ url_for('manual') }}">manual</a>.</li>
-</ul>
-<ul>
-<li>To determine the minimal size of the test corpus with sufficient power, use
+<li>Watch the AACL-IJCNLP <a href="https://youtu.be/c9QyMJSRAmk">demonstration</a>.</li>
+
+<li>Find more info about the toolkit can be found in the <a class="possible" href="{{ url_for('paper') }}">paper</a> and the <a class="possible" href="{{ url_for('manual') }}">manual</a>.</li>
+
+<li>To determine the minimum size of the test corpus for sufficient power, use
 <a class="possible"  href="{{ url_for('ppa') }}">prospective power analysis</a>.</li>
 <li>To compare system performance, click <a class="possible" href="{{ url_for('start') }}"> here </a> to get started.</li>
 
-<li>If you want to run the toolkit on your own machine (as a command line interface, or as a local GUI), you can download an executable and source code from the
- <a class="possible"  href="https://github.com/nlp-stat-test/nlp-stat-test/releases">Releases</a> page.</li>
-</ul>
-<ul>
+<li>Download the latest release from the
+ <a class="possible"  href="https://github.com/nlp-stat-test/nlp-stat-test/releases">releases</a> page, to run the GUI or CLI version locally.</li>
+
+
+<li>Check out the latest source on the the
+ <a class="possible"  href="https://github.com/nlp-stat-test/nlp-stat-test/">repository</a> page.</li>
+
+
+
 <li><a class="possible" href="{{ url_for('paper') }}">Our paper</a> contains a list of references.</li>
 </ul>
 
-<h3>Citation (BibTeX)</h3>
+<h3>Data Policy</h3>
 
-<div><pre>
+
+<p>The web version of NLPStatTest uses the data file you upload (two columns of numbers) to calculate your results. We also use cookies. You can delete the most recent file you uploaded and clear the cookies by clicking the delete data link at the end of the "Data, Significance, and Retrospective Power Analysis" tab (prospective power analysis does not store any data). Otherwise, we will clear the data from time to time. We do not use uploaded data for any other purpose than to calculate your results.</p>
+
+
+<h3>  Paper <a class="possible" href="{{ url_for('paper') }}">(PDF)</a> and Citation (BibTeX)</h3>
+
+<div><pre style="white-space: pre-wrap;">
 @inproceedings{zhu-etal-2020-AACL,
   title = "{NLPStatTest: A Toolkit for Comparing NLP System Performance}",
   author = "Haotian Zhu and Denise Mak and Jesse Gioannini and Fei Xia",

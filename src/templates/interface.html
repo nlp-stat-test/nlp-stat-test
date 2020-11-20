@@ -111,9 +111,9 @@ function show_montecarlo_div() {
                style="background-color: #eee; padding: 5; top: 0;">
 
 
-             <a class="button1 possible" href="{{ url_for('home') }}">Home</a>  |
-                    <a class="button1 possible" href="{{ url_for('ppa') }}">Prospective Power Analysis</a> |
-                     <a class="button1 current" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
+             <a class="button1 interface" href="{{ url_for('home') }}">Home</a>  |
+                    <a class="button1 interface" href="{{ url_for('ppa') }}">Prospective Power Analysis</a> |
+                     <a class="button1 interface" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
   </div>
 
 
@@ -203,15 +203,15 @@ style="background-color: #eee; padding: 5;   top: 0;
         </script>
 
   <div class="roundgreen"  id="uploadresult">
-
+  {% if fileName %}
     <h3>File Validation Results</h3>
-      <p>{% if fileName %}The file '{{ fileName }}' has been uploaded.
+    <p>The file '{{ fileName }}' has been uploaded.
           Go to the "Data Analysis" tab.</p>
-        <a class="button1 completed" id='BtnTabDataNext' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a>
+        <a class="button1 interface" id='BtnTabDataNext' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a>
          {% else %} <b>{{ error_str }}</b>
-         {% endif %}
-  </div>
 
+  </div>
+{% endif %}
      </div>
 
 
@@ -305,7 +305,7 @@ Error tolerance:
               <img id=eu_image_file src="../{{ url_for('send_img_file_dir', image_name=eu_size_std_dev_file) }}?{{ rand }}">
                   {% endif %}
               </div>
-              
+
                 <!-- SUMMARY STATISTICS -->
                 <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}
                 <table>
@@ -461,8 +461,9 @@ Error tolerance:
                     </table>
                     <!-- End Non-Recommended Tests Table -->
                     {% else %} <p>There are no inappropriate tests.</p> {% endif %}
+                    <br>
                 </div>
-         <a class="button1 current" id='BtnTab2SignificanceNext' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a>
+         <a class="button1 interface" id='BtnTab2SignificanceNext' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a>
          </div>
             <!-- end round green (data analysis) -->
         </div>
@@ -665,7 +666,8 @@ NLP field</p>
             </table>
             {% endif %}
             <!-- Next button -->
-    <a class="button1 possible" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
+            <br>
+    <a class="button1 interface" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
         </div>
 
     </div>
@@ -728,6 +730,7 @@ hypothesis is false (Cohen, 1994).</p>
 
         <div class="roundgreen" class="hiddendiv" id="hiddenEffectSize">
 
+<div>
             <!-- New table to make into estimator, value instead of est, desc: -->
             {% if estimator_value_list|length %}
             <h3>Results</h3>
@@ -752,8 +755,13 @@ hypothesis is false (Cohen, 1994).</p>
             </table>
             {% endif %}
 
-        <a class="button1 current" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
-        </div>
+</div>
+<br>
+<div>
+        <a class="button1 interface" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
+</div>
+
+</div>
     </div>
 
     <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">
@@ -873,7 +881,7 @@ hypothesis is false (Cohen, 1994).</p>
             <h3>Results</h3>
             <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
         <br>
-        <a class="button1 current" id='BtnTab5.1DownloadNext' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
+        <a class="button1 interface" id='BtnTab5.1DownloadNext' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
         </div>
     </div>
 
