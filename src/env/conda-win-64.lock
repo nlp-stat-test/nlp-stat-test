@@ -1,0 +1,12 @@
+# platform: win-64
+# env_hash: 6968e18ba8b75285d90f09322547fdb8c7562e1919a0bf81449fc4ef8b2c209f
+
+@EXPLICIT
+
+https://conda.anaconda.org/conda-forge/win-64/ca-certificates-2020.11.8-h5b45459_0.tar.bz2#21fea8c142c35d2967cb0300e5056980
+https://conda.anaconda.org/conda-forge/win-64/vs2015_runtime-14.16.27012-h30e32a0_2.tar.bz2#37a0bcc72c5e97f5602dca37eb3f8314
+https://conda.anaconda.org/conda-forge/win-64/vc-14.1-h869be7e_1.tar.bz2#4fae57303daa91367eca263374e4a638
+https://conda.anaconda.org/conda-forge/win-64/openssl-1.1.1h-he774522_0.tar.bz2#21844b16355ef8faa21fca97794d6825
+https://conda.anaconda.org/conda-forge/win-64/sqlite-3.33.0-he774522_1.tar.bz2#d71a870ed0940cdf9f4bcb827d12ead6
+https://conda.anaconda.org/conda-forge/win-64/python-3.8.6-h60c2a47_0_cpython.tar.bz2#b6c4723a2ba9b8f68521404bc0d23462
+https://conda.anaconda.org/conda-forge/win-64/python_abi-3.8-1_cp38.tar.bz2#18ced0580562dca07ae039050748cc50
