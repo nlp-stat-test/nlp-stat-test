@@ -11,11 +11,7 @@ This website is a demonstration of "NLPStatTest: A Toolkit for Comparing NLP Sys
 
 While statistical significance testing has been commonly used to compare NLP system performance, a small p-value alone is not sufficient because statistical significance is different from practical significance. To measure practical significance, we recommend estimating and reporting of effect size. It is also necessary to conduct power analysis to ensure that the test corpus is large enough to achieve a desirable power level. We propose a three-stage procedure for comparing NLP system performance, and provide a toolkit, NLPStatTest, to automate the testing stage of the procedure. For future work, we will extend this work to hypothesis testing with multiple datasets or multiple metrics.
 
-## Setup
-
-1. Download and install [Anaconda](https://www.anaconda.com/products/individual). This [article](https://pythonspeed.com/articles/conda-dependency-management/) explains how Conda can be used to create reproducible environments to keep track of dependencies.
-
-2. 
+To run the program, use Conda with requirements set to our requirements file, or use the prebuilt Windows and Mac binaries.
 
 ## Citation
 ```
