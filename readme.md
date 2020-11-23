@@ -12,7 +12,7 @@ While statistical significance testing has been commonly used to compare NLP sys
 
 2. From the `env` subdirectory of the `src` directory, run `conda create --name nlp-stat-test --copy --file conda-linux-64.lock`, but with `linux-64` changed to `win-64` or `osx-64` as needed. Then run `conda activate nlp-stat-test`
 
-3. Run `python run-gui.py` and open `localhost:5000` in your browser (we recommend a Chromium-based browser). Keep the all the contents of the package together; separating them will break paths.
+3. Run `python run-gui.py` and open `localhost:5000` in your browser (we recommend a Chromium-based browser). Keep the all the contents of the package together; separating them will break paths. The program will create a `user` subdirectory to store temporary files, and may write error logs, so writing permissions is required for the `nlp-stat-test` directory.
 
 4. To exit the Conda environment, run `conda deactivate`.
 
