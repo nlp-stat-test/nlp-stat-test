@@ -1,5 +1,5 @@
 # platform: linux-64
-# env_hash: 8d080fbff14ea9cac77068efaf864c5a7a7975aa08c457c4c124726fcb827093
+# env_hash: 07afff7ce06ca859ad85ef7af7e3bdc23412f89a293bc394773a0d34a0bd0fe3
 
 @EXPLICIT
 
@@ -42,6 +42,7 @@ https://conda.anaconda.org/conda-forge/linux-64/kiwisolver-1.3.1-py38h82cb98a_0.
 https://conda.anaconda.org/conda-forge/linux-64/markupsafe-1.1.1-py38h8df0ef7_2.tar.bz2#74e818eb7b17fde40f9ae4d2a89caf1d
 https://conda.anaconda.org/conda-forge/linux-64/numpy-1.18.5-py38h8854b6b_0.tar.bz2#865f44137948275e1a198ae4604c3968
 https://conda.anaconda.org/conda-forge/noarch/python-dateutil-2.8.1-py_0.tar.bz2#0d0150ed9c2d25817f5324108d3f7571
+https://conda.anaconda.org/conda-forge/linux-64/pyyaml-5.3.1-py38h8df0ef7_1.tar.bz2#8eaa66e391971ac0e9e329b91bc37003
 https://conda.anaconda.org/conda-forge/linux-64/tornado-6.1-py38h25fe258_0.tar.bz2#44f79ac64582a77cecbdca04c777ae30
 https://conda.anaconda.org/conda-forge/linux-64/pandas-1.0.5-py38hcb8c335_0.tar.bz2#1e1b4382170fd26cf722ef008ffb651e
 https://conda.anaconda.org/conda-forge/linux-64/scipy-1.5.3-py38hb2138dd_0.tar.bz2#e0ab8ace182b8d88a43c7e25a3ed092f

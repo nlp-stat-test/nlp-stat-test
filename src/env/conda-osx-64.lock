@@ -1,14 +1,14 @@
 # platform: osx-64
-# env_hash: 7fad169a0464771be1ab19ffaf24ac89d3f1773cc3fdbd713268ddbe7aba5b22
+# env_hash: 90a95cefa36161086afa76e1bba9f46138058d5838977640bd877f61efbe3869
 
 @EXPLICIT
 
-https://conda.anaconda.org/conda-forge/osx-64/yaml-0.2.5-haf1e3a3_0.tar.bz2#84c2fc186995c25a43e86ed708065572
 https://conda.anaconda.org/conda-forge/osx-64/ca-certificates-2020.11.8-h033912b_0.tar.bz2#80ae143af10fb5c662a3ef1579948c30
 https://conda.anaconda.org/conda-forge/osx-64/libcxx-11.0.0-h439d374_0.tar.bz2#5c211134456f5066c888d16875872672
 https://conda.anaconda.org/conda-forge/osx-64/llvm-openmp-11.0.0-h73239a0_1.tar.bz2#40126f3a0c6b2a0fba13214e6ff90ff9
 https://conda.anaconda.org/conda-forge/osx-64/ncurses-6.2-h2e338ed_4.tar.bz2#9cef1910395d1543527583e73dba30f1
 https://conda.anaconda.org/conda-forge/osx-64/xz-5.2.5-haf1e3a3_1.tar.bz2#41116deb499e9bc58048c297d6403ce6
+https://conda.anaconda.org/conda-forge/osx-64/yaml-0.2.5-haf1e3a3_0.tar.bz2#84c2fc186995c25a43e86ed708065572
 https://conda.anaconda.org/conda-forge/osx-64/zlib-1.2.11-h7795811_1010.tar.bz2#7d39e47e16ed0107f37c7224d5b5be8b
 https://conda.anaconda.org/conda-forge/osx-64/libffi-3.2.1-hb1e8313_1007.tar.bz2#be8b6ba3b6710a89ab891bbed151659c
 https://conda.anaconda.org/conda-forge/osx-64/libgfortran5-9.3.0-h7cc5361_13.tar.bz2#f9f3fc3c2e4f3deb6820a395ffb6071d
@@ -36,6 +36,7 @@ https://conda.anaconda.org/conda-forge/osx-64/libcblas-3.9.0-3_openblas.tar.bz2#
 https://conda.anaconda.org/conda-forge/osx-64/liblapack-3.9.0-3_openblas.tar.bz2#981e3cbd865ea7530bb52e427ce5e1d9
 https://conda.anaconda.org/conda-forge/osx-64/markupsafe-1.1.1-py38h94c058a_2.tar.bz2#4fe723b88b05abb9e79b2cd4906fc406
 https://conda.anaconda.org/conda-forge/noarch/python-dateutil-2.8.1-py_0.tar.bz2#0d0150ed9c2d25817f5324108d3f7571
+https://conda.anaconda.org/conda-forge/osx-64/pyyaml-5.3.1-py38h94c058a_1.tar.bz2#da7293e571efb5451eaefc94dae801c9
 https://conda.anaconda.org/conda-forge/osx-64/tornado-6.1-py38h7e3306e_0.tar.bz2#bf3694efccd3901ef84b3b3b1b05accc
 https://conda.anaconda.org/conda-forge/osx-64/numpy-1.18.5-py38h1f821a2_0.tar.bz2#01b9c42320484b2850385a547551f781
 https://conda.anaconda.org/conda-forge/osx-64/setuptools-49.6.0-py38h5347e94_2.tar.bz2#d60492e2803bc7f3c85544532868cee1
