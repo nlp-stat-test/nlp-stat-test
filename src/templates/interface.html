@@ -202,7 +202,7 @@ style="background-color: #eee; padding: 5;   top: 0;
                 }
         </script>
 
-  <div class="roundgreen"  id="uploadresult">
+  <div class="roundgreen interface"  id="uploadresult">
 
     <h3>File Validation Results</h3>
       <p>{% if fileName %}The file '{{ fileName }}' has been uploaded.
@@ -305,7 +305,7 @@ Error tolerance:
               <img id=eu_image_file src="../{{ url_for('send_img_file_dir', image_name=eu_size_std_dev_file) }}?{{ rand }}">
                   {% endif %}
               </div>
-              
+
                 <!-- SUMMARY STATISTICS -->
                 <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}
                 <table>
@@ -462,7 +462,7 @@ Error tolerance:
                     <!-- End Non-Recommended Tests Table -->
                     {% else %} <p>There are no inappropriate tests.</p> {% endif %}
                 </div>
-         <a class="button1 current" id='BtnTab2SignificanceNext' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a>
+         <a class="button1 interface" id='BtnTab2SignificanceNext' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a>
          </div>
             <!-- end round green (data analysis) -->
         </div>
@@ -666,7 +666,7 @@ NLP field</p>
             {% endif %}
             <!-- Next button -->
             <br>
-    <a class="button1 possible" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
+    <a class="button1 interface" id='BtnTab3EffectNext' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a>
         </div>
 
     </div>
@@ -757,7 +757,7 @@ hypothesis is false (Cohen, 1994).</p>
 </div>
 <br>
 <div>
-        <a class="button1 current" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
+        <a class="button1 interface" id='BtnTab4PowerNext' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a>
 </div>
 
 </div>
@@ -880,7 +880,7 @@ hypothesis is false (Cohen, 1994).</p>
             <h3>Results</h3>
             <img id=power_file src="../{{ url_for('send_img_file_dir', image_name=power_file) }}?{{ rand }}"> {% endif %}
         <br>
-        <a class="button1 current" id='BtnTab5.1DownloadNext' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
+        <a class="button1 interface" id='BtnTab5.1DownloadNext' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
         </div>
     </div>
 
