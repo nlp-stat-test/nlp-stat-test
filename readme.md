@@ -8,13 +8,18 @@ While statistical significance testing has been commonly used to compare NLP sys
 
 ## Setup
 
-1. Install [Conda](https://www.anaconda.com/products/individual) on your system. Read [this article](https://pythonspeed.com/articles/conda-dependency-management/) for more information.
+1. Install [Conda](https://www.anaconda.com/products/individual) on your system. Read [this article](https://pythonspeed.com/articles/conda-dependency-management/) for more information about how Cona lockfiles allow us to build a reproducible environment.
 
-2. From the `env` subdirectory of the `src` directory of this package, run `conda create --name nlp-stat-test --copy --file conda-linux-64.lock`, but with `linux-64` changed to `win-64` or `osx-64` as needed. Then run `conda activate nlp-stat-test`
+	a. (On Windows) open Anaconda Prompt from the start menu. Then use `cd` to navigate to the unzipped package directory.
+	b. (On Mac or Linux) open your favorite shell with `conda` aliased to your installation. Then use `cd` to navigate to the unzipped package directory.
 
-3. Run `python run-gui.py` and open `localhost:5000` in your browser (we recommend a Chromium-based browser). Keep the all the contents of the package together; separating them will break paths. The program will create a `user` subdirectory to store temporary files, and may write error logs, so writing permissions is required for the `nlp-stat-test` directory.
+2. From the `env` subdirectory of the `src` directory of this package, run `conda create --name nlp-stat-test --copy --file conda-linux-64.lock`, but with `linux-64` changed to `win-64` or `osx-64` as needed. 
 
-4. To exit the Conda environment, run `conda deactivate`.
+3. Then run `conda activate nlp-stat-test`
+
+4. Run `python run-gui.py` from the top level of the package and open `localhost:5000` in your browser (we recommend a Chromium-based browser). Keep the all the contents of the package together; separating them will break paths. The program will create a `user` subdirectory to store temporary files, and may write error logs, so writing permissions is required for the `nlp-stat-test` directory.
+
+5. To exit the Conda environment, run `conda deactivate`.
 
 ## Citation
 ```
