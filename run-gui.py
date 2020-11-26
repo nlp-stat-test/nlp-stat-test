@@ -1,4 +1,3 @@
-LOCALHOST = True    # Important: set this to False if running on https://nlpstats.ling.washington.edu/
 # v3
 import io
 import traceback
@@ -879,7 +878,7 @@ def sigtest(debug=False):
             resp.set_cookie('sig_boot_iterations', str(sig_boot_iterations))
             resp.set_cookie('mu', str(mu))
             resp.set_cookie('pval', str(pval))
-            resp.set_cookie('rejectH0', str(rejection))
+            resp.set_cookie('rejectH0', json.dumps(bool(rejection)))
             return resp
         # GET
         return render_template(template_filename,
@@ -983,7 +982,7 @@ def effectsize(debug=False):
                                        sig_test_stat_val=request.cookies.get('sig_test_stat_val'),
                                        CI=request.cookies.get('CI'),
                                        pval=request.cookies.get('pval'),
-                                       rejectH0=request.cookies.get('rejectH0'),
+                                       rejectH0=json.loads(request.cookies.get('rejectH0')),
                                        sig_alpha=request.cookies.get('sig_test_alpha'),
                                        sig_test_name=request.cookies.get('sig_test_name'),
                                        alternative=request.cookies.get('alternative'),
@@ -1130,9 +1129,10 @@ def power(debug=False):
                                        eu_size_std_dev_file=request.cookies.get('eu_size_std_dev_file'),
                                        # specific to sig_test
                                        sig_test_stat_val=request.cookies.get('sig_test_stat_val'),  # json.loads?
+                                       alternative=request.cookies.get('alternative'),
                                        pval=request.cookies.get('pval'),
                                        CI=request.cookies.get('CI'),
-                                       rejectH0=request.cookies.get('rejectH0'),
+                                       rejectH0=json.loads(request.cookies.get('rejectH0')),
                                        sig_alpha=request.cookies.get('sig_test_alpha'),
                                        sig_test_name=sig_test_name,  # request.cookies.get('sig_test_name')
                                        rand_str=get_rand_state_str()
