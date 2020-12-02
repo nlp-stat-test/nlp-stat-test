@@ -767,7 +767,7 @@ hypothesis is false (Cohen, 1994).</p>
     <div id="Retrospective Power Analysis" class="tabcontent" style="display:none">
 
         <div class="roundpurplebottom" style="position:relative;">
-
+{% if rejectH0 %}{% else %}<p style="color:red"><b>The null hypothesis was not rejected, so the following results may look strange.</b></p>{% endif %}
             <form action="/power" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group">
                     <h3>Retrospective Power Analysis</h3>
