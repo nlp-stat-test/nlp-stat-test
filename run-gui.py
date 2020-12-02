@@ -4,9 +4,11 @@ import traceback
 import shutil
 import yaml
 import zipfile
+from flask import Flask
 from flask import *
 from flask import render_template
 from flask import make_response
+import logging
 
 from werkzeug.utils import secure_filename
 import os
@@ -121,7 +123,7 @@ def partition_score_no_hist(score1, score2, score_diff, eval_unit_size, shuffled
 
     if shuffled:
         ind_shuffled = np.random.Random(randomSeed).shuffle(ind)
-    print(eval_unit_size)
+    #print(eval_unit_size)
     ind_shuffled = np.array_split(ind, np.floor(len(ind) / eval_unit_size))
     ind_new = 0
 
@@ -225,10 +227,10 @@ def start():
 
 @app.route('/upload', methods=["POST"])
 def upload(debug=False):
-    print('In /upload')
+    #print('In /upload')
     try:
         if request.method == "POST":
-            print('In /upload POST')
+            #print('In /upload POST')
             # ------- Data File ----------------
             f = request.files['data_file']
             last_tab_name_clicked = 'Upload Files'
@@ -247,7 +249,7 @@ def upload(debug=False):
                 if not os.path.exists(FOLDER + "/" + dir_str):
                     os.makedirs(FOLDER + "/" + dir_str)
                 f.save(FOLDER + "/" +dir_str + "/" + secure_filename(data_filename))
-                print('Check directory {} for saved file'.format(dir_str))
+                #print('Check directory {} for saved file'.format(dir_str))
                 have_file = True  # assume the above worked
             # elif request.cookies.get('fileName'):
             #     print('no f.filename, getting cookie')
@@ -376,7 +378,7 @@ def home():
     
 @app.route('/home', methods=["GET", "POST"])
 def landing_page():
-    print('.... Landing page')
+    #print('.... Landing page')
     return render_template('welcome.html')
     #return redirect(url_for('data_analysis'))
 
@@ -395,7 +397,7 @@ def data_analysis(debug=False):
             last_tab_clicked = request.form.get('last_tab') #todo: remove this line?
             # todo: make this a cookie
             last_tab_name_clicked = 'Data Analysis'  # request.form.get('last_tab_name')
-            print("***** LAST TAB: {}".format(last_tab_name_clicked))
+            #print("***** LAST TAB: {}".format(last_tab_name_clicked))
 
             eval_unit_size = request.form.get('eval_unit_size')
 
@@ -405,11 +407,11 @@ def data_analysis(debug=False):
 
             # target_stat is 'mean' or 'median'
             eval_unit_stat = request.form.get('target_statistic')
-            print('eval_unit_stat={}'.format(eval_unit_stat))
+            #print('eval_unit_stat={}'.format(eval_unit_stat))
 
             # normality
             normality_alpha = float(request.form.get('normality_alpha'))
-            print('NORMALITY_ALPHA (from form)={}'.format(normality_alpha))
+            #print('NORMALITY_ALPHA (from form)={}'.format(normality_alpha))
             seed = request.form.get('seed')
             if not seed:
                 shuffle = False
@@ -419,7 +421,7 @@ def data_analysis(debug=False):
 
             # Epsilon
             epsilon = float(request.form.get('epsilon'))
-            print('EPSILON (from form)={}'.format(epsilon))
+            #print('EPSILON (from form)={}'.format(epsilon))
 
 
             # ------- File ----------------
@@ -511,7 +513,7 @@ def data_analysis(debug=False):
 
                 # EU output
                 EU_table = choose_eu(score_dif, epsilon, shuffle, seed, mean_or_median, dir_folder)
-                print(EU_table)
+                #print(EU_table)
 
                 if debug:
                     print("Recommended: {}".format(recommended_tests))
@@ -584,7 +586,7 @@ def data_analysis(debug=False):
 
                     resp.set_cookie('teststat_heading', teststat_heading)
                     resp.set_cookie('mean_or_median', mean_or_median)
-                    print('DA Set cookie: is_normal dumped={}'.format(json.dumps(is_normal)))
+                    #print('DA Set cookie: is_normal dumped={}'.format(json.dumps(is_normal)))
                     resp.set_cookie('is_normal', json.dumps(is_normal))
 
                     resp.set_cookie('sig_test_heading', sig_test_heading)
@@ -856,7 +858,7 @@ def sigtest(debug=False):
             resp.set_cookie('alternative', alternative)
             if test_stat_val:
                 resp.set_cookie('sig_test_stat_val', json.dumps(float(test_stat_val)))
-                print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(float(test_stat_val))))
+                #print('test_stat_val={}, json_dumped={}'.format(test_stat_val, json.dumps(float(test_stat_val))))
             if CI:
                 resp.set_cookie('CI', json.dumps(CI))
             if show_non_recommended:
@@ -924,7 +926,7 @@ def effectsize(debug=False):
             if cur_selected_est_hedgesg: cur_selected_ests.append(cur_selected_est_hedgesg)
             cur_selected_est_cohend = request.form.get('target_eff_test_cohend')
             if cur_selected_est_cohend: cur_selected_ests.append(cur_selected_est_cohend)
-            print('currentEstimators={}:'.format(cur_selected_ests.reverse()))
+            #print('currentEstimators={}:'.format(cur_selected_ests.reverse()))
 
             # old:
             # (estimates, estimators) = calc_eff_size(cur_selected_test,
@@ -946,7 +948,7 @@ def effectsize(debug=False):
             previous_selected_test = request.cookies.get('sig_test_name')
             recommended_tests = json.loads(request.cookies.get('recommended_tests'))
             summary_stats_list = json.loads(request.cookies.get('summary_stats_list'))
-            print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
+            #print("EFFECT SIZE (from cookie): is_normal={}".format(json.loads(request.cookies.get('is_normal'))))
             skewness_gamma = json.loads(request.cookies.get('skewness_gamma'))
             rendered = render_template(template_filename,
                                        file_label=request.cookies.get('file_label'),
@@ -1029,7 +1031,7 @@ def power(debug=False):
                                     shuffled=False,randomSeed=0,method=request.cookies.get('mean_or_median'))
             score_dif = partitions[2]
             is_normal = json.loads(request.cookies.get('is_normal'))
-            print("POWER: (from cookie): is_normal={}".format(is_normal))
+            #print("POWER: (from cookie): is_normal={}".format(is_normal))
 
             if is_normal:
                 power_test = request.form.get('target_pow_test')
@@ -1058,13 +1060,13 @@ def power(debug=False):
                 boot_B = int(request.cookies.get('sig_boot_iterations'))
             else:
                 boot_B = 500
-            print('In PowerAnalysis: sig_test_name={} alpha={} mu={} bootB={} pow_iter={}'.format(
-                sig_test_name, alpha, mu, boot_B, power_iterations))
+          # http://127.0.0.1:5000/ #print('In PowerAnalysis: sig_test_name={} alpha={} mu={} bootB={} pow_iter={}'.format(
+               # sig_test_name, alpha, mu, boot_B, power_iterations))
             num_scores = len(score_dif)
 
             if (num_scores/power_num_intervals < 2):
                 power_num_intervals = num_scores // 2
-                print("len(score)=={} \npower_num_intervals changed to {}".format(num_scores, power_num_intervals))
+                #print("len(score)=={} \npower_num_intervals changed to {}".format(num_scores, power_num_intervals))
                 # todo: create warning message to display in interface
 
             dir_str = request.cookies.get("dir_str")
@@ -1075,7 +1077,7 @@ def power(debug=False):
                                                 mu=mu,
                                                 boot_B=boot_B,
                                                 output_dir=FOLDER + "/" + dir_str)
-            print(pow_sampsizes)
+            #print(pow_sampsizes)
 
             power_file = 'power_samplesizes.svg'
             rand = np.random.randint(10000)
@@ -1237,7 +1239,7 @@ def download_config(config_file_name):   # was download_config() no param
             cookie_dict[k]=v
 
         #Write YAML file
-        print('Writing to file: {}'.format(config_file_path))
+        #print('Writing to file: {}'.format(config_file_path))
         with io.open(config_file_path, 'w', encoding='utf8') as outfile:
             yaml.dump(cookie_dict, outfile, default_flow_style=False, allow_unicode=True)
 
@@ -1328,7 +1330,7 @@ def download_zip():
         with zipfile.ZipFile(zip_file + ".zip",'w') as zip:
           for root, dirs, files in os.walk(zip_file):
             for name in files:
-              print(os.path.join(root, name))
+              #print(os.path.join(root, name))
               zip.write(os.path.join(root, name)) 
         
          
@@ -1354,5 +1356,8 @@ def delete_data():
 
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
+    # https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
     app.run()    # TODO: Allow argument
