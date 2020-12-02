@@ -31,14 +31,18 @@ from src.logic.filenames import get_path, split_filename
 
 from src.logic.errorHandling import InputError
 
-
+import os
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('error_logs')
 from src.logic.powerAnalysis import post_power_analysis
 import src.logic.powerAnalysis
 
+
 app = Flask(__name__, static_folder=os.path.join("src", "static"), template_folder=os.path.join("src", "templates"))
+
+
+print("\nGo to http://localhost:5000 in your browser.\n")
 
 app.config['FOLDER'] = FOLDER
 
@@ -379,6 +383,7 @@ def home():
 @app.route('/home', methods=["GET", "POST"])
 def landing_page():
     #print('.... Landing page')
+
     return render_template('welcome.html')
     #return redirect(url_for('data_analysis'))
 
@@ -1360,4 +1365,5 @@ if __name__ == "__main__":
     # https://stackoverflow.com/questions/14888799/disable-console-messages-in-flask-server
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
+    log.disabled = True
     app.run()    # TODO: Allow argument
