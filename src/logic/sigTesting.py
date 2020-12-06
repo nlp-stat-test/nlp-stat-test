@@ -106,17 +106,24 @@ def CI_median(x, alpha, alternative):
 	n = len(x)
 	CI = None
 
+	lower_index = int(round(n / 2 - stats.norm.ppf(1 - alpha) * np.sqrt(n) / 2))
+	upper_index = int(round(1 + n / 2 + stats.norm.ppf(1 - alpha) * np.sqrt(n) / 2))
+	# print('In CI_median: norm={}, len(x_sorted)={} >? index={} '.format(len(x_sorted), upper_index))
+	if upper_index >= n:  # account for case where index >= n
+		upper_index = n - 1
+
 	if alternative == "less":
-		upp_bound = x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha)*np.sqrt(n)/2))]
+		upp_bound = x_sorted[upper_index]
 		CI = (-float('inf'),round(upp_bound,5))
 
 	if alternative == "greater":
-		low_bound = x_sorted[int(round(n/2-stats.norm.ppf(1-alpha)*np.sqrt(n)/2))]
+
+		low_bound = x_sorted[lower_index]
 		CI = (round(low_bound,5),float('inf'))
 
 	if alternative == "two-sided":
-		low_bound = x_sorted[int(round(n/2-stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))]
-		upp_bound = x_sorted[int(round(1+n/2+stats.norm.ppf(1-alpha/2)*np.sqrt(n)/2))]
+		low_bound = x_sorted[lower_index]
+		upp_bound = x_sorted[upper_index]
 		CI = (round(low_bound,5),round(upp_bound,5))
 
 	return(CI)
