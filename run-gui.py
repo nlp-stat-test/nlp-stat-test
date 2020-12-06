@@ -370,6 +370,11 @@ def upload(debug=False):
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
                     if config.filename and parsed_config:
                         resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
+                    if 'dir_str_list' in request.cookies:
+                        resp.set_cookie('dir_str_list', json.dumps(
+                        [dir_str] + json.loads(request.cookies.get('dir_str_list'))))
+                    else:
+                        resp.set_cookie('dir_str_list', json.dumps([dir_str]))
                     resp.set_cookie('dir_str', dir_str)
             return resp
     except:
@@ -379,7 +384,7 @@ def upload(debug=False):
 @app.route('/', methods=["GET", "POST"])
 def home():
     return redirect(url_for('landing_page'))
-    
+
 @app.route('/home', methods=["GET", "POST"])
 def landing_page():
     #print('.... Landing page')
@@ -392,7 +397,7 @@ def landing_page():
 def ppa():
     return render_template('ppa.html')
 
-    
+
 @app.route('/data_analysis', methods=["GET", "POST"])
 def data_analysis(debug=False):
     str_err = ''
@@ -1294,8 +1299,8 @@ def manual():
     except:
         ret = handle_exception()
         return ret
-    
-    
+
+
 @app.route('/paper')
 def paper():
     try:
@@ -1318,7 +1323,7 @@ def get_help(help_file_name, debug=False):
         else:
             file = render_template(template_filename, rand_str=get_rand_state_str())
     return file
-    
+
 def print_exception(cls, ex, traceback):
     print('{}\nException trace last instruction: {}'.format(ex, traceback.tb_lasti))
     return
@@ -1336,9 +1341,9 @@ def download_zip():
           for root, dirs, files in os.walk(zip_file):
             for name in files:
               #print(os.path.join(root, name))
-              zip.write(os.path.join(root, name)) 
-        
-         
+              zip.write(os.path.join(root, name))
+
+
         return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
     except:
         ret = handle_exception()
@@ -1347,14 +1352,17 @@ def download_zip():
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/delete')
 def delete_data():
-    if request.cookies.get("dir_str"):
-      zip_file = FOLDER + "/" + request.cookies.get("dir_str")
-      shutil.rmtree(zip_file)
-      os.remove(zip_file + ".zip")
-      print("deleted " + zip_file)
+    for dir_str in json.loads(request.cookies.get('dir_str_list')):
+          zip_file = FOLDER + "/" + dir_str
+          if os.path.exists(zip_file):
+              shutil.rmtree(zip_file)
+          if os.path.isfile(zip_file + ".zip"):
+              os.remove(zip_file + ".zip")
+              print("deleted " + zip_file)
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
     rendered = render_template("welcome.html")
     resp = make_response(rendered)
+    resp.set_cookie("dir_str_list", json.dumps([]))
     resp.set_cookie("dir_str", '')
     return resp
 
