@@ -8,7 +8,7 @@ While statistical significance testing has been commonly used to compare NLP sys
 
 ## Setup
 
-1. Install [Conda](https://www.anaconda.com/products/individual) on your system. Read [this article](https://pythonspeed.com/articles/conda-dependency-management/) for more information about how Cona lockfiles allow us to build a reproducible environment.
+1. Install [Conda](https://www.anaconda.com/products/individual) on your system. Read [this article](https://pythonspeed.com/articles/conda-dependency-management/) for more information about how Conda lockfiles allow us to build a reproducible environment.
 
 	a. (On Windows) open Anaconda Prompt from the start menu. Then use `cd` to navigate to the unzipped package directory.
 	b. (On Mac or Linux) open your favorite shell with `conda` aliased to your installation. Then use `cd` to navigate to the unzipped package directory.
