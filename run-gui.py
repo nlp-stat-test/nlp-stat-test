@@ -79,12 +79,12 @@ def handle_exception(dir_str='', debug=False):
         f_err.write('----------------------\n')
         str_err = str(exc_info[0]) + '\n' + str(exc_info[1])
         f_err.write('Exception info:\n{}\n'.format(str_err))
-        print('------\n{}------'.format(str_err))
+        print('------\n{}\n------'.format(str_err))
         traceback.print_exception(*exc_info, file=f_err)
-    exception_message = "Exception:" + str(sys.exc_info()[0]) + "occurred."
+    exception_message = "Exception occurred:" + str(sys.exc_info()[0]) + ". \n Please email dpm3@uw.edu and paste the exception message in the body of the email."
     # print_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
     return make_response(render_template(template_filename,
-                                         exception_message=str_err,#exception_message,
+                                         exception_message=exception_message, ##str_err,
                                          rand_str=get_rand_state_str()))
 
 def get_rand_state_str():
