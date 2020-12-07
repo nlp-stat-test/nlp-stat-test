@@ -1358,7 +1358,7 @@ def delete_data():
               shutil.rmtree(zip_file)
           if os.path.isfile(zip_file + ".zip"):
               os.remove(zip_file + ".zip")
-              print("deleted " + zip_file)
+    print("Deleted user sessions: " + str(list(json.loads(request.cookies.get('dir_str_list')))))
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
     rendered = render_template("welcome.html")
     resp = make_response(rendered)
