@@ -357,7 +357,6 @@ def upload(debug=False):
                 str_err = 'Check that your file is properly formatted before upload'
                 file_err = 'was not properly formatted.'
                 rendered = render_template(template_filename,
-                                               last_tab_name_clicked=last_tab_name_clicked,
                                                rand_str=get_rand_state_str(),
                                                error_str=str_err,
                                                file_label=format_file_label(f.filename, file_err)
@@ -371,8 +370,9 @@ def upload(debug=False):
                     if config.filename and parsed_config:
                         resp.set_cookie('config_file_label', format_file_label(config.filename, 'uploaded'))
                     if 'dir_str_list' in request.cookies:
-                        resp.set_cookie('dir_str_list', json.dumps(
-                        [dir_str] + json.loads(request.cookies.get('dir_str_list'))))
+                        old = list(json.loads(request.cookies.get('dir_str_list')))
+                        print(json.loads(request.cookies.get('dir_str_list')))
+                        resp.set_cookie('dir_str_list', json.dumps([dir_str] + old))
                     else:
                         resp.set_cookie('dir_str_list', json.dumps([dir_str]))
                     resp.set_cookie('dir_str', dir_str)
@@ -1352,7 +1352,7 @@ def download_zip():
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/delete')
 def delete_data():
-    for dir_str in json.loads(request.cookies.get('dir_str_list')):
+    for dir_str in list(json.loads(request.cookies.get('dir_str_list'))):
           zip_file = FOLDER + "/" + dir_str
           if os.path.exists(zip_file):
               shutil.rmtree(zip_file)
