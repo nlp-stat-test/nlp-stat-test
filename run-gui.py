@@ -1352,13 +1352,14 @@ def download_zip():
 # https://www.roytuts.com/how-to-download-file-using-python-flask/
 @app.route('/delete')
 def delete_data():
-    for dir_str in list(json.loads(request.cookies.get('dir_str_list'))):
+    if "dir_str_list" in request.cookies:
+      for dir_str in list(json.loads(request.cookies.get('dir_str_list'))):
           zip_file = FOLDER + "/" + dir_str
           if os.path.exists(zip_file):
               shutil.rmtree(zip_file)
           if os.path.isfile(zip_file + ".zip"):
               os.remove(zip_file + ".zip")
-    print("Deleted user sessions: " + str(list(json.loads(request.cookies.get('dir_str_list')))))
+      print("Deleted user sessions: " + str(list(json.loads(request.cookies.get('dir_str_list')))))
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
     rendered = render_template("welcome.html")
     resp = make_response(rendered)
