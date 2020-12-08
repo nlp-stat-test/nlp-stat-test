@@ -522,7 +522,7 @@ def data_analysis(debug=False):
                     create_test_reasons(recommended_tests)
 
                 # EU output
-                EU_table = choose_eu(score_dif, epsilon, shuffle, seed, mean_or_median, dir_folder)
+                EU_table = choose_eu(score_dif, epsilon, shuffle, seed, eval_unit_stat, dir_folder)
                 #print(EU_table)
 
                 if debug:
