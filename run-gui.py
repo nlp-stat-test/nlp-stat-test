@@ -1336,14 +1336,11 @@ def print_exception(cls, ex, traceback):
 @app.route('/download_zip')
 def download_zip():
     try:
-        zip_file = FOLDER + "/" + str(request.cookies.get("dir_str"))
+        zip_file = FOLDER + "/" + str(request.cookies.get("dir_str")) 
         with zipfile.ZipFile(zip_file + ".zip",'w') as zip:
           for root, dirs, files in os.walk(zip_file):
             for name in files:
-              #print(os.path.join(root, name))
-              zip.write(os.path.join(root, name))
-
-
+              zip.write(os.path.join(root, name), name)
         return send_file(zip_file +".zip", as_attachment=True, cache_timeout=0)
     except:
         ret = handle_exception()
