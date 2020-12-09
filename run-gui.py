@@ -521,9 +521,6 @@ def data_analysis(debug=False):
                 ( recommended_tests, not_preferred_tests, not_recommended_tests) = \
                     create_test_reasons(recommended_tests)
 
-                # EU output
-                EU_table = choose_eu(score_dif, epsilon, shuffle, seed, eval_unit_stat, dir_folder)
-                #print(EU_table)
 
                 if debug:
                     print("Recommended: {}".format(recommended_tests))
@@ -544,7 +541,7 @@ def data_analysis(debug=False):
                                                config_file_label = request.cookies.get('config_file_label'),
                                                normality_alpha=normality_alpha,
                                                skewness_gamma=skewness_gamma,
-                                               eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
+                                               #eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
                                                hist_score1_file= get_path('hist_score1_file'),#'hist_score1_EUs.svg',
                                                hist_score2_file=get_path('hist_score2_file'),
                                                hist_diff_file=get_path('hist_diff_file'),
@@ -573,7 +570,7 @@ def data_analysis(debug=False):
                                                power_test=request.cookies.get('power_test'),
                                                power_num_intervals=request.cookies.get('power_num_intervals'),
                                                rand_str=get_rand_state_str(),
-                                               EU_table= "\n".join(["<tr><td>" + str(x) + "</td><td>" + str(y) + "</td></tr>" for x,y in zip(*EU_table)])
+                                               #EU_table= "\n".join(["<tr><td>" + str(x) + "</td><td>" + str(y) + "</td></tr>" for x,y in zip(*EU_table)])
 
                                                )
                     resp = make_response(rendered)
