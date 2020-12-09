@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "run-gui.py", line 525, in data_analysis
-    EU_table = choose_eu(score_dif, epsilon, shuffle, seed, eval_unit_stat, dir_folder)
-  File "/home/jesse/Documents/GitHub/nlp-stat-test/src/logic/dataAnalysis.py", line 72, in choose_eu
-    low = np.quantile(sd,0.25)-1.5*scipy.stats.iqr(sd)
-NameError: name 'scipy' is not defined
