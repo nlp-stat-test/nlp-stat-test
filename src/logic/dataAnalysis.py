@@ -48,8 +48,9 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
 		return(score_diff_new)
 
 
+	diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
 
-	max_n = int(np.floor(len(score_diff.values())/5)) # make sure the EU size is not too large
+	max_n = int(np.floor(len(score_diff.values())/15)) # make sure the EU size is not too large
 	eu_sizes = []
 	sd = []
 	for i in range(1,max_n):
@@ -58,32 +59,44 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
 		eu_sizes.append(i)
 
 
+	eu_sd = {}
+	for i in eu_sizes:
+		eu_sd[i] = sd[i-1]
+
 
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
 
-	# plotting
-	diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
-	plt.figure() 
-	plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
-	plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
-	plt.legend(loc='upper right')
-	plt.title('Relationship between EU Size and Standard Deviation')
-	plt.xlabel('EU Size')
-	plt.ylabel('Standard Deviation')
+	recommended_i = None
+    	low = np.quantile(b,0.25)-1.5*scipy.stats.iqr(b)
+	up = np.quantile(b,0.75)+1.5*scipy.stats.iqr(b)
+
+    	for i in range(0,len(sd)):
+    		if low < b[i] and up > b[i]:
+        		recommended_i = i
+
+    	help_message = 'The recommended EU size is '+str(eu_sizes[recommended_i])+'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
+
+	
+    	plt.figure() 
+    	plt.plot(np.array(c),np.array(b),label='Std Dev',linewidth=1)
+    	plt.plot(np.array(c[1:]),np.array(a),color='r',label='Differences',linestyle='--',linewidth=1)
+    	plt.axvline(x=eu_sizes[recommended_i], linewidth=2,linestyle='-.',label='Min EU')
+    	plt.legend(loc='upper right')
+    	plt.title('Relationship between EU Size and Standard Deviation')
+    	plt.xlabel('EU Size')
+    	plt.ylabel('Standard Deviation')
 	plt.savefig(output_dir+'/eu_size_std_dev.svg')
-	# choosing EU
-	diff_chosen = []
-	eu_chosen = []
-	sd_chosen = []
-	for i in range(0,len(diff)):
-          if abs(diff[i])<epsilon:
-            diff_chosen.append(diff[i])
-            eu_chosen.append(eu_sizes[i+1])
-            sd_chosen.append(round(sd[i+1],5))
 
-	return([eu_chosen[:10],sd_chosen[:10]]) # output first 10 choices
 
+    	return([eu_sizes[recommended_i], help_message, eu_sd]) # output the first eu size
+
+
+def is_goodEU(eu, min_eu, eu_sd):
+	if eu not in eu_sd:
+		return([False, None])
+	else:
+		return([eu>=min_eu, eu_sd[eu]])
 
 
 
