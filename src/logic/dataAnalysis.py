@@ -61,11 +61,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
     eu_sd = {}
     for i in eu_sizes:
         eu_sd[i] = sd[i-1]
-        
-        
-    diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
-
-
+       
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -78,17 +74,17 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
                 recommended_i = i
                 break
 
-        help_message = 'The recommended EU size is '+ str(eu_sizes[recommended_i]) +'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
+    help_message = 'The recommended EU size is '+ str(eu_sizes[recommended_i]) +'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
 
     
-        plt.figure() 
-        plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
-        plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
-        plt.axvline(x=eu_sizes[recommended_i], linewidth=2,linestyle='-.',label='Min EU')
-        plt.legend(loc='upper right')
-        plt.title('Relationship between EU Size and Standard Deviation')
-        plt.xlabel('EU Size')
-        plt.ylabel('Standard Deviation')
+    plt.figure() 
+    plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
+    plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
+    plt.axvline(x=eu_sizes[recommended_i], linewidth=2,linestyle='-.',label='Min EU')
+    plt.legend(loc='upper right')
+    plt.title('Relationship between EU Size and Standard Deviation')
+    plt.xlabel('EU Size')
+    plt.ylabel('Standard Deviation')
     plt.savefig(output_dir+'/eu_size_std_dev.svg')
 
 
