@@ -12,6 +12,7 @@ import os
 import sys
 import numpy as np
 from scipy import stats
+import scipy
 import random
 import matplotlib
 matplotlib.use('Svg')
@@ -68,7 +69,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    recommended_i = None
+    recommended_i = 1
     low = np.quantile(sd,0.25)-1.5*scipy.stats.iqr(sd)
     up = np.quantile(sd,0.75)+1.5*scipy.stats.iqr(sd)
 
@@ -76,7 +77,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
         if low < sd[i] and up > sd[i]:
                 recommended_i = i
 
-        help_message = 'The recommended EU size is '+str(eu_sizes[recommended_i])+'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
+        help_message = 'The recommended EU size is '+ str(eu_sizes[recommended_i]) +'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
 
     
         plt.figure() 
