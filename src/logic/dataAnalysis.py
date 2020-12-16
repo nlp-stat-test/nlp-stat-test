@@ -76,6 +76,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
     for i in range(0,len(sd)):
         if low < sd[i] and up > sd[i]:
                 recommended_i = i
+                break
 
         help_message = 'The recommended EU size is '+ str(eu_sizes[recommended_i]) +'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
 
