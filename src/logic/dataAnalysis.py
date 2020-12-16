@@ -76,9 +76,8 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
                 recommended_i = i
                 break
 
+                
     help_message = 'The recommended EU size is '+ str(eu_sizes[recommended_i]) +'. This is the smallest EU size of which the standard deviation lies between the whiskers of a standard box plot.'
-
-    
     plt.figure() 
     plt.plot(np.array(eu_sizes),np.array(sd),label='Std Dev',linewidth=1)
     plt.plot(np.array(eu_sizes[1:]),np.array(diff),color='r',label='Differences',linestyle='--',linewidth=1)
