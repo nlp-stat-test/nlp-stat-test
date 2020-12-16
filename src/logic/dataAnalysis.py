@@ -57,11 +57,13 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
         sd.append(np.var(np.array(list(new_score_diff.values())),ddof=1))
         eu_sizes.append(i)
 
-
+        
     eu_sd = {}
     for i in eu_sizes:
         eu_sd[i] = sd[i-1]
-       
+     
+    diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
+    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
