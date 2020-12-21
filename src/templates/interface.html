@@ -183,9 +183,26 @@ style="background-color: #eee; padding: 5;   top: 0;
             <!-- NOTE: this link shows as button -->
                 <a href="#" class="button1 interface"><label for="config_file">Upload</label></a>
                 <label id="configLabel"><i>{{config_file_label}}</i>{% if config_error_str %} <b>{{ config_error_str }}</b>{% endif %}</label></p>
-            <!-- todo: Note that we may want to call client-side validation such as checkFileSize() after changing
-            the 'loading' div style to 'block', to be able to get rid of it if we have found an error.
-             -->
+
+
+                <p>  Choose a metric to represent each evaluation unit:
+              <br>
+                  <input type="radio" name="target_statistic" id="target_statistic-0" value="mean" checked="checked" {% if eval_unit_stat=="mean" %} checked="checked" {% else %} checked="checked" {% endif %}> Mean
+              <br>
+                  <input type="radio" name="target_statistic" id="target_statistic-1" value="median" {% if eval_unit_stat=="median" %} checked="checked" {% endif %}> Median
+              </p>
+
+
+
+              <p>Random <abbr title="A real number seed for random shuffling can be entered here. Otherwise, the data will not be shuffled.">Seed</abbr>:
+              <br>
+                  <input id="seed" name="seed" type="number" placeholder="Do not shuffle" {% if shuffle_seed %} value="{{ shuffle_seed }}" {% endif %} step="1" class="form-control input-md">
+              </p>
+
+
+
+
+
             <button id="submit" onclick="document.getElementById('loading').style.display='block';
             max_tab = '1'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); checkFileSize('submit');"
                     name="submit" type=submit class="interface" required>Submit File</button>
@@ -205,9 +222,24 @@ style="background-color: #eee; padding: 5;   top: 0;
 
   <div class="roundgreen interface"  id="uploadresult">
 
-    <h3>File Validation Results</h3>
-      <p>{% if fileName %}The file '{{ fileName }}' has been uploaded.
+    <h3>Evaluation Unit Recommendation and File Validation</h3>
+
+
+
+      {% if fileName %}
+
+          <p>{{eu_table}}</p>
+
+
+
+<img src="{{eu_size_std_dev_file}}">
+
+      <p>The file '{{ fileName }}' has been uploaded.
           Go to the "Data Analysis" tab.</p>
+
+
+
+
         <a class="button1 completed" id='BtnTabDataNext' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a>
          {% else %} <b>{{ error_str }}</b>
          {% endif %}
@@ -262,7 +294,7 @@ and test normality.</p>
 
 
 
-<p>
+<p style = "display:none">
 Error tolerance:
 <br>
 \( \epsilon = \) <input id="epsilon" name="epsilon" type="number" step="0.00001" min="0.00001" {% if epsilon %} value="{{ epsilon }}" {% else %}value="0.00001" {% endif %} class="form-control input-md">
@@ -288,24 +320,6 @@ Error tolerance:
             <!-- begin green results area -->
             <div class="roundgreen" class="hiddendiv" id="hiddenDataAnalysis">
 
-
-
-                <h3>Evaluation Unit Size Recommendation</h3>
-
-                <p>In general, as EU size increases, standard deviation decreases. An integer greater than the first size in the following table is an appropriate EU size.</p>
-
-              <table>
-                <tr><th>EU Size</th><th>Standard Deviation</th></tr>
-                {{ EU_table | safe}}
-              </table>
-
-              <p> <button id="eu_button" class="interface" onclick="showdiv('eu_image', 'eu_button', 'EU Visualization'); return false;">Show EU Visualization</button></p>
-
-              <div id="eu_image" style="display: none;">
-                  {% if eu_size_std_dev_file %}
-              <img id=eu_image_file src="../{{ url_for('send_img_file_dir', image_name=eu_size_std_dev_file) }}?{{ rand }}">
-                  {% endif %}
-              </div>
 
                 <!-- SUMMARY STATISTICS -->
                 <h3>{{ summary_str }}</h3> {% if summary_stats_list|length %}

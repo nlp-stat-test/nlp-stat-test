@@ -232,6 +232,7 @@ def start():
 @app.route('/upload', methods=["POST"])
 def upload(debug=False):
     #print('In /upload')
+    recommended_eu = 1
     try:
         if request.method == "POST":
             #print('In /upload POST')
@@ -295,6 +296,7 @@ def upload(debug=False):
                         # check type of data_loaded (should be 'dict'. string will have no .get method)
                         if isinstance(data_loaded, dict):
                             parsed_config = True
+          
                             rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                file_label=format_file_label(f.filename, 'uploaded'),
@@ -307,11 +309,11 @@ def upload(debug=False):
                                                eval_unit_size=data_loaded.get('eval_unit_size'),
                                                eval_unit_stat=data_loaded.get('eval_unit_stat'),
                                                fileName=data_loaded.get('fileName'),
+                                               eu_size_std_dev_file=data_loaded.get('eu_size_std_dev_file'),
                                                hist_diff_file=data_loaded.get('hist_diff_file'),
                                                hist_diff_par_file=data_loaded.get('hist_diff_par_file'),
                                                hist_score1_file=data_loaded.get(('hist_score1_file')),
                                                hist_score2_file=data_loaded.get(('hist_score2_file')),
-                                               eu_size_std_dev_file=data_loaded.get('eu_size_std_dev_file'),
                                                is_normal=data_loaded.get('is_normal'),
                                                mean_or_median=data_loaded.get('mean_or_median'),
                                                mu=data_loaded.get('mu'),
@@ -346,12 +348,28 @@ def upload(debug=False):
                                                        file_label=f.filename
                                                        )
                 else:  # no config file
+                    scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/" + data_filename)
+                    
+                    
+                    eval_unit_stat = request.form.get('target_statistic')
+               
+                    seed = request.form.get('seed')
+                    if not seed:
+                         shuffle = False
+                    else:
+                         shuffle = True
+                
+                    recommended_eu, explanation, table = choose_eu(calc_score_diff(scores1, scores2), 0.00001, shuffle, seed, eval_unit_stat, "user/" + dir_str)
+                    eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
                     rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                rand_str=get_rand_state_str(),
+                                               eu_size_std_dev_file = "img_url_dir/" + eu_size_std_dev_file[0],
                                                error_str=str_err,
                                                fileName = data_filename,
-                                               file_label=format_file_label(f.filename, 'uploaded')
+                                               file_label=format_file_label(f.filename, 'uploaded'),
+                                               eu_table = explanation,
+                                               eval_unit_size = recommended_eu,
                                        )
             else: # don't have data
                 str_err = 'Check that your file is properly formatted before upload'
@@ -362,9 +380,11 @@ def upload(debug=False):
                                                file_label=format_file_label(f.filename, file_err)
                                        )
             resp = make_response(rendered)
+            
             # Set cookies
             if have_data:
                 if f.filename:
+            
                     resp.set_cookie('fileName', f.filename)
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
                     if config.filename and parsed_config:
@@ -409,7 +429,7 @@ def data_analysis(debug=False):
             last_tab_name_clicked = 'Data Analysis'  # request.form.get('last_tab_name')
             #print("***** LAST TAB: {}".format(last_tab_name_clicked))
 
-            eval_unit_size = request.form.get('eval_unit_size')
+            eval_unit_size = request.form.get("eval_unit_size")
 
             # Handle case of no eval unit size
             if not eval_unit_size:
@@ -521,9 +541,6 @@ def data_analysis(debug=False):
                 ( recommended_tests, not_preferred_tests, not_recommended_tests) = \
                     create_test_reasons(recommended_tests)
 
-                # EU output
-                EU_table = choose_eu(score_dif, epsilon, shuffle, seed, eval_unit_stat, dir_folder)
-                #print(EU_table)
 
                 if debug:
                     print("Recommended: {}".format(recommended_tests))
@@ -544,7 +561,7 @@ def data_analysis(debug=False):
                                                config_file_label = request.cookies.get('config_file_label'),
                                                normality_alpha=normality_alpha,
                                                skewness_gamma=skewness_gamma,
-                                               eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
+                                               
                                                hist_score1_file= get_path('hist_score1_file'),#'hist_score1_EUs.svg',
                                                hist_score2_file=get_path('hist_score2_file'),
                                                hist_diff_file=get_path('hist_diff_file'),
@@ -573,7 +590,7 @@ def data_analysis(debug=False):
                                                power_test=request.cookies.get('power_test'),
                                                power_num_intervals=request.cookies.get('power_num_intervals'),
                                                rand_str=get_rand_state_str(),
-                                               EU_table= "\n".join(["<tr><td>" + str(x) + "</td><td>" + str(y) + "</td></tr>" for x,y in zip(*EU_table)])
+                                               #EU_table= "\n".join(["<tr><td>" + str(x) + "</td><td>" + str(y) + "</td></tr>" for x,y in zip(*EU_table)])
 
                                                )
                     resp = make_response(rendered)
