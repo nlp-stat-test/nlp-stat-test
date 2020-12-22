@@ -929,13 +929,19 @@ function clear_cookies() {
 }
 </script>
 
-<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}'">Delete User Data</button>
+<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}';">Delete User Data</button>
 
 
 
         </div>
 
-     </div>
+
+
+
+</div>
+
+
+
 
 <div id="Exceptions">{{ exception_message }}</div>
 
@@ -1098,8 +1104,8 @@ function clear_cookies() {
             document.getElementById('Download Report').style.display='block';
             document.getElementById('warning').style.display='none';
             return false;
-
         }
+
     </script>
     <!-- custom input validation -->
     <script>

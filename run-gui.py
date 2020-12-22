@@ -359,7 +359,7 @@ def upload(debug=False):
                     else:
                          shuffle = True
                 
-                    recommended_eu, explanation, table = choose_eu(calc_score_diff(scores1, scores2), 0.00001, shuffle, seed, eval_unit_stat, "user/" + dir_str)
+                    recommended_eu, explanation, table = choose_eu(calc_score_diff(scores1, scores2), shuffle, seed, eval_unit_stat, "user/" + dir_str)
                     eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
                     rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
@@ -1375,7 +1375,7 @@ def delete_data():
               os.remove(zip_file + ".zip")
       print("Deleted user sessions: " + str(list(json.loads(request.cookies.get('dir_str_list')))))
     # https://stackoverflow.com/questions/14386304/flask-how-to-remove-cookies
-    rendered = render_template("welcome.html")
+    rendered = render_template("deleted.html")
     resp = make_response(rendered)
     resp.set_cookie("dir_str_list", json.dumps([]))
     resp.set_cookie("dir_str", '')

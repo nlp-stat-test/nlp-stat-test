@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>NLPStatTest</title>
+
+    <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='print.css')}}" rel="stylesheet" type="text/css"  media="print"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- KATEX STARTER -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+
+       <!-- The loading of KaTeX is deferred to speed up page rendering -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+
+       <!-- To automatically render math in text elements, include the auto-render extension: -->
+       <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous"
+           onload="renderMathInElement(document.body);"></script>
+
+</head>
+
+
+<script>
+
+
+function results_check(){
+  if (localStorage.getItem("ppa") == "1") {
+    document.getElementById('hiddenProspectivePowerTest').style.display = "block";
+  } else {
+      document.getElementById('hiddenProspectivePowerTest').style.display = "none";
+    }
+    return false;
+}
+
+
+        // BREADCRUMBS! adapted from W3Schools Tutorial
+        function openTab(evt, tabName, cur) {
+                console.log(localStorage.getItem("max"));
+              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max")) + 1){
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("tablinks");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+              }
+              document.getElementById(tabName).style.display = "block";
+              evt.currentTarget.className += " active";
+              greyOut(cur)
+            }
+            }
+
+
+</script>
+
+
+<body style="font-family: sans;" onload="results_check(); max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab);">
+
+
+
+
+    <div margin: 100 auto;>
+        <div class="header">
+            <h1>NlpStatTest</h1>
+
+        </div>
+
+        <div class="roundpurplebottom interface ds"
+        style="background-color: #eee; padding: 5;   top: 0;">
+
+
+             <a class="possible button1" href="{{ url_for('home') }}">Home</a> 
+            </div>
+
+
+        <div id='deleted' class="tabcontent">
+
+            <div class="roundpurplebottom" style="position:relative;">
+
+<h3>Data Deleted</h3>
+
+        <p>Your data has been deleted and your cookies cleared. Feel free to start over again by clicking <a href="{{ url_for('home') }}">home</a>.</p>
+
+        </div>
+ </div>
+</body>
+
+</html>
+
