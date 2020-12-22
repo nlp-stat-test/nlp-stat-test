@@ -21,7 +21,7 @@ plt.rcParams['svg.fonttype'] = 'none'
     
 
 
-def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
+def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
     """
     This function tries out multiple choices of EU sizes and calculates corresponding std dev and then
     plots the relationship between them. This function also takes a small number epsilon as the input which functions
@@ -52,6 +52,7 @@ def choose_eu(score_diff, epsilon, shuffled, randomSeed, method, output_dir):
     max_n = int(np.floor(len(score_diff.values())/15)) # make sure the EU size is not too large
     eu_sizes = []
     sd = []
+
     for i in range(1,max_n):
         new_score_diff = partition_score_without_graph(score_diff, i, shuffled, randomSeed, method)
         sd.append(np.var(np.array(list(new_score_diff.values())),ddof=1))
