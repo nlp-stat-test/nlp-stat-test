@@ -36,8 +36,9 @@
           // BREADCRUMBS! adapted from W3Schools Tutorial
         function openTab(evt, tabName, cur) {
                 console.log(localStorage.getItem("max_tab"));
-              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max_tab")) + 1){
+             if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max_tab")) + 1){
               var i, tabcontent, tablinks;
+              
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
@@ -114,7 +115,7 @@ function show_montecarlo_div() {
 
              <a class="button1 possible" href="{{ url_for('home') }}">Home</a>  |
                     <a class="button1 possible" href="{{ url_for('ppa') }}">Prospective Power Analysis</a> |
-                     <a class="button1 current" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
+                     <a class="button1 possible" href="{{ url_for('start') }}">Data, Significance, and Retrospective Power Analysis</a>
   </div>
 
 
@@ -123,11 +124,11 @@ function show_montecarlo_div() {
 style="background-color: #eee; padding: 5;   top: 0;
        position: -webkit-sticky;
        position: sticky;    z-index: 2;">
-    <div > <a class="button1 completed" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
-           <a class="button1 completed" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
-           <a class="button1 current" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
+    <div > <a class="button1 possible" id='BtnTab0' onclick="openTab(event, 'Upload Files', 'BtnTab1')" >Upload Files</a> →
+           <a class="button1 possible" id='BtnTab1' onclick="openTab(event, 'Data Analysis', 'BtnTab2')" >Data Analysis</a> →
+           <a class="button1 possible" id='BtnTab2' onclick="openTab(event, 'Significance Test', 'BtnTab3')" >Significance Testing</a> →
            <a class="button1 possible" id='BtnTab3' onclick="openTab(event, 'Effect Size', 'BtnTab4')" >Effect Size Estimation</a> →
-           <a class="button1 greyed" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a> →
+           <a class="button1 possible" id='BtnTab4' onclick="openTab(event, 'Retrospective Power Analysis', 'BtnTab5')">Retrospective Power Analysis</a> →
   <a class="button1 possible" id='BtnTab5.1' onclick="openTab(event, 'Download Report', 'BtnTab6.1')">Downloads and Deletion</a>
 
   <style>.arrow{font-size: 1.5em;}</style>
@@ -929,13 +930,18 @@ function clear_cookies() {
 }
 </script>
 
-<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}';">Delete User Data</button>
+<button class="interface"  onclick="max_tab = '0'; localStorage.setItem('max_tab', max_tab); console.log(max_tab); clear_cookies(); window.location.href='{{ url_for('.delete_data') }}';  document.getElementById('deleted').style.display='block'">Delete User Data</button>
 
 
 
         </div>
 
 
+	<div class="roundgreen" class="hiddendiv" id="deleted">
+		<h3>Deleted</h3>
+
+		<p>The data has been deleted.</p>
+	</div>
 
 
 </div>
@@ -1013,6 +1019,14 @@ function clear_cookies() {
         }
         function hideGreenDivs(lastTabClicked){
               console.log('in hideGreenDivs')
+              for (i = 0; i < 5; i++){
+                if (i >= Number(localStorage.getItem("max_tab")) + 1){
+		   document.getElementById('BtnTab' + i.toString()).style.color = "Grey";
+		} else {
+		   document.getElementById('BtnTab' + i.toString()).style.color = "#4b2e83";
+		}
+      	      }
+              
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
                   console.log(lastTabClicked + 'was POSTED');
