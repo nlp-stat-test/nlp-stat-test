@@ -900,7 +900,7 @@ def sigtest(debug=False):
                 resp.set_cookie('wilcoxon_ci_nonpref', wilcoxon_ci_nonpref)
             else:
                 resp.set_cookie('wilcoxon_ci_nonpref', '')
-            if wilcoxon_ci_nonpref:
+            if wilcoxon_ci_rec:
                 resp.set_cookie('wilcoxon_ci_rec', wilcoxon_ci_rec)
             else:
                 resp.set_cookie('wilcoxon_ci_rec', '')
