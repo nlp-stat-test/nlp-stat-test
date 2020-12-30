@@ -5,6 +5,7 @@
 <html>
 
 <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta charset="UTF-8">
     <title>NLPStatTest</title>
     <link href="{{ url_for('static', filename='other.css')}}" rel="stylesheet"/>
@@ -38,7 +39,7 @@
                 console.log(localStorage.getItem("max_tab"));
              if (Number(cur.slice(-1)) <= Number(localStorage.getItem("max_tab")) + 1){
               var i, tabcontent, tablinks;
-              
+
               tabcontent = document.getElementsByClassName("tabcontent");
               for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
@@ -1026,7 +1027,7 @@ function clear_cookies() {
 		   document.getElementById('BtnTab' + i.toString()).style.color = "#4b2e83";
 		}
       	      }
-              
+
               greenDivs = document.getElementsByClassName("roundgreen");
               if (lastTabClicked) {
                   console.log(lastTabClicked + 'was POSTED');
