@@ -26,25 +26,24 @@ from src.logic.power_analysis_norm import prosp_power_analysis_norm
 
 # filenames
 from src.logic.filenames import get_path, split_filename
-
-
-
 from src.logic.errorHandling import InputError
 
-import os
 
-FOLDER = os.path.join('user')
-ERRORS = os.path.join('error_logs')
 from src.logic.powerAnalysis import post_power_analysis
 import src.logic.powerAnalysis
 
 
-app = Flask(__name__, static_folder=os.path.join("src", "static"), template_folder=os.path.join("src", "templates"))
+FOLDER = os.path.join('user')
+ERRORS = os.path.join('error_logs')
 
+
+app = Flask(__name__, static_folder=os.path.join("src", "static"),
+            template_folder=os.path.join("src", "templates"))
+app.config['FOLDER'] = FOLDER
 
 print("\nGo to http://localhost:5000 in your browser.\n")
 
-app.config['FOLDER'] = FOLDER
+
 
 # defaults
 DEFAULT_SEED = None
@@ -296,7 +295,7 @@ def upload(debug=False):
                         # check type of data_loaded (should be 'dict'. string will have no .get method)
                         if isinstance(data_loaded, dict):
                             parsed_config = True
-          
+
                             rendered = render_template(template_filename,
                                                last_tab_name_clicked=last_tab_name_clicked,
                                                file_label=format_file_label(f.filename, 'uploaded'),
@@ -349,16 +348,16 @@ def upload(debug=False):
                                                        )
                 else:  # no config file
                     scores1, scores2 = read_score_file(FOLDER + "/" + dir_str + "/" + data_filename)
-                    
-                    
+
+
                     eval_unit_stat = request.form.get('target_statistic')
-               
+
                     seed = request.form.get('seed')
                     if not seed:
                          shuffle = False
                     else:
                          shuffle = True
-                
+
                     recommended_eu, explanation, table = choose_eu(calc_score_diff(scores1, scores2), shuffle, seed, eval_unit_stat, "user/" + dir_str)
                     eu_size_std_dev_file = get_path('eu_size_std_dev_file'),
                     rendered = render_template(template_filename,
@@ -380,11 +379,11 @@ def upload(debug=False):
                                                file_label=format_file_label(f.filename, file_err)
                                        )
             resp = make_response(rendered)
-            
+
             # Set cookies
             if have_data:
                 if f.filename:
-            
+
                     resp.set_cookie('fileName', f.filename)
                     resp.set_cookie('file_label', "File selected: {}".format(f.filename))
                     if config.filename and parsed_config:
@@ -561,7 +560,7 @@ def data_analysis(debug=False):
                                                config_file_label = request.cookies.get('config_file_label'),
                                                normality_alpha=normality_alpha,
                                                skewness_gamma=skewness_gamma,
-                                               
+
                                                hist_score1_file= get_path('hist_score1_file'),#'hist_score1_EUs.svg',
                                                hist_score2_file=get_path('hist_score2_file'),
                                                hist_diff_file=get_path('hist_diff_file'),
@@ -1353,7 +1352,7 @@ def print_exception(cls, ex, traceback):
 @app.route('/download_zip')
 def download_zip():
     try:
-        zip_file = FOLDER + "/" + str(request.cookies.get("dir_str")) 
+        zip_file = FOLDER + "/" + str(request.cookies.get("dir_str"))
         with zipfile.ZipFile(zip_file + ".zip",'w') as zip:
           for root, dirs, files in os.walk(zip_file):
             for name in files:
