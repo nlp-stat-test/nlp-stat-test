@@ -9,6 +9,7 @@ from flask import *
 from flask import render_template
 from flask import make_response
 import logging
+import datetime
 
 from werkzeug.utils import secure_filename
 import os
@@ -93,6 +94,8 @@ def get_rand_state_str():
     @return: A random int between 0 and 9999
     '''
     rand_str = str(np.random.randint(10000))
+    with open('anonymous_log.csv', 'w') as f:
+        print(rand_str + ', ' + datetime.datetime.now().strftime("%H:%M:%S"), file=f)
     return rand_str
 
 def calc_score_diff(score1, score2):
