@@ -49,7 +49,7 @@ def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
         return(score_diff_new)
 
 
-    max_n = int(np.floor(len(score_diff.values())/15)) # make sure the EU size is not too large
+    max_n = max(1,int(np.floor(len(score_diff.values())/15))) # make sure the EU size is not too large
     eu_sizes = []
     sd = []
 
@@ -68,7 +68,7 @@ def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    recommended_i = 1
+    recommended_i = 0
     low = np.quantile(sd,0.25)-1.5*scipy.stats.iqr(sd)
     up = np.quantile(sd,0.75)+1.5*scipy.stats.iqr(sd)
 
