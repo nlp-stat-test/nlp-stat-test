@@ -53,7 +53,7 @@ def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
     eu_sizes = []
     sd = []
 
-    for i in range(1,max_n):
+    for i in range(1,max_n+1):
         new_score_diff = partition_score_without_graph(score_diff, i, shuffled, randomSeed, method)
         sd.append(np.var(np.array(list(new_score_diff.values())),ddof=1))
         eu_sizes.append(i)
