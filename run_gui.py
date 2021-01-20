@@ -87,6 +87,21 @@ def handle_exception(dir_str='', debug=False):
                                          exception_message=exception_message, ##str_err,
                                          rand_str=get_rand_state_str()))
 
+def log_session_number(session_name):
+    '''
+
+    @param session_name: string that indicates the random 4-digit number assigned in get_rand_state_str() to the session,
+    or if doing pre-test analysis just indicating "pre-test-power"
+    @return:
+    '''
+
+    if not os.path.exists(ERRORS):
+        os.makedirs(ERRORS)
+    with open(os.path.join(ERRORS, 'anonymous_log.csv'), 'a+') as f:
+        print(session_name + '\t' + datetime.datetime.now().strftime("%m-%d-%y\t%H:%M:%S"), file=f)
+
+    return
+
 def get_rand_state_str():
     '''
     This is a random string that's generate every time a 'submit' operation happens.
@@ -94,10 +109,6 @@ def get_rand_state_str():
     @return: A random int between 0 and 9999
     '''
     rand_str = str(np.random.randint(10000))
-    if not os.path.exists(ERRORS):
-        os.makedirs(ERRORS)
-    with open(os.path.join(ERRORS, 'anonymous_log.csv'), 'w') as f:
-        print(rand_str + ', ' + datetime.datetime.now().strftime("%H:%M:%S"), file=f)
     return rand_str
 
 def calc_score_diff(score1, score2):
@@ -252,7 +263,8 @@ def upload(debug=False):
                 data_filename = f.filename
                 dir_str = get_rand_state_str()
 
-                #f.save(FOLDER + "/" + secure_filename(data_filename))
+                # log the session number we're using for dir_str
+                log_session_number(dir_str)
 
                 # save to dir_str
                 if not os.path.exists(FOLDER + "/" + dir_str):
@@ -657,6 +669,7 @@ def data_analysis(debug=False):
 def ppa_results(debug=False):
     try:
         if request.method == "POST":
+            log_session_number("prospective-power")
             # ------- Get cookies
             fileName = request.cookies.get('fileName')
             # ------- Get form data
