@@ -35,7 +35,7 @@ import src.logic.powerAnalysis
 
 
 FOLDER = os.path.join('user')
-ERRORS = os.path.join('error_logs')
+ERRORS = os.path.join('logs')
 
 
 app = Flask(__name__, static_folder=os.path.join("src", "static"),
@@ -94,7 +94,9 @@ def get_rand_state_str():
     @return: A random int between 0 and 9999
     '''
     rand_str = str(np.random.randint(10000))
-    with open('anonymous_log.csv', 'w') as f:
+    if not os.path.exists(ERRORS):
+        os.makedirs(ERRORS)
+    with open(os.path.join(ERRORS, 'anonymous_log.csv'), 'w') as f:
         print(rand_str + ', ' + datetime.datetime.now().strftime("%H:%M:%S"), file=f)
     return rand_str
 
