@@ -27,17 +27,22 @@ def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
     plots the relationship between them. This function also takes a small number epsilon as the input which functions
     as the level of tolerance for choosing a good EU size. If abs(sd_(i-1)-sd_i)<epsilon, then eu_i is chosen.
     """
+    ind = list(score_diff.keys())
+    if shuffled:
+        ind_shuffled = random.Random(randomSeed).shuffle(ind)
+    else:
+        ind_shuffled = ind
 
-    def partition_score_without_graph(score_diff, eval_unit_size, shuffled, randomSeed, method):
+
+    def partition_score_without_graph(score_diff, eval_unit_size, method, ind_shuffled, ind):
         """
         This function is a lite version of partition_score without plotting and saving plots
         """
-        ind = list(score_diff.keys())
-        if shuffled:
-            ind_shuffled = random.Random(randomSeed).shuffle(ind)
-        ind_shuffled = np.array_split(ind,np.floor(len(ind)/eval_unit_size))
-        ind_new = 0
 
+        ind_shuffled = np.array_split(ind, np.floor(len(ind)/eval_unit_size))
+        ind_new = 0
+        
+    
         score_diff_new = {}
 
         for i in ind_shuffled:
@@ -46,32 +51,49 @@ def choose_eu(score_diff, shuffled, randomSeed, method, output_dir):
             if method == "median":
                 score_diff_new[ind_new] = np.median(np.array([score_diff[x] for x in i]))
             ind_new+=1
+        
         return(score_diff_new)
 
-
-    max_n = max(1,int(np.floor(len(score_diff.values())/15))) # make sure the EU size is not too large
+    
+    n = len(score_diff.values())
+    
+    max_n = max(1,int(np.floor(n/15)))
+    
     eu_sizes = []
+    sd_dict = {}
     sd = []
+    
+    if max_n <= 100:
+        num_n = max_n
+    else:
+        num_n = 100
 
-    for i in range(1,max_n+1):
-        new_score_diff = partition_score_without_graph(score_diff, i, shuffled, randomSeed, method)
+    steps = np.linspace(1, max_n, num_n, endpoint=True)
+    
+    new_i = 0
+    for i in steps:
+        i = int(i)
+        new_score_diff = partition_score_without_graph(score_diff, int(i), method, ind_shuffled, ind)
         sd.append(np.var(np.array(list(new_score_diff.values())),ddof=1))
+        sd_dict[i] = np.var(np.array(list(new_score_diff.values())),ddof=1)
         eu_sizes.append(i)
+        new_i = new_i + 1
 
-        
+    
     eu_sd = {}
     for i in eu_sizes:
-        eu_sd[i] = sd[i-1]
+        eu_sd[i] = sd_dict[i]
      
     diff = [y-x for x, y in zip(sd[:-1], sd[1:])] 
     
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
+    
     recommended_i = 0
+    
     low = np.quantile(sd,0.25)-1.5*scipy.stats.iqr(sd)
     up = np.quantile(sd,0.75)+1.5*scipy.stats.iqr(sd)
 
+
+    
     for i in range(0,len(sd)):
         if low < sd[i] and up > sd[i]:
                 recommended_i = i
