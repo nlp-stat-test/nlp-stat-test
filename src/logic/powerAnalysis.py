@@ -95,7 +95,8 @@ def post_power_analysis(sig_test_name, method, score, num_of_subsample, dist_nam
 	y = list(power_sampsizes.values())
 
 	plt.figure()
-	plt.plot(x,y)
+	plt.scatter(x,y,color="red")
+	plt.plot(x,y,color="blue")
 	plt.xlabel("Sample Size")
 	plt.ylabel("Power")
 	plt.title("Power Against Different Sample Sizes for '" + test_name_to_display + "'")
