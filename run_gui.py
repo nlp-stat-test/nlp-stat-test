@@ -36,7 +36,7 @@ import src.logic.powerAnalysis
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('logs')
-
+session_count = 0
 
 app = Flask(__name__, static_folder=os.path.join("src", "static"),
             template_folder=os.path.join("src", "templates"))
@@ -94,13 +94,14 @@ def log_session_number(session_name):
     or if doing pre-test analysis just indicating "pre-test-power"
     @return:
     '''
-
+    global session_count 
     if not os.path.exists(ERRORS):
         os.makedirs(ERRORS)
+    with open(os.path.join(ERRORS, 'anonymous_log.csv'), 'r') as f:
+        session_count = len(f.readlines()) + 1
     with open(os.path.join(ERRORS, 'anonymous_log.csv'), 'a+') as f:
-        print(session_name + '\t' + datetime.datetime.now().strftime("%m-%d-%y\t%H:%M:%S"), file=f)
+        print(str(session_count) + "\t" + session_name + '\t' + datetime.datetime.now().strftime("%m-%d-%y\t%H:%M:%S"), file=f)
 
-    return
 
 def get_rand_state_str():
     '''
