@@ -1,10 +1,10 @@
-import logic.fileReader
-import logic.dataAnalysis
-import logic.sigTesting
-import logic.testCase
-import logic.effectSize
-import logic.powerAnalysis
-import logic.power_analysis_norm
+import src.logic.fileReader
+import src.logic.dataAnalysis
+import src.logic.sigTesting
+import src.logic.testCase
+import src.logic.effectSize
+import src.logic.powerAnalysis
+import src.logic.power_analysis_norm
 
 import sys
 import time
@@ -28,11 +28,11 @@ if __name__ == '__main__':
 	with open(config_file, 'r') as ymlfile:
 		config = yaml.load(ymlfile)
 
-	with open('logic/sysconfig.yml', 'r') as ymlfile:
+	with open('src/logic/sysconfig.yml', 'r') as ymlfile:
 		sysconfig = yaml.load(ymlfile)
 
 	### initialize a new testCase object
-	testCase_new = logic.testCase.testCase(None, None, None, None, None)
+	testCase_new = src.logic.testCase.testCase(None, None, None, None, None)
 
 	# eda
 	testCase_new.eda.m = int(config['eval_unit_size'])
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 		pre_alpha = float(config['pre_alpha'])
 		pre_alternative = str(config['pre_alternative'])
 
-		pre_samp_size = logic.power_analysis_norm.prosp_power_analysis_norm(pre_mu_diff, pre_sd, pre_pow_lev, pre_alpha, pre_alternative)
+		pre_samp_size = src.logic.power_analysis_norm.prosp_power_analysis_norm(pre_mu_diff, pre_sd, pre_pow_lev, pre_alpha, pre_alternative)
 
 
 		####################################
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
 
 	### read score file
-	[testCase_new.score1,testCase_new.score2] = logic.fileReader.read_score_file(score_file)
+	[testCase_new.score1,testCase_new.score2] = src.logic.fileReader.read_score_file(score_file)
 
 
 
@@ -128,7 +128,7 @@ if __name__ == '__main__':
 	testCase_new.sample_size = np.floor(len(list(testCase_new.score1.values()))/float(testCase_new.eda.m))
 
 	# partition score difference and plot hists
-	testCase_new.score1, testCase_new.score2, testCase_new.score_diff_par, ind_shuffled = logic.dataAnalysis.partition_score(\
+	testCase_new.score1, testCase_new.score2, testCase_new.score_diff_par, ind_shuffled = src.logic.dataAnalysis.partition_score(\
 		score1 = testCase_new.score1, 
 		score2 = testCase_new.score2, 
 		score_diff = testCase_new.score_diff, 
@@ -142,7 +142,7 @@ if __name__ == '__main__':
 	if not os.path.exists(sample_output_dir):
 		os.makedirs(sample_output_dir)
 
-	logic.fileReader.print_eu(testCase_new.score1, testCase_new.score2, testCase_new.score_diff_par, ind_shuffled, sample_output_dir)
+	src.logic.fileReader.print_eu(testCase_new.score1, testCase_new.score2, testCase_new.score_diff_par, ind_shuffled, sample_output_dir)
 
 	# check for minimum sample size requirement for power analysis
 	# this check is here because wilcoxon test needs more than 10 data points
@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
 
 	# skewness test
-	skewness_test_res = logic.dataAnalysis.skew_test(testCase_new.score_diff_par)
+	skewness_test_res = src.logic.dataAnalysis.skew_test(testCase_new.score_diff_par)
 	gamma = skewness_test_res[0]
 	skewed = ''
 	if abs(gamma)>1:
@@ -193,7 +193,7 @@ if __name__ == '__main__':
 
 
 	# normality test
-	testCase_new.eda.normal = logic.dataAnalysis.normality_test(\
+	testCase_new.eda.normal = src.logic.dataAnalysis.normality_test(\
 		score = testCase_new.score_diff_par, 
 		alpha = testCase_new.eda.normal_alpha)
 
@@ -206,7 +206,7 @@ if __name__ == '__main__':
 	####################################
 
 	# recommend tests
-	list_of_tests = logic.dataAnalysis.recommend_test(testCase_new.eda.testParam,testCase_new.eda.normal)
+	list_of_tests = src.logic.dataAnalysis.recommend_test(testCase_new.eda.testParam,testCase_new.eda.normal)
 
 	recommended_test_list = []
 	not_preferred_test_list = []
@@ -280,7 +280,7 @@ if __name__ == '__main__':
 
 	# run sig test
 	print("------ Testing ------")
-	test_stat, pval, CI, rejection = logic.sigTesting.run_sig_test(\
+	test_stat, pval, CI, rejection = src.logic.sigTesting.run_sig_test(\
 		recommended_test = testCase_new.sigTest.testName, 
 		score = testCase_new.score_diff_par, 
 		alpha = testCase_new.sigTest.alpha, 
@@ -307,7 +307,7 @@ if __name__ == '__main__':
 
 	print("------ Effect Size ------")
 
-	eff_size_est, es_CI = logic.effectSize.calc_eff_size(testCase_new.es.estimator, testCase_new.score_diff_par, es_alpha, es_B)
+	eff_size_est, es_CI = src.logic.effectSize.calc_eff_size(testCase_new.es.estimator, testCase_new.score_diff_par, es_alpha, es_B)
 
 	testCase_new.es.estimate = eff_size_est
 
@@ -325,7 +325,7 @@ if __name__ == '__main__':
 	print("------ Power Analysis ------")
 	start_time = time.time()
 
-	power_sampsize = logic.powerAnalysis.post_power_analysis(\
+	power_sampsize = src.logic.powerAnalysis.post_power_analysis(\
 		sig_test_name = testCase_new.sigTest.testName,
 		method = testCase_new.power.method,
 		score = testCase_new.score_diff_par, 
