@@ -12,6 +12,9 @@ import numpy as np
 import os
 import yaml
 import warnings
+
+os.umask(0000)
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 if __name__ == '__main__':
