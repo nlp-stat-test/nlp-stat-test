@@ -33,7 +33,7 @@ from src.logic.errorHandling import InputError
 from src.logic.powerAnalysis import post_power_analysis
 import src.logic.powerAnalysis
 
-os.uasmk(0000)
+os.umask(0000)
 
 FOLDER = os.path.join('user')
 ERRORS = os.path.join('logs')
